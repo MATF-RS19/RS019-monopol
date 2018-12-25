@@ -3,16 +3,19 @@
 #include "Card.hpp"
 #include "Property.hpp"
 #include "Utility.hpp"
+#include "Railroad.hpp"
 
 #define NUM_CHANCE 17
 #define NUM_CHEST 17
 #define NUM_PROPERTY 50
 #define NUM_UTILITY 2
+#define NUM_RAILROAD 4
 
 using namespace std;
 
 vector<Property*> initialize_properties();
 vector<Utility*> initialize_utilities();
+vector<Railroad*> initialize_railroads();
 vector<Card*> initialize_cards();
 
 int main(int argc, char** argv)
@@ -22,6 +25,9 @@ int main(int argc, char** argv)
 	
 	vector<Utility*> utilities(NUM_UTILITY);
 	initialize_utilities();
+	
+	vector<Railroad*> railroads(NUM_RAILROAD);
+	railroads = initialize_railroads();
 	
 	vector<Card*> cards(NUM_CHANCE);
 	cards = initialize_cards();
@@ -97,4 +103,15 @@ vector<Utility*> initialize_utilities()
 	Utility* electric_company = new Utility(150, 75, "ELECTRIC_COMPANY");
 	vector<Utility*> utilities = {water_works, electric_company};
 	return utilities;
+}
+
+vector<Railroad*> initialize_railroads()
+{
+	Railroad* reading = new Railroad(200, 25, 100, "Reading railroad");
+	Railroad* penn = new Railroad(200, 25, 100, "Pennsylvania Railroad");
+	Railroad* bo = new Railroad(200, 25, 100, "B. & O. Railroad");
+	Railroad* sl = new Railroad(200, 25, 100, "Short Line");	
+	
+	vector<Railroad*> railroads = {reading, penn, bo, sl};
+	return railroads;	
 }
