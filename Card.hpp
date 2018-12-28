@@ -1,15 +1,29 @@
 #pragma once
 
 #include <string>
-
-using namespace std;
+#include <vector>
 
 class Card
 {
 public:
-	Card(string type, string message)
-	: _type(type), _message(message)
+	Card(std::string type, std::string message, int action)
+	: _type(type), _message(message), m_action(action)
 	{}
+	
+	static std::vector<Card*> initialize_cards();
+
+    std::string getType() const{
+        return _type;
+    }
+    
+    std::string getMsg() const{
+        return _message;
+    }
+    
+ 	int getAction() const{
+ 		return m_action;
+ 	}
 private:
-	string _type, _message;
+	std::string _type, _message;
+	int m_action;
 };

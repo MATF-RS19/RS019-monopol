@@ -1,16 +1,21 @@
 #pragma once
 
+#include "Space.hpp"
 #include <string>
+#include <vector>
 
-using namespace std;
+//using namespace std;
 
-class Utility
+class Utility : public Space
 {
 public:
-	Utility(double buy_price, double mortgage, string group)
+	Utility(double buy_price, double mortgage, std::string group)
 	: _buy_price(buy_price), _mortgage(mortgage), _group(group)
 	{}
+	
+	static std::vector<Utility*> initialize_utilities();
 private:
 	double _buy_price, _mortgage;
-	string _group;
+	std::string _group;
 };
+
