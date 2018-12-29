@@ -15,10 +15,9 @@ Card Board::drawCard(){
 Board::Board(){
 
 	std::vector<Utility*> utils = Utility::initialize_utilities();
-
 	std::vector<Railroad*> rails = Railroad::initialize_railroads();
-
 	std::vector<Card*> cardDeck = Card::initialize_cards();
+	std::vector<Property*> properties = Property::initialize_properties();
     
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::GO))); 
 //	m_spaces[1] = //property

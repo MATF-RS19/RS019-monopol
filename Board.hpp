@@ -11,6 +11,7 @@
 #include "Railroad.hpp"
 #include "ActionSpace.hpp" 
 #include "Card.hpp"
+#include "Property.hpp"
 
 class Board{
 

@@ -1,22 +1,8 @@
 #include <vector>
-
-//TODO: remove these 
-#include "Card.hpp"
-#include "Property.hpp"
-#include "Utility.hpp"
-#include "Railroad.hpp"
-//
-#include "Board.hpp"
 #include <iostream>
 #include <ctime>
 
-#define NUM_PROPERTY 50
-#define NUM_UTILITY 2
-#define NUM_RAILROAD 4
-
-// using namespace std;
-
-std::vector<Property*> initialize_properties();
+#include "Board.hpp"
 
 int main(int argc, char** argv)
 {
@@ -31,13 +17,6 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-
-
-std::vector<Property*> initialize_properties()
-{
-	std::vector<Property*> properties(NUM_PROPERTY);
-	return properties;
-}
 
 
 
