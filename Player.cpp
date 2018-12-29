@@ -40,6 +40,11 @@ void pay(int amount)
 	m_wallet -= amount;
 }
 
+void buy(Space* space)
+{
+
+}
+
 void receive(int amount)
 {
 	m_wallet += amount;

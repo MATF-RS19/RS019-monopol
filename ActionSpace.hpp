@@ -18,7 +18,8 @@ class ActionSpace : public Space{
              INCOME_TAX,
              FREE_PARKING,
              LUXURY_TAX,
-             GO
+             GO,
+			 JAIL
          };
 
 	private:

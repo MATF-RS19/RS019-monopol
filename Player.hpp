@@ -34,7 +34,7 @@ public:
 
 	const Coordinate& position() const;
 	void move();
-
+	void buy(Space* space);
 	void build(std::string building);
 	
 	void set_name(std::string name);
@@ -45,6 +45,9 @@ private:
 	Coordinate m_pos;	// position of player
 	int m_wallet; // player's money
 	bool m_in_jail;
+	std::vector<Property*> owned_properties;
+	std::vector<Utility*> owned_utilities;
+	std::vector<Railroad*> owned_railroads;
 
 	// m_houses[name_of_property] = num_of_houses
 	std::map<std::string, int> m_houses;
