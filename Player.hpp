@@ -20,8 +20,6 @@ private:
 
 class Player {
 public:
-	
-	static int m_obj_count;
 
 	Player();
 
@@ -50,6 +48,7 @@ public:
 
     static std::vector<Player*> initializePlayers(int numPlayers);
 private:
+    static int m_obj_count;
 	unsigned m_id;
 	std::string m_name;
 	//Coordinate m_pos;	// position of player NOTE: uncomment later
