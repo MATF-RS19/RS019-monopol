@@ -66,9 +66,13 @@ void Player::pay(int amount)
 	m_wallet -= amount;
 }
 
+<<<<<<< HEAD
+=======
+// TODO
+>>>>>>> 25f271624e199f52893978c2eb6cf08b2db47f40
 void Player::buy(Space* space)
 {
-
+	return;
 }
 
 void Player::receive(int amount)
@@ -76,11 +80,18 @@ void Player::receive(int amount)
 	m_wallet += amount;
 }
 
+<<<<<<< HEAD
 //NOTE: uncomment later
 // const Player::Coordinate& position() const
 // {
 // 	return m_pos;
 // }
+=======
+const Coordinate& Player::position() const
+{
+	return m_pos;
+}
+>>>>>>> 25f271624e199f52893978c2eb6cf08b2db47f40
 
 // TODO: void move()
 // TODO: void build(std::string building)
