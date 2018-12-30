@@ -1,5 +1,9 @@
 #include "Railroad.hpp"
 
+void Railroad::printSpace() const{
+	std::cout << "Railroad: " << Railroad::getName() << ", price: " << Railroad::getBuyPrice() << std::endl;
+}
+
 std::vector<Railroad*> Railroad::initialize_railroads()
 {
 	Railroad* reading = new Railroad(200, 25, 100, "Reading railroad");

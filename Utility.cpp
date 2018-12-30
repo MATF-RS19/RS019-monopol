@@ -1,5 +1,11 @@
 #include "Utility.hpp"
 
+void Utility::printSpace() const{
+
+	std::cout << "Utility: " << Utility::getGroup() << ", price: " << Utility::getBuyPrice() << std::endl; 
+
+}
+
 std::vector<Utility*> Utility::initialize_utilities()
 {
 	Utility* water_works = new Utility(150, 75, "WATER_WORKS");

@@ -19,8 +19,10 @@ class Board{
 		Board();
 
         Card drawCard();
+
+	void printBoard() const;
         
-		//~Board();
+		~Board();
 
 	private:
 		

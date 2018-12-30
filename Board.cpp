@@ -2,11 +2,20 @@
 
 #define NUM_CARDS 17
 
+void Board::printBoard() const{
+    
+    for(const auto i : m_spaces){
+        i->printSpace();
+    }
+    
+}
+
 Card Board::drawCard(){
     
     Card result = *m_chanceDeck.at(0);
     m_chanceDeck.erase(m_chanceDeck.begin());
     //TODO: if not jail card put back, else add the card to player
+    //TODO: remove magic nums
     if(result.getAction() != 7 && result.getAction() != 22){
         std::cout << "Puting card back" << std::endl;
         m_chanceDeck.push_back(&result);
@@ -62,13 +71,16 @@ Board::Board(){
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::LUXURY_TAX)));
 	m_spaces.push_back(properties.at(21));
 
+    //TODO: put me in a func?
+    //Shuffle card decks
 	std::copy(cardDeck.cbegin(), cardDeck.cbegin() + NUM_CARDS, std::back_inserter(m_chanceDeck));
 	std::random_shuffle(m_chanceDeck.begin(), m_chanceDeck.end());
 
 	std::copy(cardDeck.cbegin() + NUM_CARDS, cardDeck.cend(), std::back_inserter(m_communityChestDeck));
 	std::random_shuffle(m_communityChestDeck.begin(), m_communityChestDeck.end());
-	
-	
-
 
 }	
+
+Board::~Board(){
+    std::cout << "Destroying board" << std::endl;
+}

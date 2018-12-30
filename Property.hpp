@@ -12,6 +12,16 @@ public:
 		{}
 		
 	static std::vector<Property*> initialize_properties();
+
+	virtual void printSpace() const override;
+
+	std::string getName() const{
+		return _name;
+	}
+
+	double getBuyPrice() const{
+		return _buy_price;
+	}
 private:
 	double _buy_price, _rent_price, _h1_price, _h2_price, _h3_price, _h4_price, _h5_price, _mortgage, _house_price;
 	std::string _name, _colour;

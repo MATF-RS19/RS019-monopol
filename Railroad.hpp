@@ -2,6 +2,7 @@
 
 #include "Space.hpp"
 #include <string>
+#include <iostream>
 #include <vector>
 
 class Railroad : public Space
@@ -12,6 +13,16 @@ public:
 	{}
 	
 	static std::vector<Railroad*> initialize_railroads();
+
+	std::string getName() const{
+		return _name;
+	}
+
+	double getBuyPrice() const{
+		return _buy_price;
+	}
+
+	virtual void printSpace() const override;
 private:
 	double _buy_price,  _rent_price, _mortgage;
 	std::string _name;

@@ -1,6 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "Space.hpp"
+#include "Property.hpp"
+#include "Utility.hpp"
+#include "Railroad.hpp"
+#include <map>
+#include <vector>
+
 class Coordinate {
 public:
 	Coordinate(unsigned x, unsigned y);
@@ -9,7 +16,7 @@ public:
 	
 private:
 	unsigned x, y;
-}
+};
 
 class Player {
 public:
@@ -32,17 +39,20 @@ public:
 	void pay(int amount);
 	void receive(int amount);
 
-	const Coordinate& position() const;
+	//const Coordinate& position() const; NOTE: uncomment later
 	void move();
 	void buy(Space* space);
 	void build(std::string building);
 	
 	void set_name(std::string name);
+    
+    std::string get_name() const;
 
+    static std::vector<Player*> initializePlayers(int numPlayers);
 private:
 	unsigned m_id;
-	std::string name;
-	Coordinate m_pos;	// position of player
+	std::string m_name;
+	//Coordinate m_pos;	// position of player NOTE: uncomment later
 	int m_wallet; // player's money
 	bool m_in_jail;
 	std::vector<Property*> owned_properties;
@@ -56,12 +66,12 @@ private:
 	// TODO?: [???] instead of std::string
 	std::map<std::string, int> m_property_fields;
 
-	friend std::ostream & operator << (std::ostream& out, const player& value);
+	friend std::ostream & operator << (std::ostream& out, const Player& value);
 	// do we need this?
 //	friend std::istream & operator >> (std::istream& in, player& value);
 };
 
-std::ostream & operator << (std::ostream& out, const player& value);
+std::ostream & operator << (std::ostream& out, const Player& value);
 // std::istream & operator >> (std::istream& in, player& value);
 
 #endif
