@@ -11,6 +11,7 @@ std::vector<Player*> Player::initializePlayers(int numPlayers){
         std::cout << "Enter your name: " << std::endl;
         std::cin >> name;
         p->set_name(name);
+        p->set_pos(0);
         numPlayers--;
         players.push_back(p);
     }
@@ -81,7 +82,10 @@ void Player::receive(int amount)
 // 	return m_pos;
 // }
 
-// TODO: void move()
+//getPosition -> space na kome se nalazi
+//setPosition -> 
+
+// TODO: void move(int i) -> pokrece se i polja po tabli => treba neko ko ima pristup tabli da pomera (Game)
 // TODO: void build(std::string building)
 
 void Player::set_name(std::string name)
@@ -91,4 +95,28 @@ void Player::set_name(std::string name)
 
 std::string Player::get_name() const{
     return m_name;
+}
+
+void Player::set_pos(int pos){
+    m_pos = pos;
+}
+
+int Player::get_pos() const{
+    return m_pos;
+}
+
+void Player::add_property(Property* p){
+    owned_properties.push_back(p);
+}
+
+std::vector<Property*> Player::get_properties() const{
+    return owned_properties;
+}
+
+std::vector<Space*> Player::get_spaces() const{
+    return owned_spaces;
+}
+
+void Player::add_space(Space* s){
+    owned_spaces.push_back(s);
 }

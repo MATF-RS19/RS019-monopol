@@ -6,12 +6,12 @@
 #include <typeinfo>
 #include <iostream>
 
-#include "Space.hpp"
-#include "Utility.hpp"
-#include "Railroad.hpp"
-#include "ActionSpace.hpp" 
-#include "Card.hpp"
-#include "Property.hpp"
+#include "/home/aleksandar/RS019-monopol/Space.hpp"
+#include "/home/aleksandar/RS019-monopol/Utility.hpp"
+#include "/home/aleksandar/RS019-monopol/Railroad.hpp"
+#include "/home/aleksandar/RS019-monopol/ActionSpace.hpp"
+#include "/home/aleksandar/RS019-monopol/Card.hpp"
+#include "/home/aleksandar/RS019-monopol/Property.hpp"
 
 class Board{
 
@@ -19,6 +19,12 @@ class Board{
 		Board();
 
         Card drawCard();
+        
+        std::vector<Space*> getSpaces() const;
+        
+        std::vector<Card*> getChanceDeck() const;
+        
+        std::vector<Card*> getCommunityChestDeck() const;
 
 	void printBoard() const;
         

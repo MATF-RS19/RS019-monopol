@@ -20,12 +20,21 @@ public:
 		return _buy_price;
 	}
 
-	std::string getGroup() const{
+	std::string getName() const{
 		return _group;
 	}
+	
+	bool isOwned() const override{
+        return _owned;
+    }
+	
+	void setOwned(){
+        _owned = true;
+    }
 
 private:
 	double _buy_price, _mortgage;
 	std::string _group;
+    bool _owned = false;
 };
 

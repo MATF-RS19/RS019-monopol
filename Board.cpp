@@ -1,4 +1,4 @@
-#include "Board.hpp"
+#include "/home/aleksandar/RS019-monopol/Board.hpp"
 
 #define NUM_CARDS 17
 
@@ -7,6 +7,12 @@ void Board::printBoard() const{
     for(const auto i : m_spaces){
         i->printSpace();
     }
+    
+}
+
+std::vector<Space*> Board::getSpaces() const{
+    
+    return m_spaces;
     
 }
 
@@ -25,7 +31,7 @@ Card Board::drawCard(){
 
 Board::Board(){
 
-	std::vector<Utility*> utils = Utility::initialize_utilities();
+    std::vector<Utility*> utils = Utility::initialize_utilities();
 	std::vector<Railroad*> rails = Railroad::initialize_railroads();
 	std::vector<Card*> cardDeck = Card::initialize_cards();
 	std::vector<Property*> properties = Property::initialize_properties();

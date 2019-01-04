@@ -1,6 +1,6 @@
 CFLAGS = -Wall -Wextra -std=c++11
 
-monopoly: main.o Property.o Utility.o Railroad.o Board.o Card.o ActionSpace.o Game.o Player.o
+monopoly: main.o Property.o Utility.o Railroad.o Board.o Card.o ActionSpace.o Game.o Player.o Bank.o
 	g++ $^ $(CFLAGS) -o $@
 
 main.o: main.cpp Property.hpp Utility.hpp Railroad.hpp Card.hpp
@@ -31,6 +31,9 @@ Board.o: Board.cpp Board.hpp Utility.hpp Railroad.hpp Card.hpp ActionSpace.hpp
 	g++ -c $< $(CFLAGS)
 	
 Game.o: Game.cpp Game.hpp Board.hpp Player.hpp
+	g++ -c $< $(CFLAGS)
+	
+Bank.o: Bank.cpp Bank.hpp AuctionHouse.hpp Player.hpp Utility.hpp Railroad.hpp Property.hpp
 	g++ -c $< $(CFLAGS)
 	
 .PHONY: clean

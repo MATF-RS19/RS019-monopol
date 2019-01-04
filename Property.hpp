@@ -20,9 +20,28 @@ public:
 	}
 
 	double getBuyPrice() const{
+        //std::cout << "Property" << std::endl;
 		return _buy_price;
 	}
+	
+	int getNumBuildings() const{
+        return _num_buildings;
+    }
+    
+    void setNumBuildings(int num){
+        _num_buildings = num;
+    }
+    
+    bool isOwned() const override{
+        return _owned;
+    }
+    
+    void setOwned() override{
+        _owned = true;
+    }
 private:
 	double _buy_price, _rent_price, _h1_price, _h2_price, _h3_price, _h4_price, _h5_price, _mortgage, _house_price;
 	std::string _name, _colour;
+    int _num_buildings;
+    bool _owned = false;
 };

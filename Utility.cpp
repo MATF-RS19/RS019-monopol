@@ -2,7 +2,7 @@
 
 void Utility::printSpace() const{
 
-	std::cout << "Utility: " << Utility::getGroup() << ", price: " << Utility::getBuyPrice() << std::endl; 
+	std::cout << "Utility: " << Utility::getName() << ", price: " << Utility::getBuyPrice() << std::endl; 
 
 }
 

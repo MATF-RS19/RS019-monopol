@@ -14,18 +14,27 @@ class ActionSpace : public Space{
 			return m_action;
 		}
         
-		virtual void printSpace() const override;
-	
+		void printSpace() const override;
+
+        std::string getName() const override;
+        
+        double getBuyPrice() const override{
+            return -1;
+        }
+        
+        bool isOwned() const override{
+            return false;
+        }
 
  		enum class EnumActionSpace
          	{
             	CHANCE,
              	COMMUNITY_CHEST,
-		     	GOTO_JAIL,
+                GOTO_JAIL,
                 INCOME_TAX,
-		     	FREE_PARKING,
-		     	LUXURY_TAX,
-		     	GO,
+                FREE_PARKING,
+                LUXURY_TAX,
+                GO,
                 JAIL
             };
 

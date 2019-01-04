@@ -45,8 +45,22 @@ public:
 	void set_name(std::string name);
     
     std::string get_name() const;
+    
+    void add_property(Property* p);
+    void add_utility(Utility* p);
+    void add_railroad(Railroad* p);
+    
+    int get_pos() const;
+    
+    void set_pos(int pos);
 
     static std::vector<Player*> initializePlayers(int numPlayers);
+    
+    std::vector<Property*> get_properties() const;
+    
+    std::vector<Space*> get_spaces() const;
+    void add_space(Space *s);
+    
 private:
     static int m_obj_count;
 	unsigned m_id;
@@ -55,8 +69,11 @@ private:
 	int m_wallet; // player's money
 	bool m_in_jail;
 	std::vector<Property*> owned_properties;
-	std::vector<Utility*> owned_utilities;
-	std::vector<Railroad*> owned_railroads;
+    std::vector<Utility*> owned_utilities;
+    std::vector<Railroad*> owned_railroads;
+    
+    std::vector<Space*> owned_spaces;
+	int m_pos;
 
 	// m_houses[name_of_property] = num_of_houses
 	std::map<std::string, int> m_houses;
