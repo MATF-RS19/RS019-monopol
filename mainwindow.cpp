@@ -79,7 +79,7 @@ void MainWindow::createDockWindows()
     description = new QListWidget();
     dices = new QLabel();
 
-    dices->setText(tr("ovde ce biti kockice..."));
+    dices->setText(tr("dices"));
 
     // adding widgets to vertical layout
     QVBoxLayout *v_layout = new QVBoxLayout();
@@ -105,7 +105,7 @@ void MainWindow::createDockWindows()
 	int i = 0;
 	while(i < numOfPlayers) {
 		tab = new QLabel();
-		tab->setText(QString("Info za igraca broj " + QString().setNum(i+1)));
+		tab->setText(QString("Player " + QString().setNum(i+1)) + " info");
 		player_tabs.push_back(tab);
 		++i;
 	}
