@@ -31,6 +31,10 @@ public:
 	void setOwned(){
         _owned = true;
     }
+    
+    std::string getType() const {
+		return "UTILITY";
+    }
 
 private:
 	double _buy_price, _mortgage;

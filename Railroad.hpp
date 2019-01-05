@@ -23,12 +23,21 @@ public:
 		return _buy_price;
 	}
 	
+	double getRentPrice() const{
+        //std::cout << "Railroad" << std::endl;
+		return _rent_price;
+	}
+	
 	bool isOwned() const override{
         return _owned;
     }
 	
 	void setOwned(){
         _owned = true;
+    }
+    
+    std::string getType() const {
+		return "RAILROAD";
     }
 
 	virtual void printSpace() const override;

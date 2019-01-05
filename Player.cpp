@@ -63,6 +63,68 @@ void Player::pay(int amount)
 
 void Player::buy(Space* space)
 {
+	// promeniti u upozorenje
+	int price = space->getBuyPrice();
+	if (balance() < price)
+	{
+		std::cout << "Not enough money." << std::endl;
+		return;
+	}
+	else
+	{
+		pay(price);
+		std::string type = space->getType();
+		if (type == "PROPERTY")
+		{
+			add_property((Property*)space);
+		}
+		else if (type == "UTILITY")
+		{
+			add_utility((Utility*)space);
+		}
+		else if (type == "RAILROAD")
+		{
+			add_railroad((Railroad*)space);
+		}
+		add_space(space);
+		space->setOwned();
+	}
+	
+	return;
+}
+
+void Player::pay_rent(Space* space, Player* player, int dice)
+{
+	double amount = 0;
+	
+	std::string type = space->getType();
+	if (type == "PROPERTY")
+	{
+		Property* p = (Property*)space;
+		std::vector<Property*> my_properties = get_properties();
+		 
+		std::string colour = p->getColour();
+		int i = 0;
+		if (colour == "D_BLUE" || colour == "L_BLUE")
+			i = 1;
+		//TODO: check to see if all properties of that colour are owned by the same player
+		
+		amount = p->getRentPrice();
+	}
+	else if (type == "UTILITY")
+	{
+		Utility* u = (Utility*)space;
+		amount = dice * 40;
+	}
+	else if (type == "RAILROAD")
+	{
+		Railroad* r = (Railroad*)space;
+		amount = r->getRentPrice();
+	}
+	
+	pay(amount);
+	player->receive(amount);
+	
 	return;
 }
 
@@ -107,6 +169,22 @@ int Player::get_pos() const{
 
 void Player::add_property(Property* p){
     owned_properties.push_back(p);
+}
+
+void Player::add_utility(Utility* u){
+    owned_utilities.push_back(u);
+}
+
+void Player::add_railroad(Railroad* r){
+    owned_railroads.push_back(r);
+}
+
+std::vector<Railroad*> Player::get_railroads() const{
+    return owned_railroads;
+}
+
+std::vector<Utility*> Player::get_utilities() const{
+    return owned_utilities;
 }
 
 std::vector<Property*> Player::get_properties() const{

@@ -37,6 +37,10 @@ class ActionSpace : public Space{
                 GO,
                 JAIL
             };
+			
+		std::string getType() const {
+			return "ACTION SPACE";
+		}
 
 	private:
 		int m_action;

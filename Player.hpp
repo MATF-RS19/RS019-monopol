@@ -40,6 +40,7 @@ public:
 	//const Coordinate& position() const; NOTE: uncomment later
 	void move();
 	void buy(Space* space);
+ 	void pay_rent(Space* space, Player* player, int dice);
 	void build(std::string building);
 	
 	void set_name(std::string name);
@@ -47,8 +48,8 @@ public:
     std::string get_name() const;
     
     void add_property(Property* p);
-    void add_utility(Utility* p);
-    void add_railroad(Railroad* p);
+    void add_utility(Utility* u);
+    void add_railroad(Railroad* r);
     
     int get_pos() const;
     
@@ -57,7 +58,8 @@ public:
     static std::vector<Player*> initializePlayers(int numPlayers);
     
     std::vector<Property*> get_properties() const;
-    
+    std::vector<Utility*> get_utilities() const;
+	std::vector<Railroad*> get_railroads() const;
     std::vector<Space*> get_spaces() const;
     void add_space(Space *s);
     

@@ -28,6 +28,14 @@ public:
         return _num_buildings;
     }
     
+    double getRentPrice() const{
+		return _rent_price;
+    }
+    
+    std::string getColour(){
+		return _colour;
+    }
+    
     void setNumBuildings(int num){
         _num_buildings = num;
     }
@@ -39,6 +47,11 @@ public:
     void setOwned() override{
         _owned = true;
     }
+    
+    std::string getType() const {
+		return "PROPERTY";
+    }
+    
 private:
 	double _buy_price, _rent_price, _h1_price, _h2_price, _h3_price, _h4_price, _h5_price, _mortgage, _house_price;
 	std::string _name, _colour;
