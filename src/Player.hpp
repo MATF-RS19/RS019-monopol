@@ -1,10 +1,10 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "Space.hpp"
 #include "Property.hpp"
 #include "Utility.hpp"
 #include "Railroad.hpp"
+#include "ActionSpace.hpp"
 #include <map>
 #include <vector>
 
@@ -25,6 +25,8 @@ public:
 
 	~Player();
 
+    int getId() const;
+    
 	Player(const Player& other) = delete;
 
 	Player& operator= (const Player& other) = delete;
@@ -39,8 +41,11 @@ public:
 
 	//const Coordinate& position() const; NOTE: uncomment later
 	void move();
-	void buy(Space* space);
-	void build(std::string building);
+	void buy(Space* space); // NOTE: not necessary, bank sells properties
+	//void build(Property* property); // build on this property TODO: zabrani nasledjivanje Property klase 
+    //TODO: unique pointeri na property
+    //TODO: implementacija move semantike
+    
 	
 	void set_name(std::string name);
     
@@ -65,7 +70,6 @@ private:
     static int m_obj_count;
 	unsigned m_id;
 	std::string m_name;
-	//Coordinate m_pos;	// position of player NOTE: uncomment later
 	int m_wallet; // player's money
 	bool m_in_jail;
 	std::vector<Property*> owned_properties;
@@ -75,19 +79,9 @@ private:
     std::vector<Space*> owned_spaces;
 	int m_pos;
 
-	// m_houses[name_of_property] = num_of_houses
-	std::map<std::string, int> m_houses;
-	// m_hotels[name_of_property] = num_of_hotels
-	std::map<std::string, int> m_hotels;
-	// TODO?: [???] instead of std::string
-	std::map<std::string, int> m_property_fields;
-
 	friend std::ostream & operator << (std::ostream& out, const Player& value);
-	// do we need this?
 //	friend std::istream & operator >> (std::istream& in, player& value);
 };
 
 std::ostream & operator << (std::ostream& out, const Player& value);
 // std::istream & operator >> (std::istream& in, player& value);
-
-#endif

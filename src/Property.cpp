@@ -8,6 +8,9 @@ void Property::printSpace() const{
 
 }
 
+std::string Property::getGroup() const{
+    return this->getColour();
+}
 
 std::vector<Property*> Property::initialize_properties(){
 	Property* p1 = new Property(60, 2, 10, 30, 90, 160, 250, 30, 50, "Mediterranean Avenue", "PURPLE");
@@ -36,4 +39,8 @@ std::vector<Property*> Property::initialize_properties(){
 	std::vector<Property*> properties = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22};
 	// brisanje promenljivih?
 	return properties;
+}
+
+int Property::getAction() const{
+    return -1;
 }

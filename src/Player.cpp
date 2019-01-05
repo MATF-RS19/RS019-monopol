@@ -23,13 +23,17 @@ int Player::m_obj_count;
 
 Player::Player()
 {
-    //TODO: implement me, mada ja mislim da nije potreban konstruktor bez argumenata
+    m_obj_count++;
     m_id = m_obj_count;
 }
 
 Player::~Player()
 {
 	m_obj_count--;
+}
+
+int Player::getId() const{
+    return m_id;
 }
 
 bool Player::is_in_jail() const
@@ -61,35 +65,15 @@ void Player::pay(int amount)
 	m_wallet -= amount;
 }
 
-void Player::buy(Space* space)
-{
-	return;
-}
-
 void Player::receive(int amount)
 {
 	m_wallet += amount;
 }
 
-//NOTE: uncomment later
-// const Player::Coordinate& position() const
-// {
-// 	return m_pos;
-// }
-
-// Coordinate& Player::position() const
-// {
-// 	return m_pos;
-// }
-
-//getPosition -> space na kome se nalazi
-//setPosition -> 
-
 // TODO: void move(int i) -> pokrece se i polja po tabli => treba neko ko ima pristup tabli da pomera (Game)
 // TODO: void build(std::string building)
 
-void Player::set_name(std::string name)
-{
+void Player::set_name(std::string name){
 	m_name = name;
 }
 

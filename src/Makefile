@@ -6,13 +6,13 @@ monopoly: main.o Property.o Utility.o Railroad.o Board.o Card.o ActionSpace.o Ga
 main.o: main.cpp Property.hpp Utility.hpp Railroad.hpp Card.hpp
 	g++ -c $< $(CFLAGS)
 	
-Property.o: Property.cpp Property.hpp
+Property.o: Property.cpp Property.hpp Space.hpp
 	g++ -c $< $(CFLAGS)
 	
 Utility.o: Utility.cpp Utility.hpp Space.hpp
 	g++ -c $< $(CFLAGS)
 	
-Railroad.o: Railroad.cpp Railroad.hpp
+Railroad.o: Railroad.cpp Railroad.hpp Space.hpp
 	g++ -c $< $(CFLAGS)
 	
 Card.o: Card.cpp Card.hpp

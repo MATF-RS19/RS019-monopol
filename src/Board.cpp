@@ -1,4 +1,4 @@
-#include "/home/aleksandar/RS019-monopol/Board.hpp"
+#include "Board.hpp"
 
 #define NUM_CARDS 17
 
@@ -86,6 +86,14 @@ Board::Board(){
 	std::random_shuffle(m_communityChestDeck.begin(), m_communityChestDeck.end());
 
 }	
+
+std::vector<Space*> Board::getSpacesByGroup(std::string group) const{
+    std::vector<Space*> result;
+    std::copy_if(m_spaces.cbegin(), m_spaces.cend(), std::back_inserter(result),
+                 [group](Space* g){ return !strcmp(g->getGroup().c_str(),group.c_str()); }
+    );
+    return result;
+}
 
 Board::~Board(){
     std::cout << "Destroying board" << std::endl;

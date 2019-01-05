@@ -6,12 +6,13 @@
 #include <typeinfo>
 #include <iostream>
 
-#include "/home/aleksandar/RS019-monopol/Space.hpp"
-#include "/home/aleksandar/RS019-monopol/Utility.hpp"
-#include "/home/aleksandar/RS019-monopol/Railroad.hpp"
-#include "/home/aleksandar/RS019-monopol/ActionSpace.hpp"
-#include "/home/aleksandar/RS019-monopol/Card.hpp"
-#include "/home/aleksandar/RS019-monopol/Property.hpp"
+#include "Space.hpp"
+#include "Utility.hpp"
+#include "Railroad.hpp"
+#include "ActionSpace.hpp"
+#include "Card.hpp"
+#include "Property.hpp"
+#include <cstring>
 
 class Board{
 
@@ -26,7 +27,9 @@ class Board{
         
         std::vector<Card*> getCommunityChestDeck() const;
 
-	void printBoard() const;
+        void printBoard() const;
+        
+        std::vector<Space*> getSpacesByGroup(std::string group) const;
         
 		~Board();
 

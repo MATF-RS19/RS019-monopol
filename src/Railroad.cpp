@@ -4,6 +4,14 @@ void Railroad::printSpace() const{
 	std::cout << "Railroad: " << Railroad::getName() << ", price: " << Railroad::getBuyPrice() << std::endl;
 }
 
+std::string Railroad::getGroup() const{
+    return "Railroad";
+}
+
+int Railroad::getNumBuildings() const{
+    return -1;
+}
+
 std::vector<Railroad*> Railroad::initialize_railroads()
 {
 	Railroad* reading = new Railroad(200, 25, 100, "Reading railroad");
@@ -13,4 +21,8 @@ std::vector<Railroad*> Railroad::initialize_railroads()
 	
 	std::vector<Railroad*> railroads = {reading, penn, bo, sl};
 	return railroads;	
+}
+
+int Railroad::getAction() const{
+    return -1;
 }

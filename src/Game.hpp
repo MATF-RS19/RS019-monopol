@@ -32,12 +32,18 @@ public:
     
     //void sellToCurrentPlayer();
     
+    void build(Player* player, Property* property);
+    
     void movePlayer(Player *player, int steps);
     
     
-    //TODO: remove me
+    //TODO: remove me, i don't need to exist
     Bank* getBank() const{
         return m_bank;
+    }
+    //TODO: remove me
+    Board* getBoard() const{
+        return m_board;
     }
     
 private:

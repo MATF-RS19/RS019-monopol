@@ -18,6 +18,10 @@ public:
 	std::string getName() const{
 		return _name;
 	}
+	
+	std::string getColour() const{
+        return _colour;
+    }
 
 	double getBuyPrice() const{
         //std::cout << "Property" << std::endl;
@@ -39,9 +43,26 @@ public:
     void setOwned() override{
         _owned = true;
     }
+    
+    void setOwner(int id){
+        std::cout << "Hey" << std::endl;
+        id_owner = id;
+    }
+    
+    int getOwner() const{
+        return id_owner;
+    }
+    
+    std::string getGroup() const override;
+    
+    int getAction() const override;
+    
 private:
 	double _buy_price, _rent_price, _h1_price, _h2_price, _h3_price, _h4_price, _h5_price, _mortgage, _house_price;
 	std::string _name, _colour;
-    int _num_buildings;
+    int _num_buildings = 0;
     bool _owned = false;
+    //FIXME: should be something like ref to Player object
+    int id_owner;
+    
 };
