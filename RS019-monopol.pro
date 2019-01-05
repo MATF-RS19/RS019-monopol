@@ -7,6 +7,8 @@ TARGET = RS019-monopol
 INCLUDEPATH += .
 
 # Input
+CONFIG += qt
+INCLUDEPATH += /opt/Qt/5.3/Src/qtbase/include/QtWidgets
 HEADERS += ActionSpace.hpp \
            AuctionHouse.hpp \
            Bank.hpp \
@@ -33,4 +35,5 @@ SOURCES += ActionSpace.cpp \
            Space.cpp \
            Utility.cpp
 
-QT+=widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui
