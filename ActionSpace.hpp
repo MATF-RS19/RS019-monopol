@@ -8,23 +8,28 @@ class ActionSpace : public Space{
 	public:
 		ActionSpace(int action)
         	: m_action(action)
-       		{}
+       		{
+            }
         
-        int getAction() const{
-			return m_action;
-		}
+        int getAction() const override;
         
 		void printSpace() const override;
 
         std::string getName() const override;
         
-        double getBuyPrice() const override{
-            return -1;
-        }
+        double getBuyPrice() const override;
         
-        bool isOwned() const override{
-            return false;
-        }
+        bool isOwned() const override;
+        
+        void setOwned() override;
+        
+        void setOwner(int id) override;
+        
+        int getOwner() const override;
+        
+        int getNumBuildings() const override;
+        
+        std::string getGroup() const override;
 
  		enum class EnumActionSpace
          	{
