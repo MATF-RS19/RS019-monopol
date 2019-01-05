@@ -101,25 +101,30 @@ void Player::pay_rent(Space* space, Player* player, int dice)
 	if (type == "PROPERTY")
 	{
 		Property* p = (Property*)space;
-		std::vector<Property*> my_properties = get_properties();
-		 
-		std::string colour = p->getColour();
-		int i = 0;
-		if (colour == "D_BLUE" || colour == "L_BLUE")
-			i = 1;
-		//TODO: check to see if all properties of that colour are owned by the same player
-		
 		amount = p->getRentPrice();
+		if(check_properties(p, player))
+			amount *= 2;
 	}
 	else if (type == "UTILITY")
 	{
-		Utility* u = (Utility*)space;
-		amount = dice * 40;
+		bool both_utilities = check_utilities(player);
+		if(!both_utilities)
+			amount = dice * 4;
+		else
+			amount = dice * 10;
 	}
 	else if (type == "RAILROAD")
 	{
 		Railroad* r = (Railroad*)space;
+		int num_railroads = check_railroads(player);
+		
 		amount = r->getRentPrice();
+		if(num_railroads == 2)
+			amount *= 2;
+		else if(num_railroads == 3)
+			amount *= 4;
+		else if(num_railroads == 4)
+			amount *= 8;
 	}
 	
 	pay(amount);
@@ -197,4 +202,40 @@ std::vector<Space*> Player::get_spaces() const{
 
 void Player::add_space(Space* s){
     owned_spaces.push_back(s);
+}
+
+bool Player::check_properties(Property* p, Player* player)
+{
+	std::vector<Property*> my_properties = player->get_properties();		
+	std::string colour = p->getColour();
+	int count = 0;
+	unsigned i = 0;
+	bool has_all = false;
+	if(colour == "D_BLUE" || colour == "L_BLUE")
+		count = 1;
+	for(; i < my_properties.size(); i++)
+	{
+		if(my_properties[i]->getColour() == colour)
+			count ++;
+	}		
+	
+	if(count == 3)
+		has_all = true;
+	
+	return has_all;
+}
+
+bool Player::check_utilities(Player* player)
+{
+	bool has_all = false;
+	std::vector<Utility*> my_utilities = player->get_utilities();
+	if(my_utilities.size() == 2)
+		has_all = true;
+	return has_all;
+}
+
+int Player::check_railroads(Player* player)
+{
+	std::vector<Railroad*> my_railroads = player->get_railroads();
+	return my_railroads.size();
 }

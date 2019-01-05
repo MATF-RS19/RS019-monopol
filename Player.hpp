@@ -52,8 +52,11 @@ public:
     void add_railroad(Railroad* r);
     
     int get_pos() const;
-    
     void set_pos(int pos);
+	
+	bool check_properties(Property* p, Player* player);
+	bool check_utilities(Player* player);
+	int check_railroads(Player* player);
 
     static std::vector<Player*> initializePlayers(int numPlayers);
     
