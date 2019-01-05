@@ -6,12 +6,12 @@
 #include <typeinfo>
 #include <iostream>
 
-#include "/home/aleksandar/RS019-monopol/Space.hpp"
-#include "/home/aleksandar/RS019-monopol/Utility.hpp"
-#include "/home/aleksandar/RS019-monopol/Railroad.hpp"
-#include "/home/aleksandar/RS019-monopol/ActionSpace.hpp"
-#include "/home/aleksandar/RS019-monopol/Card.hpp"
-#include "/home/aleksandar/RS019-monopol/Property.hpp"
+#include "Space.hpp"
+#include "Utility.hpp"
+#include "Railroad.hpp"
+#include "ActionSpace.hpp"
+#include "Card.hpp"
+#include "Property.hpp"
 
 class Board{
 

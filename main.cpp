@@ -1,12 +1,17 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
+#include <QApplication>
+#include <QString>
 
 #include "Board.hpp"
 #include "Game.hpp"
+#include "mainwindow.h"
 
 int main(int argc, char** argv)
 {
+	QApplication app(argc, argv);
+
     std::srand(unsigned(std::time(0)));
     
     // Game g;
@@ -20,7 +25,9 @@ int main(int argc, char** argv)
     //std::cout << dummyCard.getMsg() << std::endl;
  	
     //b.printBoard();
-    
+	
+/* BUG: ulazi u beskonacnu petlju, pa gui ne moze lepo da se izvrsava
+ 
     Game g{2};
     g.showBoard();
     g.printPlayers();
@@ -85,8 +92,13 @@ int main(int argc, char** argv)
         }
         
     }
+	*/
+	
+	MainWindow main;
+
+	main.show();
     
-	return 0;
+	return app.exec();
 }
 
 

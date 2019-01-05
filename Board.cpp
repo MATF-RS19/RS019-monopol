@@ -1,4 +1,4 @@
-#include "/home/aleksandar/RS019-monopol/Board.hpp"
+#include "Board.hpp"
 
 #define NUM_CARDS 17
 
