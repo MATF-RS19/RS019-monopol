@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <iostream>
 
 class ActionSpace : public Space{
@@ -41,8 +42,9 @@ class ActionSpace : public Space{
 		std::string getType() const {
 			return "ACTION SPACE";
 		}
+		
+		void doAction(Player* p);
 
 	private:
 		int m_action;
-
 };

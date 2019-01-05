@@ -42,6 +42,7 @@ void Player::send_to_jail()
 	if (m_in_jail == true) return;
 
 	m_in_jail = true;
+	num_turns_in_jail = 1;
 }
 
 void Player::release_from_jail()
@@ -49,6 +50,7 @@ void Player::release_from_jail()
 	if (m_in_jail == false) return;
 
 	m_in_jail = false;
+	num_turns_in_jail = 0;
 }
 
 int Player::balance() const
@@ -59,6 +61,16 @@ int Player::balance() const
 void Player::pay(int amount)
 {
 	m_wallet -= amount;
+}
+
+void Player::set_num_turns(int num)
+{
+	num_turns_in_jail = num;
+}
+
+int Player::get_num_turns() const
+{
+	return num_turns_in_jail;
 }
 
 void Player::buy(Space* space)
@@ -93,6 +105,45 @@ void Player::buy(Space* space)
 	return;
 }
 
+void Player::build(std::string building, Property* p)
+{
+	if(!check_properties(p, this))
+	{
+		// TODO: popraviti da izadje prozor
+		std::cout << "Not allowed to build here!" << std::endl;
+		return;
+	}
+	
+	if(p->getNumBuildings() != 4 && building == "HOTEL")
+	{
+		std::cout << "Not allowed to build here!" << std::endl;
+		return;
+	}
+	
+	std::string colour = p->getColour();
+	std::vector<Property*> my_properties = this->get_properties();
+	unsigned i = 0;
+	for(i=0; i < my_properties.size(); i++)
+	{
+		// if current property is the same colour as the target
+		if (my_properties[i]->getColour() == colour && my_properties[i]->eql(p))
+		{
+			if(abs(my_properties[i]->getNumBuildings() - p->getNumBuildings()) > 1)
+			{
+				std::cout << "Not allowed to build here!" << std::endl;
+				return;
+			}
+		}
+	}
+	
+	if(building == "HOUSE")
+		p->setNumBuildings(p->getNumBuildings()+1);
+	else
+		p->setNumBuildings(1);
+	
+	pay(p->getHousePrice());
+}
+
 void Player::pay_rent(Space* space, Player* player, int dice)
 {
 	double amount = 0;
@@ -102,7 +153,7 @@ void Player::pay_rent(Space* space, Player* player, int dice)
 	{
 		Property* p = (Property*)space;
 		amount = p->getRentPrice();
-		if(check_properties(p, player))
+		if(check_properties(p, player) && p->getNumBuildings() == 0)
 			amount *= 2;
 	}
 	else if (type == "UTILITY")

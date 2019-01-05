@@ -32,6 +32,10 @@ public:
 		return _rent_price;
     }
     
+    double getHousePrice() const{
+		return _house_price;
+    }
+    
     std::string getColour(){
 		return _colour;
     }
@@ -50,6 +54,10 @@ public:
     
     std::string getType() const {
 		return "PROPERTY";
+    }
+    
+    bool eql(Property* p) {
+		return _name == p->getName();
     }
     
 private:

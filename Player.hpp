@@ -41,7 +41,7 @@ public:
 	void move();
 	void buy(Space* space);
  	void pay_rent(Space* space, Player* player, int dice);
-	void build(std::string building);
+	void build(std::string building, Property* p);
 	
 	void set_name(std::string name);
     
@@ -65,6 +65,9 @@ public:
 	std::vector<Railroad*> get_railroads() const;
     std::vector<Space*> get_spaces() const;
     void add_space(Space *s);
+	
+	void set_num_turns(int num);
+	int get_num_turns() const;
     
 private:
     static int m_obj_count;
@@ -73,6 +76,7 @@ private:
 	//Coordinate m_pos;	// position of player NOTE: uncomment later
 	int m_wallet; // player's money
 	bool m_in_jail;
+	int num_turns_in_jail;
 	std::vector<Property*> owned_properties;
     std::vector<Utility*> owned_utilities;
     std::vector<Railroad*> owned_railroads;
