@@ -27,7 +27,7 @@ MainWindow::MainWindow()
 	}
 
     QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setSceneRect(0, 0, 1500, 1500);
+    scene->setSceneRect(0, 0, 885, 885);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
     QPixmap pix("./images/monopoly_board.jpg");
