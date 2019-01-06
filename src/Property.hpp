@@ -32,6 +32,10 @@ public:
         return _num_buildings;
     }
     
+    double getRentPrice() const{
+		return _rent_price;
+    }
+    
     void setNumBuildings(int num){
         _num_buildings = num;
     }
@@ -51,6 +55,10 @@ public:
     
     int getOwner() const{
         return id_owner;
+    }
+    
+    std::string getType() const{
+		return "PROPERTY";
     }
     
     std::string getGroup() const override;

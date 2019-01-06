@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <iostream>
+
+class Player;
 
 class ActionSpace : public Space{
 
@@ -30,6 +33,12 @@ class ActionSpace : public Space{
         int getNumBuildings() const override;
         
         std::string getGroup() const override;
+		
+		void doAction(Player* p);
+		
+		std::string getType() const{
+			return "ACTION SPACE";
+		}
 
  		enum class EnumActionSpace
          	{

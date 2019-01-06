@@ -46,6 +46,7 @@ void Player::send_to_jail()
 	if (m_in_jail == true) return;
 
 	m_in_jail = true;
+	num_turns_in_jail = 1;
 }
 
 void Player::release_from_jail()
@@ -53,6 +54,17 @@ void Player::release_from_jail()
 	if (m_in_jail == false) return;
 
 	m_in_jail = false;
+	num_turns_in_jail = 0;
+}
+
+void Player::set_num_turns(int num)
+{
+	num_turns_in_jail = num;
+}
+
+int Player::get_num_turns() const
+{
+	return num_turns_in_jail;
 }
 
 int Player::balance() const
@@ -97,8 +109,52 @@ std::vector<Property*> Player::get_properties() const{
     return owned_properties;
 }
 
+std::vector<Utility*> Player::get_utilities() const{
+    return owned_utilities;
+}
+
+std::vector<Railroad*> Player::get_railroads() const{
+    return owned_railroads;
+}
+
 std::vector<Space*> Player::get_spaces() const{
     return owned_spaces;
+}
+
+bool Player::check_properties(Property* p)
+{
+	std::vector<Property*> my_properties = get_properties();		
+	std::string colour = p->getColour();
+	int count = 0;
+	unsigned i = 0;
+	bool has_all = false;
+	if(colour == "D_BLUE" || colour == "L_BLUE")
+		count = 1;
+	for(; i < my_properties.size(); i++)
+	{
+		if(my_properties[i]->getColour() == colour)
+			count ++;
+	}		
+	
+	if(count == 3)
+		has_all = true;
+	
+	return has_all;
+}
+
+bool Player::check_utilities()
+{
+	bool has_all = false;
+	std::vector<Utility*> my_utilities = get_utilities();
+	if(my_utilities.size() == 2)
+		has_all = true;
+	return has_all;
+}
+
+int Player::check_railroads()
+{
+	std::vector<Railroad*> my_railroads = get_railroads();
+	return my_railroads.size();
 }
 
 void Player::add_space(Space* s){
