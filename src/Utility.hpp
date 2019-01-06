@@ -24,6 +24,10 @@ public:
 		return _group;
 	}
 	
+	std::string getType() const{
+		return "UTILITY";
+    }
+	
 	bool isOwned() const override{
         return _owned;
     }

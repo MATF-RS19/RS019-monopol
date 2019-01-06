@@ -33,4 +33,6 @@ class Space{
         virtual int getNumBuildings() const = 0;
         
         virtual int getAction() const = 0;
+		
+		virtual std::string getType() const = 0;
 };

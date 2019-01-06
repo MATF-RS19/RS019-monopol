@@ -62,9 +62,18 @@ public:
     static std::vector<Player*> initializePlayers(int numPlayers);
     
     std::vector<Property*> get_properties() const;
+    std::vector<Utility*> get_utilities() const;
+    std::vector<Railroad*> get_railroads() const;
+	
+	bool check_properties(Property* p);
+	bool check_utilities();
+	int check_railroads();
     
     std::vector<Space*> get_spaces() const;
     void add_space(Space *s);
+	
+	void set_num_turns(int num);
+	int get_num_turns() const;
     
 private:
     static int m_obj_count;
@@ -78,6 +87,7 @@ private:
     
     std::vector<Space*> owned_spaces;
 	int m_pos;
+	int num_turns_in_jail;
 
 	friend std::ostream & operator << (std::ostream& out, const Player& value);
 //	friend std::istream & operator >> (std::istream& in, player& value);

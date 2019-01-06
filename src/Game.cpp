@@ -11,7 +11,9 @@ void Game::movePlayer(Player *player, int steps){
 }
 
 std::pair<int , int> Game::throwDice(){
-    return std::make_pair(rand()%6+1, rand()%6+1);
+	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
+	setDice(num.first + num.second);
+    return num;
 }
 
 //NOTE: Only current player will build because game is turn based at this point
@@ -19,8 +21,6 @@ std::pair<int , int> Game::throwDice(){
 void Game::build(Player* player, Property* property){
     
     if(property->getOwner() == player->getId()){
-        
-        
         // Check if player has purchased all properties in a particular group and
         // if building order is valid
         std::vector<Space*> group = m_board->getSpacesByGroup(property->getGroup());
@@ -64,6 +64,47 @@ void Game::build(Player* player, Property* property){
         }
         
     }
+}
+
+void Game::pay_rent(Space* space, Player* player)
+{
+	double amount = 0;
+	int dice = getDice();
+	
+	std::string type = space->getType();
+	if (type == "PROPERTY")
+	{
+		Property* p = (Property*)space;
+		amount = p->getRentPrice();
+		if(player->check_properties(p) && p->getNumBuildings() == 0)
+			amount *= 2;
+	}
+	else if (type == "UTILITY")
+	{
+		bool both_utilities = player->check_utilities();
+		if(!both_utilities)
+			amount = dice * 4;
+		else
+			amount = dice * 10;
+	}
+	else if (type == "RAILROAD")
+	{
+		Railroad* r = (Railroad*)space;
+		int num_railroads = player->check_railroads();
+		
+		amount = r->getRentPrice();
+		if(num_railroads == 2)
+			amount *= 2;
+		else if(num_railroads == 3)
+			amount *= 4;
+		else if(num_railroads == 4)
+			amount *= 8;
+	}
+	
+	player->pay(amount);
+	player->receive(amount);
+	
+	return;
 }
 
 void Game::nextPlayer(){

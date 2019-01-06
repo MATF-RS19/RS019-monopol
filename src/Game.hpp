@@ -33,6 +33,7 @@ public:
     //void sellToCurrentPlayer();
     
     void build(Player* player, Property* property);
+	void pay_rent(Space* space, Player* player);
     
     void movePlayer(Player *player, int steps);
     
@@ -46,11 +47,19 @@ public:
         return m_board;
     }
     
+    int getDice(){
+		return _dice;
+    }
+    
+    void setDice(int num){
+		_dice = num;
+    }
+    
 private:
     //tabla, igraci, banka, aukcijska kuca, trenutno na potezu igrac
     Board* m_board;
     std::vector<Player*> m_players;
     Player* m_current_player;
     Bank* m_bank;
-    
+    int _dice;
 };
