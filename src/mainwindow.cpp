@@ -79,7 +79,8 @@ void MainWindow::createDockWindows()
     description = new QListWidget();
     dices = new QLabel();
 
-    dices->setText(tr("dices"));
+	// die -- jednina, dice -- mnozina
+    dices->setText(tr("dice"));
 
     // adding widgets to vertical layout
     QVBoxLayout *v_layout = new QVBoxLayout();

@@ -38,6 +38,9 @@ public:
 	bool is_in_jail() const;
 	void send_to_jail();
 	void release_from_jail();
+	void receive_jail_card() {
+		has_jail_card = true;
+	}
 
 	std::pair<double, double> balance();
 	void pay(double amount);
@@ -93,6 +96,7 @@ private:
     std::vector<Space*> owned_spaces;
 	int m_pos;
 	int num_turns_in_jail;
+	bool has_jail_card = false;
 
 	friend std::ostream & operator << (std::ostream& out, const Player& value);
 //	friend std::istream & operator >> (std::istream& in, player& value);

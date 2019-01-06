@@ -44,6 +44,14 @@ public:
 		_dice = num;
     }
     
+    Bank* getBank() const {
+	    return m_bank;
+	}
+	
+	Board* getBoard() const {
+	    return m_board;
+	}
+    
 private:
     //tabla, igraci, banka, aukcijska kuca, trenutno na potezu igrac
     Board* m_board;

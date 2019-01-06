@@ -23,7 +23,7 @@ public:
  	int getAction() const {
  		return _m_action;
  	}
- 	
+
 private:
 	std::string _type, _message;
 	int _m_action;

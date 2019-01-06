@@ -43,6 +43,12 @@ bool Player::is_in_jail() const
 void Player::send_to_jail()
 {
 	if (m_in_jail == true) return;
+	if (has_jail_card)
+	{
+		release_from_jail();
+		has_jail_card = false;
+		//TODO: staviti kartu nazad u spil
+	}
 
 	m_in_jail = true;
 	num_turns_in_jail = 1;
