@@ -46,6 +46,7 @@ public:
     //TODO: unique pointeri na property
     //TODO: implementacija move semantike
     
+	void init_wallet();
 	
 	void set_name(std::string name);
     
@@ -56,7 +57,6 @@ public:
     void add_railroad(Railroad* p);
     
     int get_pos() const;
-    
     void set_pos(int pos);
 
     static std::vector<Player*> initializePlayers(int numPlayers);

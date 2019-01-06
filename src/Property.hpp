@@ -61,6 +61,26 @@ public:
 		return "PROPERTY";
     }
     
+    double getH1Price() const{
+		return _h1_price;
+    }
+    
+    double getH2Price() const{
+		return _h2_price;
+    }
+    
+    double getH3Price() const{
+		return _h3_price;
+    }
+    
+    double getH4Price() const{
+		return _h4_price;
+    }
+    
+    double getH5Price() const{
+		return _h5_price;
+    }
+    
     std::string getGroup() const override;
     
     int getAction() const override;

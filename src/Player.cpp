@@ -1,8 +1,7 @@
 #include "Player.hpp"
 
 //TODO: incorporate in qt (ako ostane vremena) neka za sada bude arg kom linije
-std::vector<Player*> Player::initializePlayers(int numPlayers){
-    
+std::vector<Player*> Player::initializePlayers(int numPlayers){   
     std::vector<Player*> players;
     Player* p;
     std::string name;
@@ -132,7 +131,7 @@ bool Player::check_properties(Property* p)
 		count = 1;
 	for(; i < my_properties.size(); i++)
 	{
-		if(my_properties[i]->getColour() == colour)
+		if(my_properties[i]->getColour() == colour && my_properties[i]->getNumBuildings() == 0)
 			count ++;
 	}		
 	
@@ -159,4 +158,9 @@ int Player::check_railroads()
 
 void Player::add_space(Space* s){
     owned_spaces.push_back(s);
+}
+
+void Player::init_wallet()
+{
+	m_wallet = 1500;
 }

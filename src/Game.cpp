@@ -76,8 +76,18 @@ void Game::pay_rent(Space* space, Player* player)
 	{
 		Property* p = (Property*)space;
 		amount = p->getRentPrice();
-		if(player->check_properties(p) && p->getNumBuildings() == 0)
+		if(player->check_properties(p))
 			amount *= 2;
+		else if(p->getNumBuildings() == 1)
+			amount = p->getH1Price();
+		else if(p->getNumBuildings() == 2)
+			amount = p->getH2Price();
+		else if(p->getNumBuildings() == 3)
+			amount = p->getH3Price();
+		else if(p->getNumBuildings() == 4)
+			amount = p->getH4Price();
+		else if(p->getNumBuildings() == 5)
+			amount = p->getH5Price();
 	}
 	else if (type == "UTILITY")
 	{
@@ -134,6 +144,9 @@ Game::Game(int numPlayers){
     
     // Init players
     std::vector<Player*> players = Player::initializePlayers(numPlayers);
+	unsigned i = 0;
+	for(i=0; i < players.size(); i++)
+		players[i]->init_wallet();
     std::copy(players.cbegin(), players.cend(), std::back_inserter(m_players));
     
     // Set first player
