@@ -106,6 +106,7 @@ void MainWindow::createDockWindows()
 	while(i < numOfPlayers) {
 		tab = new QLabel();
 		tab->setText(QString("Player " + QString().setNum(i+1)) + " info");
+
 		player_tabs.push_back(tab);
 		++i;
 	}

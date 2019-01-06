@@ -3,6 +3,8 @@
 #include "Space.hpp"
 #include <iostream>
 
+class Player;
+
 class ActionSpace : public Space{
 
 	public:
@@ -30,6 +32,8 @@ class ActionSpace : public Space{
         int getNumBuildings() const override;
         
         std::string getGroup() const override;
+        
+        void doAction(Player *p);
 
  		enum class EnumActionSpace
          	{

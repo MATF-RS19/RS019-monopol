@@ -5,6 +5,7 @@ Bank::Bank(){
 }
 
 void Bank::sellSpace(Player *player, Space *space){
+    //TODO: check balance in Player::pay
     player->pay(space->getBuyPrice());
     player->add_space(space);
     space->setOwned();

@@ -37,7 +37,7 @@ std::vector<Property*> Property::initialize_properties(){
 	Property* p22 = new Property(400, 50, 200, 600, 1400, 1700, 2000, 200, 200, "Boardwalk", "D_BLUE");
 	
 	std::vector<Property*> properties = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22};
-	// brisanje promenljivih?
+	
 	return properties;
 }
 
