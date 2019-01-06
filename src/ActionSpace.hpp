@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Space.hpp"
-#include "Player.hpp"
+#include "Player.hpp" 
 #include <iostream>
 
 class Player;
@@ -38,6 +38,10 @@ class ActionSpace : public Space{
 		
 		std::string getType() const{
 			return "ACTION SPACE";
+		}
+		
+		bool isOnMortgage() const{
+			return false;
 		}
 
  		enum class EnumActionSpace

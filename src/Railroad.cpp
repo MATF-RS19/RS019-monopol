@@ -26,3 +26,13 @@ std::vector<Railroad*> Railroad::initialize_railroads()
 int Railroad::getAction() const{
     return -1;
 }
+
+void Railroad::setMortgage(Player* p) {
+	_is_on_mortgage = true;
+	p->receive(_mortgage);
+}
+
+void Railroad::revertMortgage(Player* p) {
+	_is_on_mortgage = false;
+	p->pay(_mortgage*1.1);
+}

@@ -48,7 +48,7 @@ void ActionSpace::doAction(Player* p) {
 	
 	if(action == 0)
 	{
-		
+ 
 	}
 	else if(action == 1)
 	{
@@ -60,16 +60,16 @@ void ActionSpace::doAction(Player* p) {
 	}
 	else if(action == 3)
 	{
-		p->pay(200);
+		p->pay((double)200);
 	}
 	// action 4 (free parking) -- nothing happens
 	else if(action == 5)
 	{
-		p->pay(75);
+		p->pay((double)75);
 	}
 	else if(action == 6)
 	{
-		p->receive(200);
+		p->receive((double)200);
 	}
 	else if(action == 7)
 	{
@@ -78,7 +78,7 @@ void ActionSpace::doAction(Player* p) {
 		{
 			if(p->get_num_turns() == 3)
 			{
-				p->pay(50);
+				p->pay((double)50);
 				p->release_from_jail();
 			}
 			else

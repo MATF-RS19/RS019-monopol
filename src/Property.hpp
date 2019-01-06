@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <string>
 #include <vector>
+
+class Player;
 
 class Property : public Space
 {
@@ -34,6 +37,14 @@ public:
     
     double getRentPrice() const{
 		return _rent_price;
+    }
+    
+    double getMortgage() const{
+		return _mortgage;
+    }
+    
+    double getHousePrice() const{
+		return _house_price;
     }
     
     void setNumBuildings(int num){
@@ -81,6 +92,12 @@ public:
 		return _h5_price;
     }
     
+    void setMortgage(Player* p);
+    void revertMortgage(Player* p);
+	bool isOnMortgage() const{
+		return _is_on_mortgage;
+	}
+    
     std::string getGroup() const override;
     
     int getAction() const override;
@@ -90,6 +107,7 @@ private:
 	std::string _name, _colour;
     int _num_buildings = 0;
     bool _owned = false;
+	bool _is_on_mortgage = false;
     //FIXME: should be something like ref to Player object
     int id_owner;
     

@@ -3,21 +3,16 @@
 #define NUM_CARDS 17
 
 void Board::printBoard() const{
-    
     for(const auto i : m_spaces){
         i->printSpace();
     }
-    
 }
 
 std::vector<Space*> Board::getSpaces() const{
-    
     return m_spaces;
-    
 }
 
 Card Board::drawCard(){
-    
     Card result = *m_chanceDeck.at(0);
     m_chanceDeck.erase(m_chanceDeck.begin());
     //TODO: if not jail card put back, else add the card to player

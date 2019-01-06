@@ -23,3 +23,13 @@ std::vector<Utility*> Utility::initialize_utilities()
 int Utility::getAction() const{
     return -1;
 }
+
+void Utility::setMortgage(Player* p) {
+	_is_on_mortgage = true;
+	p->receive(_mortgage);
+}
+
+void Utility::revertMortgage(Player* p) {
+	_is_on_mortgage = false;
+	p->pay(_mortgage*1.1);
+}

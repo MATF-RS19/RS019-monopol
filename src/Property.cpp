@@ -3,13 +3,26 @@
 #define NUM_PROPS 22
 
 void Property::printSpace() const{
-
 	std::cout << "Property: " << Property::getName() << ", price: " << Property::getBuyPrice() << std::endl;
-
 }
 
 std::string Property::getGroup() const{
     return this->getColour();
+}
+
+void Property::setMortgage(Player* p) {
+	if(getNumBuildings() > 0)
+	{
+		std::cout << "Sell your houses first!" << std::endl;
+		return;
+	}
+	_is_on_mortgage = true;
+	p->receive((double)_mortgage);
+}
+
+void Property::revertMortgage(Player* p) {
+	_is_on_mortgage = false;
+	p->pay((double)_mortgage*1.1);
 }
 
 std::vector<Property*> Property::initialize_properties(){

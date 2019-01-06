@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
+
+class Player;
 
 class Utility : public Space
 {
@@ -27,6 +30,10 @@ public:
 	std::string getType() const{
 		return "UTILITY";
     }
+    
+    double getMortgage() const{
+		return _mortgage;
+    }
 	
 	bool isOwned() const override{
         return _owned;
@@ -49,11 +56,18 @@ public:
     std::string getGroup() const override;
     
     int getAction() const override;
+	
+	void setMortgage(Player* p);
+	void revertMortgage(Player* p);
+	bool isOnMortgage() const {
+		return _is_on_mortgage;
+	}
 
 private:
 	double _buy_price, _mortgage;
 	std::string _group;
     bool _owned = false;
+	bool _is_on_mortgage = false;
     int id_owner;
 };
 

@@ -8,6 +8,10 @@
 #include <map>
 #include <vector>
 
+class Property;
+class Utility;
+class Railroad;
+
 class Coordinate {
 public:
 	Coordinate(unsigned x, unsigned y);
@@ -35,9 +39,9 @@ public:
 	void send_to_jail();
 	void release_from_jail();
 
-	int balance() const;
-	void pay(int amount);
-	void receive(int amount);
+	std::pair<double, double> balance();
+	void pay(double amount);
+	void receive(double amount);
 
 	//const Coordinate& position() const; NOTE: uncomment later
 	void move();
@@ -47,6 +51,7 @@ public:
     //TODO: implementacija move semantike
     
 	void init_wallet();
+	bool is_bankrupt(double amount);
 	
 	void set_name(std::string name);
     

@@ -66,17 +66,52 @@ int Player::get_num_turns() const
 	return num_turns_in_jail;
 }
 
-int Player::balance() const
+bool Player::is_bankrupt(double amount)
 {
-	return m_wallet;
+	double total = balance().second;
+	if (amount > total)
+		return true;
+	else
+		return false;
 }
 
-void Player::pay(int amount)
+std::pair<double, double> Player::balance()
+{
+	std::pair<double, double> balance;
+	balance.first = m_wallet;
+	
+	double props_val = 0;
+	double utils_val = 0;
+	double rails_val = 0;
+	
+	std::vector<Property*> my_props = get_properties();
+	for(unsigned i=0; i<my_props.size(); i++)
+	{
+		props_val += my_props[i]->getMortgage();
+		int buildings = my_props[i]->getNumBuildings();
+		if(buildings)
+			props_val += buildings * my_props[i]->getHousePrice()/2; 
+	}
+	
+	// both utils have the same mortgage value
+	std::vector<Utility*> my_utils = get_utilities();
+	utils_val += my_utils[0]->getMortgage() * my_utils.size();
+	
+	// all rails have the same mortgage value
+	std::vector<Railroad*> my_rails = get_railroads();
+	rails_val += my_rails[0]->getMortgage() * my_rails.size();
+	
+	balance.second = props_val + utils_val + rails_val + m_wallet;
+	
+	return balance;
+}
+
+void Player::pay(double amount)
 {
 	m_wallet -= amount;
 }
 
-void Player::receive(int amount)
+void Player::receive(double amount)
 {
 	m_wallet += amount;
 }
