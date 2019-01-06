@@ -1,14 +1,14 @@
 #include "Utility.hpp"
 
-void Utility::printSpace() const{
+void Utility::printSpace() const {
 	std::cout << "Utility: " << Utility::getName() << ", price: " << Utility::getBuyPrice() << std::endl; 
 }
 
-std::string Utility::getGroup() const{
+std::string Utility::getGroup() const {
     return "Utility";
 }
 
-int Utility::getNumBuildings() const{
+int Utility::getNumBuildings() const {
     return -1;
 }
 
@@ -20,7 +20,7 @@ std::vector<Utility*> Utility::initialize_utilities()
 	return utilities;
 }
 
-int Utility::getAction() const{
+int Utility::getAction() const {
     return -1;
 }
 

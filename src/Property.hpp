@@ -18,77 +18,77 @@ public:
 
 	virtual void printSpace() const override;
 
-	std::string getName() const{
+	std::string getName() const {
 		return _name;
 	}
 	
-	std::string getColour() const{
+	std::string getColour() const {
         return _colour;
     }
 
-	double getBuyPrice() const{
+	double getBuyPrice() const {
         //std::cout << "Property" << std::endl;
 		return _buy_price;
 	}
 	
-	int getNumBuildings() const{
+	int getNumBuildings() const {
         return _num_buildings;
     }
     
-    double getRentPrice() const{
+    double getRentPrice() const {
 		return _rent_price;
     }
     
-    double getMortgage() const{
+    double getMortgage() const {
 		return _mortgage;
     }
     
-    double getHousePrice() const{
+    double getHousePrice() const {
 		return _house_price;
     }
     
-    void setNumBuildings(int num){
+    void setNumBuildings(int num) {
         _num_buildings = num;
     }
     
-    bool isOwned() const override{
+    bool isOwned() const override {
         return _owned;
     }
     
-    void setOwned() override{
+    void setOwned() override {
         _owned = true;
     }
     
-    void setOwner(int id){
+    void setOwner(int id) {
         std::cout << "Hey" << std::endl;
         id_owner = id;
     }
     
-    int getOwner() const{
+    int getOwner() const {
         return id_owner;
     }
     
-    std::string getType() const{
+    std::string getType() const {
 		return "PROPERTY";
     }
     
-    double getH1Price() const{
+    double getH1Price() const {
 		return _h1_price;
     }
     
-    double getH2Price() const{
+    double getH2Price() const {
 		return _h2_price;
     }
     
-    double getH3Price() const{
+    double getH3Price() const {
 		return _h3_price;
     }
     
-    double getH4Price() const{
+    double getH4Price() const {
 		return _h4_price;
     }
     
-    double getH5Price() const{
+    double getH5Price() const {
 		return _h5_price;
     }
     

@@ -85,7 +85,8 @@ std::pair<double, double> Player::balance()
 	double rails_val = 0;
 	
 	std::vector<Property*> my_props = get_properties();
-	for(unsigned i=0; i<my_props.size(); i++)
+	unsigned size = my_props.size();
+	for(unsigned i=0; i<size; i++)
 	{
 		props_val += my_props[i]->getMortgage();
 		int buildings = my_props[i]->getNumBuildings();

@@ -1,17 +1,17 @@
 #include "ActionSpace.hpp" 
 
-std::string ActionSpace::getName() const{
+std::string ActionSpace::getName() const {
     return "ActionSpace";
 }
 
 //NOTE: These are all dummy functions overridden from Space class
 //      and should never be called
 //TODO: Find better solution for this kind of ineheritance
-void ActionSpace::setOwner(int id){
+void ActionSpace::setOwner(int id) {
     (void)id;
 }
 
-int ActionSpace::getOwner() const{
+int ActionSpace::getOwner() const {
     return -1;
 }
 
@@ -23,23 +23,23 @@ bool ActionSpace::isOwned() const {
     return false;    
 }
 
-double ActionSpace::getBuyPrice() const{
+double ActionSpace::getBuyPrice() const {
     return -1;
 }
 
-int ActionSpace::getAction() const{
+int ActionSpace::getAction() const {
     return m_action;
 }
 
-int ActionSpace::getNumBuildings() const{
+int ActionSpace::getNumBuildings() const {
     return -1;
 }
 
-std::string ActionSpace::getGroup() const{
+std::string ActionSpace::getGroup() const {
     return "ActionSpace";
 }
 
-void ActionSpace::printSpace() const{
+void ActionSpace::printSpace() const {
     std::cout << ActionSpace::getAction() << std::endl;
 }
 

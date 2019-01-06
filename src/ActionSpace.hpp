@@ -6,8 +6,7 @@
 
 class Player;
 
-class ActionSpace : public Space{
-
+class ActionSpace : public Space {
 	public:
 		ActionSpace(int action)
         	: m_action(action)
@@ -36,27 +35,25 @@ class ActionSpace : public Space{
 		
 		void doAction(Player* p);
 		
-		std::string getType() const{
+		std::string getType() const {
 			return "ACTION SPACE";
 		}
 		
-		bool isOnMortgage() const{
+		bool isOnMortgage() const {
 			return false;
 		}
 
  		enum class EnumActionSpace
-         	{
-            	CHANCE,
-             	COMMUNITY_CHEST,
-                GOTO_JAIL,
-                INCOME_TAX,
-                FREE_PARKING,
-                LUXURY_TAX,
-                GO,
-                JAIL
-            };
-
-	private:
-		int m_action;
-
+		{
+			CHANCE,
+			COMMUNITY_CHEST,
+			GOTO_JAIL,
+			INCOME_TAX,
+			FREE_PARKING,
+			LUXURY_TAX,
+			GO,
+			JAIL
+		};
+private:
+	int m_action;
 };

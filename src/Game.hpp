@@ -6,8 +6,7 @@
 #include <algorithm>
 #include <vector>
 
-class Game{
-    
+class Game {
 public:
     Game(int numPlayers);
     //f-je:
@@ -37,21 +36,11 @@ public:
     
     void movePlayer(Player *player, int steps);
     
-    
-    //TODO: remove me, i don't need to exist
-    Bank* getBank() const{
-        return m_bank;
-    }
-    //TODO: remove me
-    Board* getBoard() const{
-        return m_board;
-    }
-    
-    int getDice(){
+    int getDice() {
 		return _dice;
     }
     
-    void setDice(int num){
+    void setDice(int num) {
 		_dice = num;
     }
     

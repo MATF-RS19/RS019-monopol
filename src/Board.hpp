@@ -14,8 +14,7 @@
 #include "Property.hpp"
 #include <cstring>
 
-class Board{
-
+class Board {
 	public:
 		Board();
 
