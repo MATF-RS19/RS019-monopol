@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStandardItemModel>
+#include <QTableView>
+#include <QTextEdit>
 #include "Game.hpp"
 
 class QListWidget;
@@ -36,6 +39,11 @@ private:
 	QWidget* dice_widget;
 	std::vector<QLabel*> player_tabs; 
 	std::map<int, QPixmap*> die_sides;
+
+    //Added in order to be visible inside of function for creating docks
+    QStandardItemModel *model;
+    QTableView *view;
+    QTextEdit *infoText;
 
 	static Game* game;
 };

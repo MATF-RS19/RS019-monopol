@@ -2,8 +2,6 @@
 
 #include "Space.hpp"
 #include "Player.hpp"
-#include <string>
-#include <vector>
 
 class Player;
 
@@ -17,6 +15,8 @@ public:
 	static std::vector<Property*> initialize_properties();
 
 	virtual void printSpace() const override;
+
+    std::string getInfo() const override;
 
 	std::string getName() const {
 		return _name;

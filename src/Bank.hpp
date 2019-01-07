@@ -15,7 +15,7 @@ class Bank{
   
 public:
     Bank();
-    void sellProperty(Player *player, Property *property);
+
     void sellSpace(Player *player, Space *space);
     void sellHouse(Player *player);
     int getHouses() const;

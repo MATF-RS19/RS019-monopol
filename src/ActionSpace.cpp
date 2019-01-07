@@ -11,6 +11,10 @@ void ActionSpace::setOwner(int id) {
     (void)id;
 }
 
+std::string ActionSpace::getInfo() const{
+    return "";
+}
+
 int ActionSpace::getOwner() const {
     return -1;
 }
