@@ -8,12 +8,7 @@
 
 class Game {
 public:
-    Game(int numPlayers);
-    //f-je:
-    // pokretanje igre + petlja
-    //numplayers se zadaje iz maina(ako se stigne iz menija), bice argument konstruktora
-    //u mainu ce biti i podaci o igracima
-//     void startGame();
+    Game(int numPlayers, std::vector<std::string> player_names);
     
     std::pair<int, int> throwDice();
     
@@ -28,8 +23,6 @@ public:
     Space* getCurrentPlayerSpace() const;
     
     void nextPlayer();
-    
-    //void sellToCurrentPlayer();
     
     void build(Player* player, Property* property);
 	void pay_rent(Space* space, Player* player);

@@ -1,9 +1,14 @@
 #include <QtWidgets>
 #include <QMessageBox>
+#include <QInputDialog>
+#include <QString>
 
 #include "mainwindow.h"
+#include "Game.hpp"
 
 int numOfPlayers;
+
+QStandardItemModel *model;
 
 MainWindow::MainWindow()
 {
@@ -26,19 +31,87 @@ MainWindow::MainWindow()
 		numOfPlayers = 4;
 	}
 
-    QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setSceneRect(0, 0, 885, 885);
-    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
-    QPixmap pix("./images/monopoly_board.jpg");
-    scene->setBackgroundBrush(QPixmap(pix));
+    //Create vector of names
+    std::vector<std::string> names(numOfPlayers);
 
-    QGraphicsView *view = new QGraphicsView(this);
-    view->setScene(scene);
+    //Ask players to input their names
+    bool ok;
+    for(int i = 0; i < numOfPlayers; i++){
+        QString name = QInputDialog::getText(
+                    this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
+                    QString::null, &ok
+                    );
+        if(ok && !name.isEmpty())
+            names.push_back(name.toStdString());
+        else
+            i--;
+    }
+
+    //Create game for selected number of players
+    Game g(numOfPlayers, names);
+
+    //Get spaces
+    std::vector<Space*> spaces = g.getBoard()->getSpaces();
+
+    //Create model for all spaces on the board
+	model = new QStandardItemModel(11,11);
+
+    //Populate model with space images
+    int i=10,j=10,i_increment=0,j_increment=-1;
+        foreach(const auto& s, spaces){
+            QStandardItem *spaceItem = new QStandardItem();
+            spaceItem->setText(QString::fromStdString(s->getName()));
+            //spaceItem->setData(QVariant(QPixmap::fromImage(image)), Qt::DisplayRole);
+            //QBrush *qb = new QBrush(QImage("/images/property1.jpg"));
+            //spaceItem->setForeground(*qb);
+            //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
+            //spaceItem->setIcon(QIcon(":MyResources/images/monopoly_board.jpg"));
+
+            model->setItem(i,j,spaceItem);
+
+            i+=i_increment;
+            j+=j_increment;
+            if(i==10 && j==0){
+                i_increment=-1;
+                j_increment=0;
+            }
+            if(i==0 && j==0){
+                i_increment=0;
+                j_increment=1;
+            }
+            if(i==0 && j==10){
+                i_increment=1;
+                j_increment=0;
+            }
+
+        }
+	
+//     QGraphicsScene *scene = new QGraphicsScene(this);
+//     scene->setSceneRect(0, 0, 885, 885);
+//     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+// 
+//     QPixmap pix("./images/monopoly_board.jpg");
+//     scene->setBackgroundBrush(QPixmap(pix));
+
+    QTableView *view = new QTableView();
+    view->setModel(model);
     view->resize(500, 500);
+    view->setStyleSheet("selection-background-color : red;");
+    view->setSortingEnabled(false);
 
-    view->setRenderHint(QPainter::Antialiasing);
-    view->setDragMode(QGraphicsView::ScrollHandDrag);
+
+
+    QModelIndexList selected = view->selectionModel()->selectedIndexes();
+    foreach(QModelIndex i, selected){
+        int row = i.row();
+        int col = i.column();
+        QMessageBox msgBox;
+        msgBox.setText(tr("Hello!"));
+        msgBox.exec();
+    }
+    //view->setRenderHint(QPainter::Antialiasing);
+    //view->setDragMode(QGraphicsView::ScrollHandDrag);
 
     setCentralWidget(view);
     createDockWindows();

@@ -67,7 +67,7 @@ public:
     int get_pos() const;
     void set_pos(int pos);
 
-    static std::vector<Player*> initializePlayers(int numPlayers);
+   static std::vector<Player*> initializePlayers(std::vector<std::string> player_names);
     
     std::vector<Property*> get_properties() const;
     std::vector<Utility*> get_utilities() const;

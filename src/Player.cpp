@@ -1,17 +1,15 @@
 #include "Player.hpp"
 
 //TODO: incorporate in qt (ako ostane vremena) neka za sada bude arg kom linije
-std::vector<Player*> Player::initializePlayers(int numPlayers){   
+std::vector<Player*> Player::initializePlayers(std::vector<std::string> player_names){
     std::vector<Player*> players;
     Player* p;
     std::string name;
-    while(numPlayers){
+
+    for(int i = 0; i < player_names.size(); i++){
         p = new Player();
-        std::cout << "Enter your name: " << std::endl;
-        std::cin >> name;
-        p->set_name(name);
+        p->set_name(player_names.at(i));
         p->set_pos(0);
-        numPlayers--;
         players.push_back(p);
     }
     
