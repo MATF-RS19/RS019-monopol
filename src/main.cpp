@@ -1,13 +1,16 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
-
+#include <QApplication>
+#include "mainwindow.h"
 #include "Board.hpp"
 #include "Game.hpp"
 
 int main(int argc, char** argv)
 {
     std::srand(unsigned(std::time(0)));
+    
+    QApplication app(argc, argv);
     
     // Game g;
     
@@ -21,30 +24,30 @@ int main(int argc, char** argv)
  	
     //b.printBoard();
     
-    Game g{2};
+//     Game g{2};
     //g.showBoard();
     //g.printPlayers();
 /*    
     auto p = g.throwDice();
     std::cout << p.first << ", " << p.second << std::endl;*/
     
-    Board *b = g.getBoard();
+//     Board *b = g.getBoard();
 //     std::vector<Space*> group = b->getSpacesByGroup("ORANGE");
 //     for(auto i : group){
 //         std::cout << i->getName() << "[GROUP]" << std::endl;
 //     }
     
     
-    std::vector<Space*> spaces = b->getSpaces();
-    for(auto i : spaces){
-        std::cout << "[SPACE]" << i->getName() << std::endl;
-    }
+//     std::vector<Space*> spaces = b->getSpaces();
+//     for(auto i : spaces){
+//         std::cout << "[SPACE]" << i->getName() << std::endl;
+//     }
 //     Space* firstt = spaces.at(1);
 //     std::cout << "===============\n";
 //     std::cout << b->getSpaces().at(0)->getName() << std::endl;
 //     std::cout << b->getSpaces().at(2)->getName() << std::endl;
 //     
-     Bank *bank = g.getBank();
+//      Bank *bank = g.getBank();
 //     bank->sellProperty(g.getCurrentPlayer(), static_cast<Property*>(firstt));
     
 //     std::cout << static_cast<Property*>(firstt)->isOwned() << std::endl;
@@ -54,7 +57,7 @@ int main(int argc, char** argv)
 //     for(auto i : props){
 //         std::cout << cur->get_name() << " owns " << i->getName() << std::endl;
 //     }
-    
+ /*   
     std::cout << "buildings present on" << static_cast<Property*>(spaces.at(1))->getName() << std::endl;
     std::cout << static_cast<Property*>(spaces.at(1))->getNumBuildings() << std::endl;
     //g.nextPlayer();
@@ -65,7 +68,7 @@ int main(int argc, char** argv)
     bank->sellSpace(cur, static_cast<Property*>(spaces.at(3)));
     g.build(cur, static_cast<Property*>(spaces.at(1)));
     g.build(cur, static_cast<Property*>(spaces.at(1)));
-    
+    */
     //std::cout << "buildings present on" << static_cast<Property*>(spaces.at(1))->getName() << std::endl;
     //std::cout << static_cast<Property*>(spaces.at(1))->getNumBuildings() << std::endl;
     
@@ -82,7 +85,7 @@ int main(int argc, char** argv)
 //     for(auto i : spcs){
 //         std::cout << cur->get_name() << " owns[sellspace] " << i->getName() << std::endl;
 //     }
-    
+    /*
     std::vector<Space*> spcs;
     Space* landed;
     char wait;
@@ -101,7 +104,7 @@ int main(int argc, char** argv)
             std::cout << "COMMUNITY_CHEST " << drawed.getMsg() << std::endl;
             std::cin >> wait;
         }
-    }
+    }*/
 //         char answer;
 //         if(!landed->isOwned()){
 //             std::cout << "Do you want to buy " << landed->getName() << " for " << landed->getBuyPrice() << "?" << std::endl;
@@ -129,11 +132,9 @@ int main(int argc, char** argv)
 //     std::cout << cur->getId() << std::endl;
 //     g.build(cur,buildOnMe);
 //     std::cout << "buildings present on" << buildOnMe->getName() << std::endl << buildOnMe->getNumBuildings();
+
+    MainWindow main;
+    main.show();
+    return app.exec();
     
-	return 0;
 }
-
-
-
-
-
