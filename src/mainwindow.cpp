@@ -245,30 +245,25 @@ void MainWindow::roll_dice()
 	Space* curr_space = game->getCurrentPlayerSpace();
 	Player* curr_player = game->getCurrentPlayer();
 
-	// if space is property and is not owned
-	if (curr_space->getType() == "PROPERTY" && !curr_space->isOwned()) {
+	// if space is not action space and is not owned
+	if (curr_space->getType() != "ACTION SPACE" && !curr_space->isOwned()) {
 		// display message
 		QMessageBox buy_msg;
 		buy_msg.setWindowTitle(QString::fromStdString(curr_space->getName()));
-		buy_msg.setText("Do you want to buy this property?");
+		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
 		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
 		QPushButton *noButton = buy_msg.addButton(QMessageBox::No);
 		buy_msg.exec();
 
 		if (buy_msg.clickedButton() == yesButton) {
-			// TODO: buy property
-			// game->getBank()->sellProperty(curr_player, curr_space);
-			// 											  ^^^^^^^^^^
-			// 									FIXME: i am Space*, but i have to be Property*
-		} else if (buy_msg.clickedButton() == noButton) {
-			// ??? 
+			game->getBank()->sellSpace(curr_player, curr_space);
 		}
-
 	} else if (curr_space->getType() == "PROPERTY" && curr_space->isOwned()) {
 		// TODO: current player: pay rent or upgrade
+		game->pay_rent(curr_space, curr_player);
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// TODO: do action on player
-	}
+	} 
 
 	// if player got dice with different sides, switch to next player
 	if (dice.first != dice.second) {
