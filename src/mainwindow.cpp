@@ -7,6 +7,7 @@
 #include "mainwindow.h"
 #include "Game.hpp"
 #include "Player.hpp"
+#include "Bank.hpp"
 
 int numOfPlayers;
 Game* MainWindow::game;
@@ -19,12 +20,12 @@ MainWindow::MainWindow()
 	
 	mainMenu(names);
 
-	die_sides[1] = new QPixmap("../images/die1.png");
-	die_sides[2] = new QPixmap("../images/die2.png");
-	die_sides[3] = new QPixmap("../images/die3.png");
-	die_sides[4] = new QPixmap("../images/die4.png");
-	die_sides[5] = new QPixmap("../images/die5.png");
-	die_sides[6] = new QPixmap("../images/die6.png");
+	die_sides[1] = new QPixmap("./images/die1.png");
+	die_sides[2] = new QPixmap("./images/die2.png");
+	die_sides[3] = new QPixmap("./images/die3.png");
+	die_sides[4] = new QPixmap("./images/die4.png");
+	die_sides[5] = new QPixmap("./images/die5.png");
+	die_sides[6] = new QPixmap("./images/die6.png");
 
     //Create game for selected number of players
     game = new Game(numOfPlayers, names);
@@ -169,8 +170,8 @@ void MainWindow::createDockWindows()
     die_1 = new QLabel(this);
 	die_2 = new QLabel(this);
 	dice_widget = new QWidget(this);
-	die_1->setPixmap(QPixmap("../images/die0.png"));
-	die_2->setPixmap(QPixmap("../images/die0.png"));
+	die_1->setPixmap(QPixmap("./images/die0.png"));
+	die_2->setPixmap(QPixmap("./images/die0.png"));
 
 	QHBoxLayout *dice_layout = new QHBoxLayout();
 	dice_layout->addWidget(die_1);
@@ -196,25 +197,32 @@ void MainWindow::createDockWindows()
     // init widgets
     left_dock = new QWidget();
 
-    players = new QTabWidget();
+    players_widget = new QTabWidget();
+	std::vector<Player*> players;
+	players = game->getPlayers();	
 
 	QLabel *tab;
 	int i = 0;
 	while(i < numOfPlayers) {
 		tab = new QLabel();
-		tab->setText(QString("Player " + QString().setNum(i+1)) + " info");
+		tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name()) 
+							// TODO: banka jos ne da novce 
+							// + "\nMoney: " + QString::number(players[0]->balance().first)
+							// + "\nProperty value: " + QString::number(players[0]->balance().second)
+					));
+		tab->setAlignment(Qt::AlignTop);
 
 		player_tabs.push_back(tab);
 		++i;
 	}
 
 	for (int i = 0; i < numOfPlayers; i++) {
-		players->addTab(player_tabs[i], QString("Player " + QString().setNum(i+1)));
+		players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->get_name()));
 	}
 
     // set layout
     QVBoxLayout *v_layout2 = new QVBoxLayout();
-    v_layout2->addWidget(players);
+    v_layout2->addWidget(players_widget);
 
     // set & add left dock widget
     left_dock->setLayout(v_layout2);
@@ -235,6 +243,7 @@ void MainWindow::roll_dice()
 	game->movePlayer(game->getCurrentPlayer(), dice.first+dice.second);
 
 	Space* curr_space = game->getCurrentPlayerSpace();
+	Player* curr_player = game->getCurrentPlayer();
 
 	// if space is property and is not owned
 	if (curr_space->getType() == "PROPERTY" && !curr_space->isOwned()) {
@@ -248,6 +257,9 @@ void MainWindow::roll_dice()
 
 		if (buy_msg.clickedButton() == yesButton) {
 			// TODO: buy property
+			// game->getBank()->sellProperty(curr_player, curr_space);
+			// 											  ^^^^^^^^^^
+			// 									FIXME: i am Space*, but i have to be Property*
 		} else if (buy_msg.clickedButton() == noButton) {
 			// ??? 
 		}

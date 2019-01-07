@@ -30,7 +30,7 @@ private:
     QWidget* bottom_dock;
     QListWidget* description;
     QWidget* left_dock;
-    QTabWidget* players;
+    QTabWidget* players_widget;
     QLabel* die_1;
 	QLabel* die_2;
 	QWidget* dice_widget;
