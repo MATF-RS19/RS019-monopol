@@ -2,57 +2,35 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QString>
+#include <iostream>
 
 #include "mainwindow.h"
 #include "Game.hpp"
+#include "Player.hpp"
 
 int numOfPlayers;
-
+Game* MainWindow::game;
 QStandardItemModel *model;
 
 MainWindow::MainWindow()
 {
-	QMessageBox msgBox;
-	msgBox.setText(tr("Hello! Select number of players!"));
-	QPushButton* btn1 = msgBox.addButton(QString("One"), QMessageBox::ActionRole);
-	QPushButton* btn2 = msgBox.addButton(QString("Two"), QMessageBox::ActionRole);
-	QPushButton* btn3 = msgBox.addButton(QString("Three"), QMessageBox::ActionRole);
-	QPushButton* btn4 = msgBox.addButton(QString("Four"), QMessageBox::ActionRole);
-
-	msgBox.exec();
-
-	if (msgBox.clickedButton() == btn1) {
-	   	numOfPlayers = 1;
-	} else if (msgBox.clickedButton() == btn2) {
-		numOfPlayers = 2;
-	} else if (msgBox.clickedButton() == btn3) {
-		numOfPlayers = 3;
-	} else if (msgBox.clickedButton() == btn4) {
-		numOfPlayers = 4;
-	}
-
-
     //Create vector of names
     std::vector<std::string> names(numOfPlayers);
+	
+	mainMenu(names);
 
-    //Ask players to input their names
-    bool ok;
-    for(int i = 0; i < numOfPlayers; i++){
-        QString name = QInputDialog::getText(
-                    this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
-                    QString::null, &ok
-                    );
-        if(ok && !name.isEmpty())
-            names.push_back(name.toStdString());
-        else
-            i--;
-    }
+	die_sides[1] = new QPixmap("../images/die1.png");
+	die_sides[2] = new QPixmap("../images/die2.png");
+	die_sides[3] = new QPixmap("../images/die3.png");
+	die_sides[4] = new QPixmap("../images/die4.png");
+	die_sides[5] = new QPixmap("../images/die5.png");
+	die_sides[6] = new QPixmap("../images/die6.png");
 
     //Create game for selected number of players
-    Game g(numOfPlayers, names);
+    game = new Game(numOfPlayers, names);
 
     //Get spaces
-    std::vector<Space*> spaces = g.getBoard()->getSpaces();
+    std::vector<Space*> spaces = game->getBoard()->getSpaces();
 
     //Create model for all spaces on the board
 	model = new QStandardItemModel(11,11);
@@ -116,6 +94,46 @@ MainWindow::MainWindow()
     setCentralWidget(view);
     createDockWindows();
 	setWindowState(Qt::WindowMaximized);
+
+	connect(roll_button, SIGNAL(clicked(bool)),
+			this, SLOT(roll_dice()));
+}
+
+void MainWindow::mainMenu(std::vector<std::string>& names) 
+{
+	// ask for number of players
+	QMessageBox msgBox;
+	msgBox.setText(tr("Hello! Select number of players!"));
+	QPushButton* btn1 = msgBox.addButton(QString("One"), QMessageBox::ActionRole);
+	QPushButton* btn2 = msgBox.addButton(QString("Two"), QMessageBox::ActionRole);
+	QPushButton* btn3 = msgBox.addButton(QString("Three"), QMessageBox::ActionRole);
+	QPushButton* btn4 = msgBox.addButton(QString("Four"), QMessageBox::ActionRole);
+
+	msgBox.exec();
+
+	// set number of players depending on the answer
+	if (msgBox.clickedButton() == btn1) {
+	   	numOfPlayers = 1;
+	} else if (msgBox.clickedButton() == btn2) {
+		numOfPlayers = 2;
+	} else if (msgBox.clickedButton() == btn3) {
+		numOfPlayers = 3;
+	} else if (msgBox.clickedButton() == btn4) {
+		numOfPlayers = 4;
+	}
+	
+	//Ask players to input their names
+    bool ok;
+    for(int i = 0; i < numOfPlayers; i++){
+        QString name = QInputDialog::getText(
+                    this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
+                    QString::null, &ok
+                    );
+        if(ok && !name.isEmpty())
+            names.push_back(name.toStdString());
+        else
+            i--;
+    }
 }
 
 void MainWindow::createDockWindows()
@@ -131,14 +149,12 @@ void MainWindow::createDockWindows()
     buy_button = new QPushButton(tr("Buy"), this);
     roll_button = new QPushButton(tr("Roll"), this);
     upgrade_button = new QPushButton(tr("Upgrade"), this);
-    pass_button = new QPushButton(tr("Pass"), this);
 
     // adding widgets to horizontal layout
     QHBoxLayout *h_layout = new QHBoxLayout();
     h_layout->addWidget(buy_button);
     h_layout->addWidget(roll_button);
     h_layout->addWidget(upgrade_button);
-    h_layout->addWidget(pass_button);
 
     // set layout for bottom dock area widget
     bottom_dock->setLayout(h_layout);
@@ -148,17 +164,24 @@ void MainWindow::createDockWindows()
     addDockWidget(Qt::BottomDockWidgetArea, dock);
 
     // init widgets
-    right_dock = new QWidget();
-    description = new QListWidget();
-    dices = new QLabel();
+    right_dock = new QWidget(this);
+    description = new QListWidget(this);
+    die_1 = new QLabel(this);
+	die_2 = new QLabel(this);
+	dice_widget = new QWidget(this);
+	die_1->setPixmap(QPixmap("../images/die0.png"));
+	die_2->setPixmap(QPixmap("../images/die0.png"));
 
-	// die -- jednina, dice -- mnozina
-    dices->setText(tr("dice"));
+	QHBoxLayout *dice_layout = new QHBoxLayout();
+	dice_layout->addWidget(die_1);
+	dice_layout->addWidget(die_2);
 
+	dice_widget->setLayout(dice_layout);
+	
     // adding widgets to vertical layout
     QVBoxLayout *v_layout = new QVBoxLayout();
     v_layout->addWidget(description);
-    v_layout->addWidget(dices);
+    v_layout->addWidget(dice_widget);
 
     // set layout for right dock area widget
     right_dock->setLayout(v_layout);
@@ -184,7 +207,7 @@ void MainWindow::createDockWindows()
 		player_tabs.push_back(tab);
 		++i;
 	}
-    // TODO: add tabs depending on number of players
+
 	for (int i = 0; i < numOfPlayers; i++) {
 		players->addTab(player_tabs[i], QString("Player " + QString().setNum(i+1)));
 	}
@@ -199,4 +222,44 @@ void MainWindow::createDockWindows()
     dock->setWidget(left_dock);
 
     addDockWidget(Qt::LeftDockWidgetArea, dock);
+}
+
+// roll dice -> move player -> do specific action depending on the current position
+void MainWindow::roll_dice()
+{
+	std::pair<int, int> dice = game->throwDice();
+
+	die_1->setPixmap(*(die_sides[dice.first]));
+	die_2->setPixmap(*(die_sides[dice.second]));
+
+	game->movePlayer(game->getCurrentPlayer(), dice.first+dice.second);
+
+	Space* curr_space = game->getCurrentPlayerSpace();
+
+	// if space is property and is not owned
+	if (curr_space->getType() == "PROPERTY" && !curr_space->isOwned()) {
+		// display message
+		QMessageBox buy_msg;
+		buy_msg.setWindowTitle(QString::fromStdString(curr_space->getName()));
+		buy_msg.setText("Do you want to buy this property?");
+		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
+		QPushButton *noButton = buy_msg.addButton(QMessageBox::No);
+		buy_msg.exec();
+
+		if (buy_msg.clickedButton() == yesButton) {
+			// TODO: buy property
+		} else if (buy_msg.clickedButton() == noButton) {
+			// ??? 
+		}
+
+	} else if (curr_space->getType() == "PROPERTY" && curr_space->isOwned()) {
+		// TODO: current player: pay rent or upgrade
+	} else if (curr_space->getType() == "ACTION SPACE") {
+		// TODO: do action on player
+	}
+
+	// if player got dice with different sides, switch to next player
+	if (dice.first != dice.second) {
+		game->nextPlayer();
+	}
 }
