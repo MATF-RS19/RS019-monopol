@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <string>
 #include <iostream>
 #include <vector>
+
+class Player;
 
 class Railroad : public Space
 {
@@ -14,36 +17,40 @@ public:
 	
 	static std::vector<Railroad*> initialize_railroads();
 
-	std::string getName() const{
+	std::string getName() const {
 		return _name;
 	}
 	
-	std::string getType() const{
+	std::string getType() const {
 		return "RAILROAD";
     }
+    
+    double getMortgage() const {
+		return _mortgage;
+    }
 
-	double getBuyPrice() const{
+	double getBuyPrice() const {
         //std::cout << "Railroad" << std::endl;
 		return _buy_price;
 	}
 	
-	int getRentPrice() const{
+	int getRentPrice() const {
 		return _rent_price;
     }
 	
-	bool isOwned() const override{
+	bool isOwned() const override {
         return _owned;
     }
 	
-	void setOwner(int id){
+	void setOwner(int id) {
         id_owner = id;
     }
     
-    int getOwner() const{
+    int getOwner() const {
         return id_owner;
     }
 	
-	void setOwned(){
+	void setOwned() {
         _owned = true;
     }
 
@@ -54,10 +61,17 @@ public:
     std::string getGroup() const override;
     
     int getAction() const override;
+	
+	void setMortgage(Player* p);
+	void revertMortgage(Player* p);
+	bool isOnMortgage() const {
+		return _is_on_mortgage;
+	}
     
 private:
 	double _buy_price,  _rent_price, _mortgage;
 	std::string _name;
     bool _owned = false;
+	bool _is_on_mortgage = false;
     int id_owner;
 };

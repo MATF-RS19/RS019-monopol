@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Space.hpp"
+#include "Player.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
+
+class Player;
 
 class Utility : public Space
 {
@@ -16,31 +19,35 @@ public:
 
 	virtual void printSpace() const override;
 
-	double getBuyPrice() const{
+	double getBuyPrice() const {
 		return _buy_price;
 	}
 
-	std::string getName() const{
+	std::string getName() const {
 		return _group;
 	}
 	
-	std::string getType() const{
+	std::string getType() const {
 		return "UTILITY";
     }
+    
+    double getMortgage() const {
+		return _mortgage;
+    }
 	
-	bool isOwned() const override{
+	bool isOwned() const override {
         return _owned;
     }
     
-    void setOwner(int id){
+    void setOwner(int id) {
         id_owner = id;
     }
 	
-	int getOwner() const{
+	int getOwner() const {
         return id_owner;
     }
 	
-	void setOwned(){
+	void setOwned() {
         _owned = true;
     }
     
@@ -49,11 +56,18 @@ public:
     std::string getGroup() const override;
     
     int getAction() const override;
+	
+	void setMortgage(Player* p);
+	void revertMortgage(Player* p);
+	bool isOnMortgage() const {
+		return _is_on_mortgage;
+	}
 
 private:
 	double _buy_price, _mortgage;
 	std::string _group;
     bool _owned = false;
+	bool _is_on_mortgage = false;
     int id_owner;
 };
 

@@ -1,16 +1,16 @@
 #include "Game.hpp"
 
-void Game::printPlayers() const{
+void Game::printPlayers() const {
     for(const auto i : m_players){
         std::cerr << "Player " << i->get_name() << std::endl;
     }
 }
 
-void Game::movePlayer(Player *player, int steps){
+void Game::movePlayer(Player *player, int steps) {
     player->set_pos((player->get_pos() + steps) % 40);
 }
 
-std::pair<int , int> Game::throwDice(){
+std::pair<int , int> Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
 	setDice(num.first + num.second);
     return num;
@@ -18,8 +18,7 @@ std::pair<int , int> Game::throwDice(){
 
 //NOTE: Only current player will build because game is turn based at this point
 //      
-void Game::build(Player* player, Property* property){
-    
+void Game::build(Player* player, Property* property) {
     if(property->getOwner() == player->getId()){
         // Check if player has purchased all properties in a particular group and
         // if building order is valid
@@ -76,8 +75,18 @@ void Game::pay_rent(Space* space, Player* player)
 	{
 		Property* p = (Property*)space;
 		amount = p->getRentPrice();
-		if(player->check_properties(p) && p->getNumBuildings() == 0)
+		if(player->check_properties(p))
 			amount *= 2;
+		else if(p->getNumBuildings() == 1)
+			amount = p->getH1Price();
+		else if(p->getNumBuildings() == 2)
+			amount = p->getH2Price();
+		else if(p->getNumBuildings() == 3)
+			amount = p->getH3Price();
+		else if(p->getNumBuildings() == 4)
+			amount = p->getH4Price();
+		else if(p->getNumBuildings() == 5)
+			amount = p->getH5Price();
 	}
 	else if (type == "UTILITY")
 	{
@@ -107,33 +116,35 @@ void Game::pay_rent(Space* space, Player* player)
 	return;
 }
 
-void Game::nextPlayer(){
+void Game::nextPlayer() {
     Player* p = m_players.front();
     m_players.erase(m_players.begin());
     m_players.push_back(p);
     m_current_player = m_players.at(0);
 }
 
-Player* Game::getCurrentPlayer() const{
+Player* Game::getCurrentPlayer() const {
     return m_current_player;
 }
 
-void Game::showBoard() const{
-        m_board->printBoard();
+void Game::showBoard() const {
+       Game::m_board->printBoard();
     }
 
-std::vector<Player*> Game::getPlayers() const{
+std::vector<Player*> Game::getPlayers() const {
     return m_players;
 }
 
-Space* Game::getCurrentPlayerSpace() const{
+Space* Game::getCurrentPlayerSpace() const {
     return m_board->getSpaces().at(m_current_player->get_pos());
 }
 
-Game::Game(int numPlayers){
-    
+Game::Game(int numPlayers) {
     // Init players
     std::vector<Player*> players = Player::initializePlayers(numPlayers);
+	unsigned i = 0;
+	for(i=0; i < players.size(); i++)
+		players[i]->init_wallet();
     std::copy(players.cbegin(), players.cend(), std::back_inserter(m_players));
     
     // Set first player
@@ -144,5 +155,4 @@ Game::Game(int numPlayers){
     
     // Create Bank
     m_bank = new Bank();
-    
 }

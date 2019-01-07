@@ -35,4 +35,6 @@ class Space{
         virtual int getAction() const = 0;
 		
 		virtual std::string getType() const = 0;
+		
+		virtual bool isOnMortgage() const = 0;
 };

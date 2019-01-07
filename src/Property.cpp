@@ -2,17 +2,30 @@
 
 #define NUM_PROPS 22
 
-void Property::printSpace() const{
-
+void Property::printSpace() const {
 	std::cout << "Property: " << Property::getName() << ", price: " << Property::getBuyPrice() << std::endl;
-
 }
 
 std::string Property::getGroup() const{
     return this->getColour();
 }
 
-std::vector<Property*> Property::initialize_properties(){
+void Property::setMortgage(Player* p) {
+	if(getNumBuildings() > 0)
+	{
+		std::cout << "Sell your houses first!" << std::endl;
+		return;
+	}
+	_is_on_mortgage = true;
+	p->receive((double)_mortgage);
+}
+
+void Property::revertMortgage(Player* p) {
+	_is_on_mortgage = false;
+	p->pay((double)_mortgage*1.1);
+}
+
+std::vector<Property*> Property::initialize_properties() {
 	Property* p1 = new Property(60, 2, 10, 30, 90, 160, 250, 30, 50, "Mediterranean Avenue", "PURPLE");
 	Property* p2 = new Property(60, 4, 20, 60, 180, 320, 450, 30, 50, "Baltic Avenue", "PURPLE");
 	Property* p3 = new Property(100, 6, 30, 90, 270, 400, 550, 50, 50, "Oriental Avenue", "L_BLUE");	
@@ -41,6 +54,6 @@ std::vector<Property*> Property::initialize_properties(){
 	return properties;
 }
 
-int Property::getAction() const{
+int Property::getAction() const {
     return -1;
 }

@@ -8,6 +8,10 @@
 #include <map>
 #include <vector>
 
+class Property;
+class Utility;
+class Railroad;
+
 class Coordinate {
 public:
 	Coordinate(unsigned x, unsigned y);
@@ -34,10 +38,13 @@ public:
 	bool is_in_jail() const;
 	void send_to_jail();
 	void release_from_jail();
+	void receive_jail_card() {
+		has_jail_card = true;
+	}
 
-	int balance() const;
-	void pay(int amount);
-	void receive(int amount);
+	std::pair<double, double> balance();
+	void pay(double amount);
+	void receive(double amount);
 
 	//const Coordinate& position() const; NOTE: uncomment later
 	void move();
@@ -46,6 +53,8 @@ public:
     //TODO: unique pointeri na property
     //TODO: implementacija move semantike
     
+	void init_wallet();
+	bool is_bankrupt(double amount);
 	
 	void set_name(std::string name);
     
@@ -56,7 +65,6 @@ public:
     void add_railroad(Railroad* p);
     
     int get_pos() const;
-    
     void set_pos(int pos);
 
     static std::vector<Player*> initializePlayers(int numPlayers);
@@ -88,6 +96,7 @@ private:
     std::vector<Space*> owned_spaces;
 	int m_pos;
 	int num_turns_in_jail;
+	bool has_jail_card = false;
 
 	friend std::ostream & operator << (std::ostream& out, const Player& value);
 //	friend std::istream & operator >> (std::istream& in, player& value);

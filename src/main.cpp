@@ -42,6 +42,12 @@ int main(int argc, char** argv)
 //     for(auto i : spaces){
 //         std::cout << "[SPACE]" << i->getName() << std::endl;
 //     }
+     /*
+    std::vector<Space*> spaces = b->getSpaces();
+    for(auto i : spaces) {
+        std::cout << "[SPACE]" << i->getName() << std::endl;
+    }
+    */
 //     Space* firstt = spaces.at(1);
 //     std::cout << "===============\n";
 //     std::cout << b->getSpaces().at(0)->getName() << std::endl;
@@ -89,7 +95,7 @@ int main(int argc, char** argv)
     std::vector<Space*> spcs;
     Space* landed;
     char wait;
-    while(1){
+    while(1) {
         std::cout << cur->get_pos() << std::endl;
         std::cout << g.getCurrentPlayerSpace()->getName() << std::endl;
         auto dice = g.throwDice();

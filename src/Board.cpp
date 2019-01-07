@@ -2,22 +2,17 @@
 
 #define NUM_CARDS 17
 
-void Board::printBoard() const{
-    
-    for(const auto i : m_spaces){
+void Board::printBoard() const {
+    for(const auto i : m_spaces) {
         i->printSpace();
     }
-    
 }
 
 std::vector<Space*> Board::getSpaces() const{
-    
     return m_spaces;
-    
 }
 
-Card Board::drawCard(){
-    
+Card Board::drawCard() {
     Card result = *m_chanceDeck.at(0);
     m_chanceDeck.erase(m_chanceDeck.begin());
     //TODO: if not jail card put back, else add the card to player
@@ -29,8 +24,7 @@ Card Board::drawCard(){
     return result;
 }
 
-Board::Board(){
-
+Board::Board() {
     std::vector<Utility*> utils = Utility::initialize_utilities();
 	std::vector<Railroad*> rails = Railroad::initialize_railroads();
 	std::vector<Card*> cardDeck = Card::initialize_cards();
@@ -84,10 +78,9 @@ Board::Board(){
 
 	std::copy(cardDeck.cbegin() + NUM_CARDS, cardDeck.cend(), std::back_inserter(m_communityChestDeck));
 	std::random_shuffle(m_communityChestDeck.begin(), m_communityChestDeck.end());
-
 }	
 
-std::vector<Space*> Board::getSpacesByGroup(std::string group) const{
+std::vector<Space*> Board::getSpacesByGroup(std::string group) const {
     std::vector<Space*> result;
     std::copy_if(m_spaces.cbegin(), m_spaces.cend(), std::back_inserter(result),
                  [group](Space* g){ return !strcmp(g->getGroup().c_str(),group.c_str()); }
@@ -95,6 +88,6 @@ std::vector<Space*> Board::getSpacesByGroup(std::string group) const{
     return result;
 }
 
-Board::~Board(){
+Board::~Board() {
     std::cout << "Destroying board" << std::endl;
 }

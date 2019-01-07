@@ -12,17 +12,18 @@ public:
 	
 	static std::vector<Card*> initialize_cards();
 
-    std::string getType() const{
+    std::string getType() const {
         return _type;
     }
     
-    std::string getMsg() const{
+    std::string getMsg() const {
         return _message;
     }
     
- 	int getAction() const{
+ 	int getAction() const {
  		return _m_action;
  	}
+
 private:
 	std::string _type, _message;
 	int _m_action;

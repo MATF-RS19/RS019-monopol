@@ -1,14 +1,14 @@
 #include "Railroad.hpp"
 
-void Railroad::printSpace() const{
+void Railroad::printSpace() const {
 	std::cout << "Railroad: " << Railroad::getName() << ", price: " << Railroad::getBuyPrice() << std::endl;
 }
 
-std::string Railroad::getGroup() const{
+std::string Railroad::getGroup() const {
     return "Railroad";
 }
 
-int Railroad::getNumBuildings() const{
+int Railroad::getNumBuildings() const {
     return -1;
 }
 
@@ -23,6 +23,16 @@ std::vector<Railroad*> Railroad::initialize_railroads()
 	return railroads;	
 }
 
-int Railroad::getAction() const{
+int Railroad::getAction() const {
     return -1;
+}
+
+void Railroad::setMortgage(Player* p) {
+	_is_on_mortgage = true;
+	p->receive(_mortgage);
+}
+
+void Railroad::revertMortgage(Player* p) {
+	_is_on_mortgage = false;
+	p->pay(_mortgage*1.1);
 }

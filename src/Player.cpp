@@ -1,8 +1,7 @@
 #include "Player.hpp"
 
 //TODO: incorporate in qt (ako ostane vremena) neka za sada bude arg kom linije
-std::vector<Player*> Player::initializePlayers(int numPlayers){
-    
+std::vector<Player*> Player::initializePlayers(int numPlayers){   
     std::vector<Player*> players;
     Player* p;
     std::string name;
@@ -44,6 +43,12 @@ bool Player::is_in_jail() const
 void Player::send_to_jail()
 {
 	if (m_in_jail == true) return;
+	if (has_jail_card)
+	{
+		release_from_jail();
+		has_jail_card = false;
+		//TODO: staviti kartu nazad u spil
+	}
 
 	m_in_jail = true;
 	num_turns_in_jail = 1;
@@ -67,17 +72,53 @@ int Player::get_num_turns() const
 	return num_turns_in_jail;
 }
 
-int Player::balance() const
+bool Player::is_bankrupt(double amount)
 {
-	return m_wallet;
+	double total = balance().second;
+	if (amount > total)
+		return true;
+	else
+		return false;
 }
 
-void Player::pay(int amount)
+std::pair<double, double> Player::balance()
+{
+	std::pair<double, double> balance;
+	balance.first = m_wallet;
+	
+	double props_val = 0;
+	double utils_val = 0;
+	double rails_val = 0;
+	
+	std::vector<Property*> my_props = get_properties();
+	unsigned size = my_props.size();
+	for(unsigned i=0; i<size; i++)
+	{
+		props_val += my_props[i]->getMortgage();
+		int buildings = my_props[i]->getNumBuildings();
+		if(buildings)
+			props_val += buildings * my_props[i]->getHousePrice()/2; 
+	}
+	
+	// both utils have the same mortgage value
+	std::vector<Utility*> my_utils = get_utilities();
+	utils_val += my_utils[0]->getMortgage() * my_utils.size();
+	
+	// all rails have the same mortgage value
+	std::vector<Railroad*> my_rails = get_railroads();
+	rails_val += my_rails[0]->getMortgage() * my_rails.size();
+	
+	balance.second = props_val + utils_val + rails_val + m_wallet;
+	
+	return balance;
+}
+
+void Player::pay(double amount)
 {
 	m_wallet -= amount;
 }
 
-void Player::receive(int amount)
+void Player::receive(double amount)
 {
 	m_wallet += amount;
 }
@@ -132,7 +173,7 @@ bool Player::check_properties(Property* p)
 		count = 1;
 	for(; i < my_properties.size(); i++)
 	{
-		if(my_properties[i]->getColour() == colour)
+		if(my_properties[i]->getColour() == colour && my_properties[i]->getNumBuildings() == 0)
 			count ++;
 	}		
 	
@@ -159,4 +200,9 @@ int Player::check_railroads()
 
 void Player::add_space(Space* s){
     owned_spaces.push_back(s);
+}
+
+void Player::init_wallet()
+{
+	m_wallet = 1500;
 }
