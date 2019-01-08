@@ -44,6 +44,10 @@ public:
     
     int getAction() const override;
 	
+    void doAction(Player* p){
+        return;
+    }
+
 	void setMortgage(Player* p);
 	void revertMortgage(Player* p);
     bool isOnMortgage() const override;

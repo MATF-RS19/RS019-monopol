@@ -18,6 +18,10 @@ public:
 
     virtual std::string getInfo() const override;
 
+    void doAction(Player* p){
+        return;
+    }
+
 	double getBuyPrice() const {
 		return _buy_price;
 	}

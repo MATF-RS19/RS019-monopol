@@ -14,6 +14,8 @@
  * TODO: Try to implemet everything via smart pointers
 */
 
+class Player;
+
 class Space{
 
 	public:
@@ -38,6 +40,8 @@ class Space{
 		virtual void setNumBuildings(int num) = 0;
         
         virtual int getAction() const = 0;
+
+        virtual void doAction(Player* p) = 0;
 		
 		virtual std::string getType() const = 0;
 

@@ -12,7 +12,7 @@ std::vector<Space*> Board::getSpaces() const{
     return m_spaces;
 }
 
-Card Board::drawCard() {
+Card Board::drawChanceCard() {
     Card result = *m_chanceDeck.at(0);
     m_chanceDeck.erase(m_chanceDeck.begin());
     //TODO: if not jail card put back, else add the card to player
@@ -20,6 +20,18 @@ Card Board::drawCard() {
     if(result.getAction() != 7 && result.getAction() != 22){
         std::cout << "Puting card back" << std::endl;
         m_chanceDeck.push_back(&result);
+    }
+    return result;
+}
+
+Card Board::drawCommunityCard() {
+    Card result = *m_communityChestDeck.at(0);
+    m_communityChestDeck.erase(m_communityChestDeck.begin());
+    //TODO: if not jail card put back, else add the card to player
+    //TODO: remove magic nums
+    if(result.getAction() != 7 && result.getAction() != 22){
+        std::cout << "Puting card back" << std::endl;
+        m_communityChestDeck.push_back(&result);
     }
     return result;
 }

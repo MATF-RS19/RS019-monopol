@@ -101,6 +101,10 @@ public:
     std::string getGroup() const override;
     
     int getAction() const override;
+
+    void doAction(Player* p){
+        return;
+    }
     
 private:
 	double _buy_price, _rent_price, _h1_price, _h2_price, _h3_price, _h4_price, _h5_price, _mortgage, _house_price;

@@ -118,12 +118,6 @@ MainWindow::MainWindow()
 
     view->setIconSize(QSize(100,100));
 
-    int row = view->selectionModel()->currentIndex().row();
-    int col = view->selectionModel()->currentIndex().column();
-    std::cout << "NESTO" << std::endl;
-//    std::cout << model->index(10, 9).data(Qt::UserRole+1).value<Space*>()->getInfo();
-    std::cout << "ROWACHA " << row << " COL " << col << std::endl;
-
     setCentralWidget(view);
     createDockWindows();
 	setWindowState(Qt::WindowMaximized);
@@ -305,13 +299,23 @@ void MainWindow::roll_dice()
             std::cout << "New owner: " << curr_space->getOwner() << std::endl;
             std::cout << "Money after: " << curr_player->get_wallet() << std::endl;
             int index = curr_player->getId();
-            std::string test_str = playersTest.at(index-1)->get_name();
-            player_tabs.at(index-1)->setText(QString::number(curr_player->get_wallet()));
+
+            std::string owned_spaces;
+            foreach(const auto& i, curr_player->get_spaces()){
+                owned_spaces += i->getName() + "\n";
+            }
+
+            //TODO: initialize these tabs and add if player is in jail,
+            //has get out of jail free card etc...
+            player_tabs.at(index-1)->setText("Current balance: \n"
+                                             + QString::number(curr_player->get_wallet())
+                                             + "Owned spaces: \n"
+                                             + QString::fromStdString(owned_spaces));
 
 
 		}
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
-		// TODO: current player: pay rent or upgrade
+
 		if(curr_space->getOwner() == curr_player->getId()) {
 			upgrade_button->setVisible(true);
         }else{
@@ -325,7 +329,7 @@ void MainWindow::roll_dice()
             rent_msg.exec();
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
-		// TODO: do action on player
+        curr_space->doAction(curr_player);
 	} 
 
 	// if player got dice with different sides, switch to next player

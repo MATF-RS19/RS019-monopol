@@ -24,6 +24,9 @@ public:
     
     void nextPlayer();
     
+    //TODO: implementirati u .cpp jer mora da moze da se pristupi i igracima i ostalim glupostima
+    //switch(action) i onda za svaku od njih se gleda sta treba da se radi pomeranje igraca, placanje ostalima itd
+    void executeCardAction(int action, Player* player);
 
     //Current player pays to the owner of the space
     double pay_rent(Space* space);

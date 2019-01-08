@@ -17,14 +17,16 @@
 class Board {
 	public:
 		Board();
-
-        Card drawCard();
         
         std::vector<Space*> getSpaces() const;
         
         std::vector<Card*> getChanceDeck() const;
         
         std::vector<Card*> getCommunityChestDeck() const;
+
+        Card drawCommunityCard();
+
+        Card drawChanceCard();
 
         void printBoard() const;
         
