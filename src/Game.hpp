@@ -25,7 +25,9 @@ public:
     void nextPlayer();
     
     void build(Player* player, Property* property);
-	void pay_rent(Space* space, Player* player);
+
+    //Current player pays to the owner of the space
+    double pay_rent(Space* space);
     
     void movePlayer(Player *player, int steps);
     

@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QTextEdit>
+#include <QListView>
 #include "Game.hpp"
 
 class QListWidget;
@@ -24,6 +25,7 @@ public:
 private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
+    void display_tab(int i);
 
 private:
     void createDockWindows();
@@ -48,11 +50,14 @@ private:
 
     //Added in order to be visible inside of function for creating docks
     QStandardItemModel *model;
+    QStandardItemModel *players_model;
+    QListView* player_view;
     QTableView *view;
     QTextEdit *infoText;
 
 	static Game* game;
 	static std::vector<Space*> spaces;
+    static std::vector<Player*> playersTest;
 };
 
 

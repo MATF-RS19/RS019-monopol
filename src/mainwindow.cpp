@@ -10,6 +10,7 @@
 int numOfPlayers;
 Game* MainWindow::game;
 std::vector<Space*> MainWindow::spaces;
+std::vector<Player*> MainWindow::playersTest;
 
 MainWindow::MainWindow()
 {
@@ -31,8 +32,28 @@ MainWindow::MainWindow()
     //Get spaces
 	spaces = game->getBoard()->getSpaces();
 
+    //Create model for players
+    players_model = new QStandardItemModel(this);
+
+    //Populate model for players
+    playersTest = game->getPlayers();
+
+    /*
+    int playerModelPos = 0;
+    foreach(const auto& p, playersTest){
+        QStandardItem *playerItem = new QStandardItem();
+        QVariant v_data;
+        v_data.setValue(p->get_wallet());
+        playerItem->setData(v_data);
+        //playerItem->setText(QString("Current balance:\n" + QString::number(p->get_wallet())));
+
+        players_model->setItem(playerModelPos,playerItem);
+
+    }
+    */
+
     //Create model for all spaces on the board
-	model = new QStandardItemModel(11,11);
+    model = new QStandardItemModel(11,11);
     int img_num = 0;
     //Populate model with space images
     int i=10,j=10,i_increment=0,j_increment=-1;
@@ -142,27 +163,6 @@ void MainWindow::createDockWindows()
     QDockWidget *dock = new QDockWidget(tr("Game"), this);
     dock->setAllowedAreas(Qt::RightDockWidgetArea  |
                           Qt::LeftDockWidgetArea );
-/* DELETE ME:
-    // init widgets
-    bottom_dock = new QWidget(this);
-    buy_button = new QPushButton(tr("Buy"), bottom_dock);
-    roll_button = new QPushButton(tr("Roll"), bottom_dock);
-    upgrade_button = new QPushButton(tr("Upgrade"), bottom_dock);
-
-    // adding widgets to horizontal layout
-    QHBoxLayout *h_layout = new QHBoxLayout();
-    h_layout->addWidget(buy_button);
-    h_layout->addWidget(roll_button);
-    h_layout->addWidget(upgrade_button);
-
-
-    // set layout for bottom dock area widget
-    bottom_dock->setLayout(h_layout);
-
-    // set & add bottom dock widget
-    dock->setWidget(bottom_dock);
-    addDockWidget(Qt::BottomDockWidgetArea, dock);
-*/
 
     // init widgets for right dock widget
     right_dock = new QWidget(this);
@@ -211,23 +211,19 @@ void MainWindow::createDockWindows()
     left_dock = new QWidget(this);
 
     players_widget = new QTabWidget(left_dock);
-	std::vector<Player*> players;
-	players = game->getPlayers();	
+    std::vector<Player*> players;
+    players = game->getPlayers();
 
 	QLabel *tab;
-    QListView *listView;
+
 	int i = 0;
 	while(i < numOfPlayers) {
         tab = new QLabel(left_dock);
-        tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name())+
-                             "\nCurrent balance: " + QString::number(players[i]->get_wallet())));
+        //tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name())+
+         //                    "\nCurrent balance: " + QString::number(players[i]->get_wallet())));
 							// TODO: banka jos ne da novce 
 							// + "\nMoney: " + QString::number(players[0]->balance().first)
 							// + "\nProperty value: " + QString::number(players[0]->balance().second)
-        listView = new QListView(tab);
-        listView->setModel(model);
-        listView->show();
-
 
 		tab->setAlignment(Qt::AlignTop);
 
@@ -288,16 +284,30 @@ void MainWindow::roll_dice()
 
 		if (buy_msg.clickedButton() == yesButton) {
             std::cout << "Old owner: " << curr_space->getOwner() << std::endl;
+            std::cout << "Money before: " << curr_player->get_wallet() << std::endl;
 			game->getBank()->sellSpace(curr_player, curr_space);
             std::cout << "New owner: " << curr_space->getOwner() << std::endl;
+            std::cout << "Money after: " << curr_player->get_wallet() << std::endl;
+            int index = curr_player->getId();
+            std::string test_str = playersTest.at(index-1)->get_name();
+            player_tabs.at(index-1)->setText(QString::number(curr_player->get_wallet()));
+
 
 		}
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		// TODO: current player: pay rent or upgrade
 		if(curr_space->getOwner() == curr_player->getId()) {
 			upgrade_button->setVisible(true);
-		}
-		game->pay_rent(curr_space, curr_player);
+        }else{
+            //TODO: bankrot itd
+            double amt = game->pay_rent(curr_space);
+            QMessageBox rent_msg;
+            rent_msg.setWindowTitle("PAY RENT");
+
+            rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
+                             + QString::fromStdString(playersTest.at(curr_space->getOwner())->get_name()));
+            rent_msg.exec();
+        }
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// TODO: do action on player
 	} 
@@ -306,9 +316,6 @@ void MainWindow::roll_dice()
 	if (dice.first != dice.second) {
 		game->nextPlayer();
 	}
-
-    players_widget->setUpdatesEnabled(true);
-    player_tabs.at(0)->update();
 
 }
 
@@ -319,4 +326,10 @@ void MainWindow::display_cell(const QModelIndex& index)
 		std::string test_string = index.data(Qt::UserRole+1).value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
 	}
+}
+
+void MainWindow::display_tab(int i){
+    //std::string test_str = playersTest.at(i)->get_name();
+    //players_widget->setTabText(i,QString::fromStdString(test_str));
+    std::cout << playersTest.at(i)->get_name() << std::endl;
 }

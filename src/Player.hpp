@@ -105,3 +105,5 @@ private:
 
 std::ostream & operator << (std::ostream& out, const Player& value);
 // std::istream & operator >> (std::istream& in, player& value);
+
+Q_DECLARE_METATYPE(Player*);

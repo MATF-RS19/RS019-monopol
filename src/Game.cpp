@@ -65,11 +65,13 @@ void Game::build(Player* player, Property* property) {
     }
 }
 
-//FIXME
-void Game::pay_rent(Space* space, Player* player)
+
+double Game::pay_rent(Space* space)
 {
 	double amount = 0;
 	int dice = getDice();
+    Player* curr_player = getCurrentPlayer();
+    Player* player = getPlayers().at(space->getOwner());
 	
 	std::string type = space->getType();
 	if (type == "PROPERTY")
@@ -111,10 +113,10 @@ void Game::pay_rent(Space* space, Player* player)
 			amount *= 8;
 	}
 	
-	player->pay(amount);
+    curr_player->pay(amount);
 	player->receive(amount);
-	
-	return;
+
+    return amount;
 }
 
 void Game::nextPlayer() {
