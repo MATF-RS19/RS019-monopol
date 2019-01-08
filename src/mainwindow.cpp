@@ -9,6 +9,7 @@
 
 int numOfPlayers;
 Game* MainWindow::game;
+std::vector<Space*> MainWindow::spaces;
 
 MainWindow::MainWindow()
 {
@@ -28,7 +29,7 @@ MainWindow::MainWindow()
     game = new Game(numOfPlayers, names);
 
     //Get spaces
-    std::vector<Space*> spaces = game->getBoard()->getSpaces();
+	spaces = game->getBoard()->getSpaces();
 
     //Create model for all spaces on the board
 	model = new QStandardItemModel(11,11);
@@ -38,9 +39,8 @@ MainWindow::MainWindow()
         foreach(const auto& s, spaces){
             QStandardItem *spaceItem = new QStandardItem();
 			QVariant v_data;
-			v_data.setValue(QString::fromStdString(s->getInfo()));
-            //spaceItem->setText(QString::fromStdString(s->getName()));
-            spaceItem->setText(v_data.toString());
+			v_data.setValue(s);
+            spaceItem->setData(v_data);
             //QBrush *qb = new QBrush(QImage("/images/property1.jpg"));
             //spaceItem->setForeground(*qb);
             //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
@@ -74,7 +74,7 @@ MainWindow::MainWindow()
     int row = view->selectionModel()->currentIndex().row();
     int col = view->selectionModel()->currentIndex().column();
     std::cout << "NESTO" << std::endl;
-//    std::cout << model->index(10,10).data(Qt::UserRole+1).value<Space*>()->getInfo();
+//    std::cout << model->index(10, 9).data(Qt::UserRole+1).value<Space*>()->getInfo();
     std::cout << "ROWACHA " << row << " COL " << col << std::endl;
 
     setCentralWidget(view);
@@ -130,10 +130,9 @@ void MainWindow::createDockWindows()
 {
     // initialize dock widget
     QDockWidget *dock = new QDockWidget(tr("Game"), this);
-    dock->setAllowedAreas(Qt::BottomDockWidgetArea |
-                          Qt::RightDockWidgetArea  |
+    dock->setAllowedAreas(Qt::RightDockWidgetArea  |
                           Qt::LeftDockWidgetArea );
-
+/* DELETE ME:
     // init widgets
     bottom_dock = new QWidget(this);
     buy_button = new QPushButton(tr("Buy"), bottom_dock);
@@ -146,15 +145,20 @@ void MainWindow::createDockWindows()
     h_layout->addWidget(roll_button);
     h_layout->addWidget(upgrade_button);
 
+
     // set layout for bottom dock area widget
     bottom_dock->setLayout(h_layout);
 
     // set & add bottom dock widget
     dock->setWidget(bottom_dock);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
+*/
 
-    // init widgets
+    // init widgets for right dock widget
     right_dock = new QWidget(this);
+	roll_button = new QPushButton(tr("Roll"), right_dock);
+	upgrade_button = new QPushButton(tr("Upgrade"), right_dock);
+	upgrade_button->setVisible(false);
     infoText = new QTextEdit(right_dock);
     die_1 = new QLabel(right_dock);
 	die_2 = new QLabel(right_dock);
@@ -169,12 +173,14 @@ void MainWindow::createDockWindows()
 	dice_widget->setLayout(dice_layout);
 	
     // adding widgets to vertical layout
-    QVBoxLayout *v_layout = new QVBoxLayout();
-	v_layout->addWidget(infoText);
-    v_layout->addWidget(dice_widget);
+    right_dock_layout = new QVBoxLayout();
+	right_dock_layout->addWidget(infoText);
+	right_dock_layout->addWidget(upgrade_button);
+    right_dock_layout->addWidget(dice_widget);
+	right_dock_layout->addWidget(roll_button);
 
     // set layout for right dock area widget
-    right_dock->setLayout(v_layout);
+    right_dock->setLayout(right_dock_layout);
 
     // set & add right dock widget
     dock = new QDockWidget("Info", this);
@@ -269,6 +275,9 @@ void MainWindow::roll_dice()
 		}
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		// TODO: current player: pay rent or upgrade
+		if(curr_space->getOwner() == curr_player->getId()) {
+			upgrade_button->setVisible(true);
+		}
 		game->pay_rent(curr_space, curr_player);
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// TODO: do action on player
@@ -278,16 +287,13 @@ void MainWindow::roll_dice()
 	if (dice.first != dice.second) {
 		game->nextPlayer();
 	}
-
-
-
 }
 
 void MainWindow::display_cell(const QModelIndex& index)
 {
 	if (index.isValid()) {
-		infoText->setText(index.data().toString());
-
-        infoText->setText(QString::number(index.row())+QString(" ")+QString::number(index.column()));
+		QVariant test = index.data();
+		std::string test_string = index.data(Qt::UserRole+1).value<Space*>()->getInfo();
+		infoText->setText(QString::fromStdString(test_string));
 	}
 }
