@@ -10,13 +10,14 @@ std::vector<Player*> Player::initializePlayers(std::vector<std::string> player_n
         p = new Player();
         p->set_name(player_names.at(i));
         p->set_pos(0);
+        p->init_wallet();
         players.push_back(p);
     }
     
     return players;
 }
 
-int Player::m_obj_count;
+int Player::m_obj_count{0};
 
 Player::Player()
 {
@@ -109,6 +110,10 @@ std::pair<double, double> Player::balance()
 	balance.second = props_val + utils_val + rails_val + m_wallet;
 	
 	return balance;
+}
+
+int Player::get_wallet() const{
+    return m_wallet;
 }
 
 void Player::pay(double amount)

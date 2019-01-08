@@ -54,6 +54,7 @@ public:
     //TODO: implementacija move semantike
     
 	void init_wallet();
+    int get_wallet() const;
 	bool is_bankrupt(double amount);
 	
 	void set_name(std::string name);

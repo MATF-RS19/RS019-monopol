@@ -17,12 +17,12 @@ MainWindow::MainWindow()
 	
 	mainMenu(names);
 
-	die_sides[1] = new QPixmap("./images/die1.png");
-	die_sides[2] = new QPixmap("./images/die2.png");
-	die_sides[3] = new QPixmap("./images/die3.png");
-	die_sides[4] = new QPixmap("./images/die4.png");
-	die_sides[5] = new QPixmap("./images/die5.png");
-	die_sides[6] = new QPixmap("./images/die6.png");
+    die_sides[1] = new QPixmap(":new/img/images/die1.png");
+    die_sides[2] = new QPixmap(":new/img/images/die2.png");
+    die_sides[3] = new QPixmap(":new/img/images/die3.png");
+    die_sides[4] = new QPixmap(":new/img/images/die4.png");
+    die_sides[5] = new QPixmap(":new/img/images/die5.png");
+    die_sides[6] = new QPixmap(":new/img/images/die6.png");
 
     //Create game for selected number of players
     game = new Game(numOfPlayers, names);
@@ -32,19 +32,25 @@ MainWindow::MainWindow()
 
     //Create model for all spaces on the board
 	model = new QStandardItemModel(11,11);
-
+    int img_num = 0;
     //Populate model with space images
     int i=10,j=10,i_increment=0,j_increment=-1;
         foreach(const auto& s, spaces){
+
             QStandardItem *spaceItem = new QStandardItem();
 			QVariant v_data;
 			v_data.setValue(QString::fromStdString(s->getInfo()));
-            //spaceItem->setText(QString::fromStdString(s->getName()));
-            spaceItem->setText(v_data.toString());
+            spaceItem->setText(QString::fromStdString(s->getInfo()));
+            //spaceItem->setText(v_data.toString());
             //QBrush *qb = new QBrush(QImage("/images/property1.jpg"));
             //spaceItem->setForeground(*qb);
             //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
-            spaceItem->setIcon(QIcon("./images/monopoly_board.jpg"));
+
+            QString filename = ":new/img/images/image" + QString::number(img_num) + ".png";
+            img_num++;
+            spaceItem->setSizeHint(QSize(100,100));
+            spaceItem->setIcon(QIcon(filename));
+
 
             model->setItem(i,j,spaceItem);
 
@@ -70,12 +76,13 @@ MainWindow::MainWindow()
     view->resize(500, 500);
     view->setStyleSheet("selection-background-color : red;");
     view->setSortingEnabled(false);
+    view->resizeColumnsToContents();
+    view->resizeRowsToContents();
+
+    view->setIconSize(QSize(100,100));
 
     int row = view->selectionModel()->currentIndex().row();
     int col = view->selectionModel()->currentIndex().column();
-    std::cout << "NESTO" << std::endl;
-//    std::cout << model->index(10,10).data(Qt::UserRole+1).value<Space*>()->getInfo();
-    std::cout << "ROWACHA " << row << " COL " << col << std::endl;
 
     setCentralWidget(view);
     createDockWindows();
@@ -159,8 +166,8 @@ void MainWindow::createDockWindows()
     die_1 = new QLabel(right_dock);
 	die_2 = new QLabel(right_dock);
 	dice_widget = new QWidget(right_dock);
-	die_1->setPixmap(QPixmap("./images/die0.png"));
-	die_2->setPixmap(QPixmap("./images/die0.png"));
+    die_1->setPixmap(QPixmap(":new/img/images/die0.png"));
+    die_2->setPixmap(QPixmap(":new/img/images/die0.png"));
 
 	QHBoxLayout *dice_layout = new QHBoxLayout(right_dock);
 	dice_layout->addWidget(die_1);
@@ -199,14 +206,20 @@ void MainWindow::createDockWindows()
 	players = game->getPlayers();	
 
 	QLabel *tab;
+    QListView *listView;
 	int i = 0;
 	while(i < numOfPlayers) {
-		tab = new QLabel(left_dock);
-		tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name()) 
+        tab = new QLabel(left_dock);
+        tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name())+
+                             "\nCurrent balance: " + QString::number(players[i]->get_wallet())));
 							// TODO: banka jos ne da novce 
 							// + "\nMoney: " + QString::number(players[0]->balance().first)
 							// + "\nProperty value: " + QString::number(players[0]->balance().second)
-					));
+        listView = new QListView(tab);
+        listView->setModel(model);
+        listView->show();
+
+
 		tab->setAlignment(Qt::AlignTop);
 
 		player_tabs.push_back(tab);
@@ -265,7 +278,10 @@ void MainWindow::roll_dice()
 		buy_msg.exec();
 
 		if (buy_msg.clickedButton() == yesButton) {
+            std::cout << "Old owner: " << curr_space->getOwner() << std::endl;
 			game->getBank()->sellSpace(curr_player, curr_space);
+            std::cout << "New owner: " << curr_space->getOwner() << std::endl;
+
 		}
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		// TODO: current player: pay rent or upgrade
@@ -279,15 +295,17 @@ void MainWindow::roll_dice()
 		game->nextPlayer();
 	}
 
-
+    players_widget->setUpdatesEnabled(true);
+    player_tabs.at(0)->update();
 
 }
 
 void MainWindow::display_cell(const QModelIndex& index)
 {
 	if (index.isValid()) {
+
 		infoText->setText(index.data().toString());
 
-        infoText->setText(QString::number(index.row())+QString(" ")+QString::number(index.column()));
+        //infoText->setText(QString::number(index.row())+QString(" ")+QString::number(index.column()));
 	}
 }

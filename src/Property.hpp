@@ -109,6 +109,6 @@ private:
     bool _owned = false;
 	bool _is_on_mortgage = false;
     //FIXME: should be something like ref to Player object
-    int id_owner;
+    int id_owner = -1;
     
 };

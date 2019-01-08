@@ -9,6 +9,7 @@ void Bank::sellSpace(Player *player, Space *space) {
     player->add_space(space);
     space->setOwned();
     space->setOwner(player->getId());
+    std::cout << "CHECK OWNER" << space->getOwner() << std::endl;
 }
 
 int Bank::getHouses() const {

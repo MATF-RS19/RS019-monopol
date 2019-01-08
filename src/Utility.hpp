@@ -67,6 +67,6 @@ private:
 	std::string _group;
     bool _owned = false;
 	bool _is_on_mortgage = false;
-    int id_owner;
+    int id_owner = -1;
 };
 

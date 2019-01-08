@@ -51,5 +51,5 @@ private:
 	std::string _name;
     bool _owned = false;
 	bool _is_on_mortgage = false;
-    int id_owner;
+    int id_owner = -1;
 };

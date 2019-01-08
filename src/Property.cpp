@@ -18,6 +18,7 @@ std::string Property::getInfo() const{
     info << "If a player owns ALL the lots of any Colour-Group, the rent is doubled on unimproved lots in that group" << std::endl;
     //TODO: add getOwnerName method => this implies that all of the Space class instances
     //      should have ref to owner (Player class object)
+    info << "PlayerId: " << getOwner() << std::endl;
     return info.str();
 }
 
