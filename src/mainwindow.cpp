@@ -19,12 +19,12 @@ MainWindow::MainWindow()
 	
 	mainMenu(names);
 
-    die_sides[1] = new QPixmap(":new/img/images/die1.png");
-    die_sides[2] = new QPixmap(":new/img/images/die2.png");
-    die_sides[3] = new QPixmap(":new/img/images/die3.png");
-    die_sides[4] = new QPixmap(":new/img/images/die4.png");
-    die_sides[5] = new QPixmap(":new/img/images/die5.png");
-    die_sides[6] = new QPixmap(":new/img/images/die6.png");
+    die_sides[1] = new QPixmap("./images/die1.png");
+    die_sides[2] = new QPixmap("./images/die2.png");
+    die_sides[3] = new QPixmap("./images/die3.png");
+    die_sides[4] = new QPixmap("./images/die4.png");
+    die_sides[5] = new QPixmap("./images/die5.png");
+    die_sides[6] = new QPixmap("./images/die6.png");
 
     //Create game for selected number of players
     game = new Game(numOfPlayers, names);
@@ -67,11 +67,19 @@ MainWindow::MainWindow()
             //spaceItem->setForeground(*qb);
             //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
 
-            QString filename = ":new/img/images/image" + QString::number(img_num) + ".png";
+            QString filename = "./images/image" + QString::number(img_num) + ".png";
             img_num++;
-            spaceItem->setSizeHint(QSize(100,100));
-            spaceItem->setIcon(QIcon(filename));
+			if ((i==10 && j==10) || (i==10 && j==0) || (i==0 && j==10) || (i==0 && j==0)) {
+	            spaceItem->setSizeHint(QSize(100,100));
+			} else if (j==10 || j==0) {
+				spaceItem->setSizeHint(QSize(100, 60));
+			} else {
+				spaceItem->setSizeHint(QSize(60, 100));
+			}
 
+			
+			
+	        spaceItem->setIcon(QIcon(filename));
 
             model->setItem(i,j,spaceItem);
 
@@ -91,6 +99,14 @@ MainWindow::MainWindow()
             }
 
         }
+		
+		for (int i=1; i<10; i++) {
+			for (int j=1; j<10; j++) {
+				QStandardItem *item = new QStandardItem();
+				item->setFlags(Qt::NoItemFlags);
+				model->setItem(i,j,item);
+			}
+		}
 
     view = new QTableView();
     view->setModel(model);
@@ -176,8 +192,8 @@ void MainWindow::createDockWindows()
     die_1 = new QLabel(right_dock);
 	die_2 = new QLabel(right_dock);
 	dice_widget = new QWidget(right_dock);
-    die_1->setPixmap(QPixmap(":new/img/images/die0.png"));
-    die_2->setPixmap(QPixmap(":new/img/images/die0.png"));
+    die_1->setPixmap(QPixmap("./images/die0.png"));
+    die_2->setPixmap(QPixmap("./images/die0.png"));
 
 	QHBoxLayout *dice_layout = new QHBoxLayout(right_dock);
 	dice_layout->addWidget(die_1);
@@ -322,9 +338,14 @@ void MainWindow::roll_dice()
 void MainWindow::display_cell(const QModelIndex& index)
 {
 	if (index.isValid()) {
+		if (index.row()>0 && index.row()<10 && index.column()>0 && index.column()<10) {
+			return;
+		}
 		QVariant test = index.data();
 		std::string test_string = index.data(Qt::UserRole+1).value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
+	} else {
+		return;
 	}
 }
 
