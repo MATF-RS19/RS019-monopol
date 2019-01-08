@@ -10,6 +10,7 @@
 class QListWidget;
 class QPushButton;
 class QLabel;
+class QVBoxLayout;
 
 extern int numOfPlayers;
 
@@ -27,19 +28,23 @@ private Q_SLOTS:
 private:
     void createDockWindows();
     void mainMenu(std::vector<std::string>& names);
+	// right dock
     QWidget* right_dock;
-    QPushButton* buy_button;
+//    QPushButton* buy_button;
     QPushButton* roll_button;
     QPushButton* upgrade_button;
-    QWidget* bottom_dock;
-    QListWidget* description;
+//    QWidget* bottom_dock;
+//    QListWidget* description;
+	QVBoxLayout* right_dock_layout;
+	
+	// left dock
     QWidget* left_dock;
-    QTabWidget* players_widget;
     QLabel* die_1;
 	QLabel* die_2;
 	QWidget* dice_widget;
-	std::vector<QLabel*> player_tabs; 
 	std::map<int, QPixmap*> die_sides;
+	std::vector<QLabel*> player_tabs; 
+	QTabWidget* players_widget;
 
     //Added in order to be visible inside of function for creating docks
     QStandardItemModel *model;
@@ -47,6 +52,7 @@ private:
     QTextEdit *infoText;
 
 	static Game* game;
+	static std::vector<Space*> spaces;
 };
 
 
