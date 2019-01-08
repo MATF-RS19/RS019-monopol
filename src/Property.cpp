@@ -1,4 +1,5 @@
 #include "Property.hpp"
+#include <iostream>
 
 #define NUM_PROPS 22
 

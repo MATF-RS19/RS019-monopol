@@ -6,8 +6,6 @@
 
 #include "mainwindow.h"
 #include "Game.hpp"
-#include "Player.hpp"
-#include "Bank.hpp"
 
 int numOfPlayers;
 Game* MainWindow::game;
@@ -39,12 +37,14 @@ MainWindow::MainWindow()
     int i=10,j=10,i_increment=0,j_increment=-1;
         foreach(const auto& s, spaces){
             QStandardItem *spaceItem = new QStandardItem();
+			QVariant v_data;
+			v_data.setValue(QString::fromStdString(s->getInfo()));
             //spaceItem->setText(QString::fromStdString(s->getName()));
-            spaceItem->setData(QVariant::fromValue(s));
+            spaceItem->setText(v_data.toString());
             //QBrush *qb = new QBrush(QImage("/images/property1.jpg"));
             //spaceItem->setForeground(*qb);
             //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
-            //spaceItem->setIcon(QIcon(":MyResources/images/monopoly_board.jpg"));
+            spaceItem->setIcon(QIcon("./images/monopoly_board.jpg"));
 
             model->setItem(i,j,spaceItem);
 
@@ -74,7 +74,7 @@ MainWindow::MainWindow()
     int row = view->selectionModel()->currentIndex().row();
     int col = view->selectionModel()->currentIndex().column();
     std::cout << "NESTO" << std::endl;
-    std::cout << model->index(10,10).data(Qt::UserRole+1).value<Space*>()->getInfo();
+//    std::cout << model->index(10,10).data(Qt::UserRole+1).value<Space*>()->getInfo();
     std::cout << "ROWACHA " << row << " COL " << col << std::endl;
 
     setCentralWidget(view);
@@ -83,6 +83,10 @@ MainWindow::MainWindow()
 
 	connect(roll_button, SIGNAL(clicked(bool)),
 			this, SLOT(roll_dice()));
+
+	connect(view, SIGNAL(clicked(const QModelIndex&)),
+			this, SLOT(display_cell(const QModelIndex&)));
+
 }
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
@@ -131,10 +135,10 @@ void MainWindow::createDockWindows()
                           Qt::LeftDockWidgetArea );
 
     // init widgets
-    bottom_dock = new QWidget();
-    buy_button = new QPushButton(tr("Buy"), this);
-    roll_button = new QPushButton(tr("Roll"), this);
-    upgrade_button = new QPushButton(tr("Upgrade"), this);
+    bottom_dock = new QWidget(this);
+    buy_button = new QPushButton(tr("Buy"), bottom_dock);
+    roll_button = new QPushButton(tr("Roll"), bottom_dock);
+    upgrade_button = new QPushButton(tr("Upgrade"), bottom_dock);
 
     // adding widgets to horizontal layout
     QHBoxLayout *h_layout = new QHBoxLayout();
@@ -151,14 +155,14 @@ void MainWindow::createDockWindows()
 
     // init widgets
     right_dock = new QWidget(this);
-    description = new QListWidget(this);
-    die_1 = new QLabel(this);
-	die_2 = new QLabel(this);
-	dice_widget = new QWidget(this);
+    infoText = new QTextEdit(right_dock);
+    die_1 = new QLabel(right_dock);
+	die_2 = new QLabel(right_dock);
+	dice_widget = new QWidget(right_dock);
 	die_1->setPixmap(QPixmap("./images/die0.png"));
 	die_2->setPixmap(QPixmap("./images/die0.png"));
 
-	QHBoxLayout *dice_layout = new QHBoxLayout();
+	QHBoxLayout *dice_layout = new QHBoxLayout(right_dock);
 	dice_layout->addWidget(die_1);
 	dice_layout->addWidget(die_2);
 
@@ -166,7 +170,7 @@ void MainWindow::createDockWindows()
 	
     // adding widgets to vertical layout
     QVBoxLayout *v_layout = new QVBoxLayout();
-    v_layout->addWidget(description);
+	v_layout->addWidget(infoText);
     v_layout->addWidget(dice_widget);
 
     // set layout for right dock area widget
@@ -175,7 +179,6 @@ void MainWindow::createDockWindows()
     // set & add right dock widget
     dock = new QDockWidget("Info", this);
 
-    infoText = new QTextEdit(right_dock);
     //infoText->setText()
     int row = view->selectionModel()->currentIndex().row();
     int col = view->selectionModel()->currentIndex().column();
@@ -189,16 +192,16 @@ void MainWindow::createDockWindows()
 
     // left dock area
     // init widgets
-    left_dock = new QWidget();
+    left_dock = new QWidget(this);
 
-    players_widget = new QTabWidget();
+    players_widget = new QTabWidget(left_dock);
 	std::vector<Player*> players;
 	players = game->getPlayers();	
 
 	QLabel *tab;
 	int i = 0;
 	while(i < numOfPlayers) {
-		tab = new QLabel();
+		tab = new QLabel(left_dock);
 		tab->setText(QString("Name: " + QString::fromStdString(players[i]->get_name()) 
 							// TODO: banka jos ne da novce 
 							// + "\nMoney: " + QString::number(players[0]->balance().first)
@@ -262,5 +265,12 @@ void MainWindow::roll_dice()
 	// if player got dice with different sides, switch to next player
 	if (dice.first != dice.second) {
 		game->nextPlayer();
+	}
+}
+
+void MainWindow::display_cell(const QModelIndex& index)
+{
+	if (index.isValid()) {
+		infoText->setText(index.data().toString());
 	}
 }

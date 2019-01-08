@@ -22,6 +22,7 @@ public:
 
 private Q_SLOTS:
 	void roll_dice();
+	void display_cell(const QModelIndex&);
 
 private:
     void createDockWindows();
