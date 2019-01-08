@@ -12,6 +12,10 @@ int Railroad::getNumBuildings() const {
     return -1;
 }
 
+void Railroad::setNumBuildings(int num) {
+	return;
+}
+
 std::vector<Railroad*> Railroad::initialize_railroads()
 {
 	Railroad* reading = new Railroad(200, 25, 100, "Reading railroad");

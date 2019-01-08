@@ -118,6 +118,9 @@ MainWindow::MainWindow()
 	connect(view, SIGNAL(clicked(const QModelIndex&)),
 			this, SLOT(display_cell(const QModelIndex&)));
 
+	connect(upgrade_button, SIGNAL(clicked(bool)),
+			this, SLOT(upgrade_property()));
+
 }
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
@@ -160,7 +163,7 @@ void MainWindow::mainMenu(std::vector<std::string>& names)
 void MainWindow::createDockWindows()
 {
     // initialize dock widget
-    QDockWidget *dock = new QDockWidget(tr("Game"), this);
+	QDockWidget* dock = new QDockWidget(tr("Info"), this);
     dock->setAllowedAreas(Qt::RightDockWidgetArea  |
                           Qt::LeftDockWidgetArea );
 
@@ -191,9 +194,6 @@ void MainWindow::createDockWindows()
 
     // set layout for right dock area widget
     right_dock->setLayout(right_dock_layout);
-
-    // set & add right dock widget
-    dock = new QDockWidget("Info", this);
 
     //infoText->setText()
     int row = view->selectionModel()->currentIndex().row();
@@ -328,8 +328,10 @@ void MainWindow::display_cell(const QModelIndex& index)
 	}
 }
 
-void MainWindow::display_tab(int i){
-    //std::string test_str = playersTest.at(i)->get_name();
-    //players_widget->setTabText(i,QString::fromStdString(test_str));
-    std::cout << playersTest.at(i)->get_name() << std::endl;
+void MainWindow::upgrade_property()
+{
+	Player* curr_player = game->getCurrentPlayer();
+	Space* curr_space = game->getCurrentPlayerSpace();
+
+	game->build(curr_player, curr_space);
 }

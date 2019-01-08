@@ -25,18 +25,15 @@ public:
 private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
-    void display_tab(int i);
+	void upgrade_property();
 
 private:
     void createDockWindows();
     void mainMenu(std::vector<std::string>& names);
 	// right dock
     QWidget* right_dock;
-//    QPushButton* buy_button;
     QPushButton* roll_button;
     QPushButton* upgrade_button;
-//    QWidget* bottom_dock;
-//    QListWidget* description;
 	QVBoxLayout* right_dock_layout;
 	
 	// left dock

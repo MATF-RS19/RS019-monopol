@@ -32,6 +32,8 @@ class ActionSpace : public Space {
         int getOwner() const override;
         
         int getNumBuildings() const override;
+
+		void setNumBuildings(int num) override;
         
         std::string getGroup() const override;
 		
