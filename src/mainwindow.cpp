@@ -237,10 +237,22 @@ void MainWindow::roll_dice()
 	die_1->setPixmap(*(die_sides[dice.first]));
 	die_2->setPixmap(*(die_sides[dice.second]));
 
-	game->movePlayer(game->getCurrentPlayer(), dice.first+dice.second);
+    Player* curr_player = game->getCurrentPlayer();
+    std::cout << "Before" << curr_player->get_pos() << std::endl;
+
+    game->movePlayer(curr_player, dice.first+dice.second);
 
 	Space* curr_space = game->getCurrentPlayerSpace();
-	Player* curr_player = game->getCurrentPlayer();
+
+    std::cout << curr_space->getName() << std::endl;
+
+    std::cout << curr_player->get_pos() << std::endl;
+
+
+    std::pair<int, int> matrixCoordinates = game->getMatrixAtPos(curr_player->get_pos());
+    std::cout << matrixCoordinates.first << ", " << matrixCoordinates.second << std::endl;
+    QModelIndex index = view->model()->index(matrixCoordinates.first,matrixCoordinates.second);
+    view->setCurrentIndex(index);
 
 	// if space is not action space and is not owned
 	if (curr_space->getType() != "ACTION SPACE" && !curr_space->isOwned()) {
@@ -255,7 +267,7 @@ void MainWindow::roll_dice()
 		if (buy_msg.clickedButton() == yesButton) {
 			game->getBank()->sellSpace(curr_player, curr_space);
 		}
-	} else if (curr_space->getType() == "PROPERTY" && curr_space->isOwned()) {
+    } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		// TODO: current player: pay rent or upgrade
 		game->pay_rent(curr_space, curr_player);
 	} else if (curr_space->getType() == "ACTION SPACE") {
@@ -266,11 +278,16 @@ void MainWindow::roll_dice()
 	if (dice.first != dice.second) {
 		game->nextPlayer();
 	}
+
+
+
 }
 
 void MainWindow::display_cell(const QModelIndex& index)
 {
 	if (index.isValid()) {
 		infoText->setText(index.data().toString());
+
+        infoText->setText(QString::number(index.row())+QString(" ")+QString::number(index.column()));
 	}
 }
