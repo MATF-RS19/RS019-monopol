@@ -39,6 +39,10 @@ int ActionSpace::getNumBuildings() const {
     return -1;
 }
 
+void ActionSpace::setNumBuildings(int num) {
+	return;
+}
+
 std::string ActionSpace::getGroup() const {
     return "ActionSpace";
 }

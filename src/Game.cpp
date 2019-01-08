@@ -18,7 +18,11 @@ std::pair<int , int> Game::throwDice() {
 
 //NOTE: Only current player will build because game is turn based at this point
 //      
-void Game::build(Player* player, Property* property) {
+void Game::build(Player* player, Space* property) {
+	if (property->getType() != "PROPERTY") {
+		std::cerr << "Space is not upgradeable\n" << std::endl;
+		return;
+	}
     if(property->getOwner() == player->getId()){
         // Check if player has purchased all properties in a particular group and
         // if building order is valid

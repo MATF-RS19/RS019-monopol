@@ -24,7 +24,7 @@ public:
     
     void nextPlayer();
     
-    void build(Player* player, Property* property);
+    void build(Player* player, Space* property);
 	void pay_rent(Space* space, Player* player);
     
     void movePlayer(Player *player, int steps);

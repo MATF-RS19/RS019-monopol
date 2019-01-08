@@ -132,7 +132,7 @@ void MainWindow::mainMenu(std::vector<std::string>& names)
 void MainWindow::createDockWindows()
 {
     // initialize dock widget
-    QDockWidget *dock = new QDockWidget(tr("Game"), this);
+	QDockWidget* dock = new QDockWidget(tr("Info"), this);
     dock->setAllowedAreas(Qt::RightDockWidgetArea  |
                           Qt::LeftDockWidgetArea );
 /* DELETE ME:
@@ -184,9 +184,6 @@ void MainWindow::createDockWindows()
 
     // set layout for right dock area widget
     right_dock->setLayout(right_dock_layout);
-
-    // set & add right dock widget
-    dock = new QDockWidget("Info", this);
 
     //infoText->setText()
     int row = view->selectionModel()->currentIndex().row();

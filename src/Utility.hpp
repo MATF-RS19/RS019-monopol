@@ -51,6 +51,8 @@ public:
     }
     
     int getNumBuildings() const override;
+
+	void setNumBuildings(int num) override;
     
     std::string getGroup() const override;
     

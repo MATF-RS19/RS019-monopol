@@ -34,6 +34,8 @@ class Space{
         virtual std::string getGroup() const = 0;
         
         virtual int getNumBuildings() const = 0;
+
+		virtual void setNumBuildings(int num) = 0;
         
         virtual int getAction() const = 0;
 		

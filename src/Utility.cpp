@@ -19,6 +19,10 @@ int Utility::getNumBuildings() const {
     return -1;
 }
 
+void Utility::setNumBuildings(int num) {
+	return;
+}
+
 std::vector<Utility*> Utility::initialize_utilities()
 {
 	Utility* water_works = new Utility(150, 75, "WATER_WORKS");
