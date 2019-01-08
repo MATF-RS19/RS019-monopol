@@ -83,6 +83,12 @@ public:
 	
 	void set_num_turns(int num);
 	int get_num_turns() const;
+	void set_bankrupt() {
+		bankrupt = true;
+	}
+	bool is_bankrupt() {
+		return bankrupt;
+	}
     
 private:
     static int m_obj_count;
@@ -98,6 +104,7 @@ private:
 	int m_pos;
 	int num_turns_in_jail;
 	bool has_jail_card = false;
+	bool bankrupt = false;
 
 	friend std::ostream & operator << (std::ostream& out, const Player& value);
 //	friend std::istream & operator >> (std::istream& in, player& value);

@@ -117,6 +117,33 @@ double Game::pay_rent(Space* space)
 			amount *= 8;
 	}
 	
+	double player_balance = curr_player->balance().second;
+	if(amount > player_balance)
+	{
+		std::cout << "BANKRUPCY" << std::endl;
+		player->receive(player_balance);
+	
+		std::vector<Property*> props = curr_player->get_properties();
+		unsigned prop_size = props.size();
+		for(unsigned i=0; i<prop_size; i++)
+			props[i]->setOwner(player->getId());
+		
+		std::vector<Utility*> utils = curr_player->get_utilities();
+		unsigned util_size = utils.size();
+		for(unsigned i=0; i<util_size; i++)
+			utils[i]->setOwner(player->getId());
+		
+		std::vector<Railroad*> rails = curr_player->get_railroads();
+		unsigned rail_size = rails.size();
+		for(unsigned i=0; i<rail_size; i++)
+			rails[i]->setOwner(player->getId());
+		
+		curr_player->set_bankrupt();
+		
+		//TODO: destroy current player
+		return amount;
+	}
+	
     curr_player->pay(amount);
 	player->receive(amount);
 

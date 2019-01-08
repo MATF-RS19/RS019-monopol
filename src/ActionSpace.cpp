@@ -60,25 +60,25 @@ void ActionSpace::doAction(Player* p){
             std::cout << "DRAW CHANCE CARD" << std::endl;
         break;
         case ActionSpace::EnumActionSpace::COMMUNITY_CHEST :
-            std::cout << "COmm" << std::endl;
+            std::cout << "DRAW COMMUNITY CHEST CARD" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::FREE_PARKING :
-        std::cout << "FREE PARK" << std::endl;
+        std::cout << "FREE PARKING" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::GO :
         std::cout << "GO" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::GOTO_JAIL :
-        std::cout << "Jail" << std::endl;
+        std::cout << "JAIL" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::INCOME_TAX :
-        std::cout << "INcome tax" << std::endl;
+        std::cout << "INCOME TAX" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::JAIL :
         std::cout << "JAIL" << std::endl;
         break;
     case ActionSpace::EnumActionSpace::LUXURY_TAX :
-        std::cout << "Luc" << std::endl;
+        std::cout << "LUXURY TAX" << std::endl;
         break;
     default:
         break;

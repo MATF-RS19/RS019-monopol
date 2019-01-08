@@ -319,8 +319,8 @@ void MainWindow::roll_dice()
 		if(curr_space->getOwner() == curr_player->getId()) {
 			upgrade_button->setVisible(true);
         }else{
-            //TODO: bankrot itd
             double amt = game->pay_rent(curr_space);
+			//TODO: ako je bankrotirao, prelaz na sledeceg igraca
             QMessageBox rent_msg;
             rent_msg.setWindowTitle("PAY RENT");
 
