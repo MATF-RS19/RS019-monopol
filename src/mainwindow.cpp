@@ -11,7 +11,6 @@
 
 int numOfPlayers;
 Game* MainWindow::game;
-QStandardItemModel *model;
 
 MainWindow::MainWindow()
 {
@@ -40,8 +39,8 @@ MainWindow::MainWindow()
     int i=10,j=10,i_increment=0,j_increment=-1;
         foreach(const auto& s, spaces){
             QStandardItem *spaceItem = new QStandardItem();
-            spaceItem->setText(QString::fromStdString(s->getName()));
-            //spaceItem->setData(QVariant(QPixmap::fromImage(image)), Qt::DisplayRole);
+            //spaceItem->setText(QString::fromStdString(s->getName()));
+            spaceItem->setData(QVariant::fromValue(s));
             //QBrush *qb = new QBrush(QImage("/images/property1.jpg"));
             //spaceItem->setForeground(*qb);
             //spaceItem->setBackground(QBrush(QPixmap::fromImage(image)));
@@ -65,32 +64,18 @@ MainWindow::MainWindow()
             }
 
         }
-	
-//     QGraphicsScene *scene = new QGraphicsScene(this);
-//     scene->setSceneRect(0, 0, 885, 885);
-//     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-// 
-//     QPixmap pix("./images/monopoly_board.jpg");
-//     scene->setBackgroundBrush(QPixmap(pix));
 
-    QTableView *view = new QTableView();
+    view = new QTableView();
     view->setModel(model);
     view->resize(500, 500);
     view->setStyleSheet("selection-background-color : red;");
     view->setSortingEnabled(false);
 
-
-
-    QModelIndexList selected = view->selectionModel()->selectedIndexes();
-    foreach(QModelIndex i, selected){
-        int row = i.row();
-        int col = i.column();
-        QMessageBox msgBox;
-        msgBox.setText(tr("Hello!"));
-        msgBox.exec();
-    }
-    //view->setRenderHint(QPainter::Antialiasing);
-    //view->setDragMode(QGraphicsView::ScrollHandDrag);
+    int row = view->selectionModel()->currentIndex().row();
+    int col = view->selectionModel()->currentIndex().column();
+    std::cout << "NESTO" << std::endl;
+    std::cout << model->index(10,10).data(Qt::UserRole+1).value<Space*>()->getInfo();
+    std::cout << "ROWACHA " << row << " COL " << col << std::endl;
 
     setCentralWidget(view);
     createDockWindows();
@@ -189,6 +174,15 @@ void MainWindow::createDockWindows()
 
     // set & add right dock widget
     dock = new QDockWidget("Info", this);
+
+    infoText = new QTextEdit(right_dock);
+    //infoText->setText()
+    int row = view->selectionModel()->currentIndex().row();
+    int col = view->selectionModel()->currentIndex().column();
+
+    std::cout << "ROW " << row << " COL " << col << std::endl;
+    infoText->setReadOnly(true);
+
     dock->setWidget(right_dock);
 
     addDockWidget(Qt::RightDockWidgetArea, dock);

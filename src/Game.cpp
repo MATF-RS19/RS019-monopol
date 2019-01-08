@@ -65,6 +65,7 @@ void Game::build(Player* player, Property* property) {
     }
 }
 
+//FIXME
 void Game::pay_rent(Space* space, Player* player)
 {
 	double amount = 0;

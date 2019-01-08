@@ -2,9 +2,6 @@
 
 #include "Space.hpp"
 #include "Player.hpp"
-#include <string>
-#include <iostream>
-#include <vector>
 
 class Player;
 
@@ -17,42 +14,25 @@ public:
 	
 	static std::vector<Railroad*> initialize_railroads();
 
-	std::string getName() const {
-		return _name;
-	}
-	
-	std::string getType() const {
-		return "RAILROAD";
-    }
-    
-    double getMortgage() const {
-		return _mortgage;
-    }
+    virtual std::string getInfo() const override;
 
-	double getBuyPrice() const {
-        //std::cout << "Railroad" << std::endl;
-		return _buy_price;
-	}
+    std::string getName() const override;
 	
-	int getRentPrice() const {
-		return _rent_price;
-    }
-	
-	bool isOwned() const override {
-        return _owned;
-    }
-	
-	void setOwner(int id) {
-        id_owner = id;
-    }
+    std::string getType() const override;
     
-    int getOwner() const {
-        return id_owner;
-    }
+    double getMortgage() const;
+
+    double getBuyPrice() const override;
 	
-	void setOwned() {
-        _owned = true;
-    }
+    double getRentPrice() const;
+	
+    bool isOwned() const override;
+	
+    void setOwner(int id) override;
+    
+    int getOwner() const override;
+	
+    void setOwned() override;
 
     int getNumBuildings() const override;
     
@@ -64,9 +44,7 @@ public:
 	
 	void setMortgage(Player* p);
 	void revertMortgage(Player* p);
-	bool isOnMortgage() const {
-		return _is_on_mortgage;
-	}
+    bool isOnMortgage() const override;
     
 private:
 	double _buy_price,  _rent_price, _mortgage;

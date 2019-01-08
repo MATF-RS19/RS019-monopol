@@ -2,9 +2,6 @@
 
 #include "Space.hpp"
 #include "Player.hpp"
-#include <string>
-#include <vector>
-#include <iostream>
 
 class Player;
 
@@ -18,6 +15,8 @@ public:
 	static std::vector<Utility*> initialize_utilities();
 
 	virtual void printSpace() const override;
+
+    virtual std::string getInfo() const override;
 
 	double getBuyPrice() const {
 		return _buy_price;

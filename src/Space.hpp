@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <string>
+#include <QMetaType>
 
 /*
  * Interface for all of the spaces on the board. 
@@ -35,6 +38,10 @@ class Space{
         virtual int getAction() const = 0;
 		
 		virtual std::string getType() const = 0;
+
+        virtual std::string getInfo() const = 0;
 		
 		virtual bool isOnMortgage() const = 0;
 };
+
+Q_DECLARE_METATYPE(Space*);

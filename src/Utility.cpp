@@ -4,6 +4,13 @@ void Utility::printSpace() const {
 	std::cout << "Utility: " << Utility::getName() << ", price: " << Utility::getBuyPrice() << std::endl; 
 }
 
+std::string Utility::getInfo() const {
+    std::ostringstream info;
+    info << getName() << std::endl;
+    info << "Mortgage value $" << getMortgage() << std::endl;
+    return info.str();
+}
+
 std::string Utility::getGroup() const {
     return "Utility";
 }

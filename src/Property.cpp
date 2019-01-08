@@ -2,6 +2,24 @@
 
 #define NUM_PROPS 22
 
+std::string Property::getInfo() const{
+    std::ostringstream info;
+    info << getName() << std::endl;
+    info << "RENT $" << getRentPrice() << std::endl;
+    info << "With 1 house $" << getH1Price() << std::endl;
+    info << "With 2 houses $" << getH2Price() << std::endl;
+    info << "With 3 houses $" << getH3Price() << std::endl;
+    info << "With 4 houses $" << getH4Price() << std::endl;
+    info << "With hotel $" << getH5Price() << std::endl;
+    info << "Mortgage value $" << getMortgage() << std::endl;
+    info << "Houses cost $" << getHousePrice() << "each" << std::endl;
+    info << "Hotels, $" << getHousePrice() << " plus 4 houses" << std::endl;
+    info << "If a player owns ALL the lots of any Colour-Group, the rent is doubled on unimproved lots in that group" << std::endl;
+    //TODO: add getOwnerName method => this implies that all of the Space class instances
+    //      should have ref to owner (Player class object)
+    return info.str();
+}
+
 void Property::printSpace() const {
 	std::cout << "Property: " << Property::getName() << ", price: " << Property::getBuyPrice() << std::endl;
 }
