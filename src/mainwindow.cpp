@@ -87,6 +87,9 @@ MainWindow::MainWindow()
 	connect(view, SIGNAL(clicked(const QModelIndex&)),
 			this, SLOT(display_cell(const QModelIndex&)));
 
+	connect(upgrade_button, SIGNAL(clicked(bool)),
+			this, SLOT(upgrade_property()));
+
 }
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
@@ -296,4 +299,12 @@ void MainWindow::display_cell(const QModelIndex& index)
 		std::string test_string = index.data(Qt::UserRole+1).value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
 	}
+}
+
+void MainWindow::upgrade_property()
+{
+	Player* curr_player = game->getCurrentPlayer();
+	Space* curr_space = game->getCurrentPlayerSpace();
+
+	game->build(curr_player, curr_space);
 }
