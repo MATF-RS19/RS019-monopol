@@ -51,36 +51,43 @@ void ActionSpace::printSpace() const {
     std::cout << ActionSpace::getAction() << std::endl;
 }
 
-//TODO: popraviti ovo da ima smisla
-
-void ActionSpace::doAction(Player* p){
+std::string ActionSpace::getSpaceAction(){
     ActionSpace::EnumActionSpace action = static_cast<ActionSpace::EnumActionSpace>(getAction());
     switch (action) {
         case ActionSpace::EnumActionSpace::CHANCE :
             std::cout << "DRAW CHANCE CARD" << std::endl;
+			return "CHANCE";
         break;
         case ActionSpace::EnumActionSpace::COMMUNITY_CHEST :
             std::cout << "DRAW COMMUNITY CHEST CARD" << std::endl;
+			return "COMMUNITY_CHEST";
         break;
     case ActionSpace::EnumActionSpace::FREE_PARKING :
         std::cout << "FREE PARKING" << std::endl;
+		return "FREE_PARKING";
         break;
     case ActionSpace::EnumActionSpace::GO :
         std::cout << "GO" << std::endl;
+		return "GO";
         break;
     case ActionSpace::EnumActionSpace::GOTO_JAIL :
-        std::cout << "JAIL" << std::endl;
+        std::cout << "GO TO JAIL" << std::endl;
+		return "GOTO_JAIL";
         break;
     case ActionSpace::EnumActionSpace::INCOME_TAX :
         std::cout << "INCOME TAX" << std::endl;
+		return "INCOME_TAX";
         break;
     case ActionSpace::EnumActionSpace::JAIL :
         std::cout << "JAIL" << std::endl;
+		return "JAIL";
         break;
     case ActionSpace::EnumActionSpace::LUXURY_TAX :
         std::cout << "LUXURY TAX" << std::endl;
+		return "LUXURY_TAX";
         break;
     default:
+		return "ERROR";
         break;
     }
 }

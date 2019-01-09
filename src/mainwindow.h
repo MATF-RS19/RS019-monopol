@@ -30,6 +30,8 @@ private Q_SLOTS:
 private:
     void createDockWindows();
     void mainMenu(std::vector<std::string>& names);
+	void reactToField();
+	
 	// right dock
     QWidget* right_dock;
     QPushButton* roll_button;

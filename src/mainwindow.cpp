@@ -269,7 +269,16 @@ void MainWindow::roll_dice()
     std::cout << "Before" << curr_player->get_pos() << std::endl;
 
     game->movePlayer(curr_player, dice.first+dice.second);
+	reactToField();
+	// if player got dice with different sides, switch to next player
+	if (dice.first != dice.second) {
+		game->nextPlayer();
+	}
+}
 
+void MainWindow::reactToField()
+{
+	Player* curr_player = game->getCurrentPlayer();
 	Space* curr_space = game->getCurrentPlayerSpace();
 
     std::cout << curr_space->getName() << std::endl;
@@ -329,14 +338,257 @@ void MainWindow::roll_dice()
             rent_msg.exec();
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
-        curr_space->doAction(curr_player);
+		ActionSpace* curr_act_space = (ActionSpace*)curr_space;
+        std::string action = curr_act_space->getSpaceAction();
+		if(action == "GO")
+		{
+			curr_player->receive(200.0);
+		}
+		else if(action == "GOTO_JAIL")
+		{
+			curr_player->send_to_jail();
+			curr_player->set_num_turns(1);
+		}
+		else if(action == "INCOME_TAX")
+		{
+			curr_player->pay(200.0);
+		}
+		else if(action == "LUXURY_TAX")
+		{
+			curr_player->pay(75.0);
+		}
+		else if(action == "CHANCE")
+		{
+			Card chance = game->getBoard()->drawChanceCard();
+			int num_card = chance.getAction();
+			if(num_card == 0)
+			{
+				curr_player->set_pos(0);
+				reactToField();
+			}
+			else if(num_card == 1)
+			{
+				// if they pass go, they get $200
+				if(curr_player->get_pos() > 24)
+					curr_player->receive(200.0);
+				// Illinos Avenue
+				curr_player->set_pos(24);
+				reactToField();
+			}
+			else if(num_card == 2)
+			{
+				// if they pass go, they get $200
+				if(curr_player->get_pos() > 11)
+					curr_player->receive(200.0);
+				// St. Charles Place
+				curr_player->set_pos(11);
+				reactToField();
+			}
+			else if(num_card == 3)
+			{
+				int electric_distance = abs(12-curr_player->get_pos());
+				int water_distance = abs(28-curr_player->get_pos());
+				int nearest;
+				if(electric_distance <= water_distance)
+					nearest = 12;
+				else
+					nearest = 28;
+				// nearest utility
+				curr_player->set_pos(nearest);
+				reactToField();
+			}
+			else if(num_card == 4)
+			{
+				int quotient = curr_player->get_pos() / 10;
+				int move_to = quotient * 10 + 5;
+				// nearest railroad
+				curr_player->set_pos(move_to);
+				reactToField();				
+			}
+			else if(num_card == 5)
+			{
+				int quotient = curr_player->get_pos() / 10;
+				int move_to = quotient * 10 + 5;
+				// nearest railroad
+				curr_player->set_pos(move_to);
+				reactToField();
+			}
+			else if(num_card == 6)
+			{
+				curr_player->receive(50.0);
+			}
+			else if(num_card == 7)
+			{
+				if(curr_player->is_in_jail())
+					curr_player->release_from_jail();
+				else
+					curr_player->receive_jail_card();
+			}
+			else if(num_card == 8)
+			{
+				int current = curr_player->get_pos();
+				if(current == 0)
+					curr_player->set_pos(37);
+				else if(current == 1)
+					curr_player->set_pos(38);
+				else if(current == 2)
+					curr_player->set_pos(39);
+				else 
+					curr_player->set_pos(current-3);
+				reactToField();
+			}
+			else if(num_card == 9)
+			{
+				// placing him at the go to jail action field for a moment
+				curr_player->set_pos(30);
+				reactToField();
+			}
+			else if(num_card == 10)
+			{
+				std::vector<Property*> props = curr_player->get_properties();
+				unsigned size = props.size();
+				int num = 0;
+				for(unsigned i=0; i<size; i++)
+					num += props[i]->getNumBuildings();
+	
+				curr_player->pay(num*25.0);
+			}
+			else if(num_card == 11)
+			{
+				curr_player->pay(15.0);
+			}
+			else if(num_card == 12)
+			{
+				if(curr_player->get_pos() > 5)
+					curr_player->receive(200.0);
+				// Reading Railroad
+				curr_player->set_pos(5);
+				reactToField();
+			}
+			else if(num_card == 13)
+			{
+				// Boardwalk
+				curr_player->set_pos(39);
+				reactToField();
+			}
+			else if(num_card == 14)
+			{
+				std::vector<Player*> players = game->getPlayers();
+				curr_player->pay(50.0*(numOfPlayers-1)); 
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					if(players[i] != curr_player)
+						players[i]->receive(50.0);
+				}
+			}
+			else if(num_card == 15)
+			{
+				curr_player->receive(150.0);
+			}
+			else if(num_card == 16)
+			{
+				curr_player->receive(100.0);
+			}
+		}
+		else if(action == "COMMUNITY_CHEST")
+		{
+			Card chest = game->getBoard()->drawCommunityCard();
+			int num_card = chest.getAction();
+			if(num_card == 17)
+			{
+				curr_player->set_pos(0);
+				reactToField();
+			}
+			else if(num_card == 18)
+			{
+				curr_player->receive(200.0);
+			}
+			else if(num_card == 19)
+			{
+				curr_player->pay(50.0);
+			}
+			else if(num_card == 20)
+			{
+				curr_player->receive(50.0);
+			}
+			else if(num_card == 21)
+			{
+				if(curr_player->is_in_jail())
+					curr_player->release_from_jail();
+				else
+					curr_player->receive_jail_card();
+			}
+			else if(num_card == 22)
+			{
+				std::vector<Player*> players = game->getPlayers();
+				curr_player->receive(50.0*(numOfPlayers-1)); 
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					if(players[i] != curr_player)
+						players[i]->pay(50.0);
+				}
+			}
+			else if(num_card == 23)
+			{
+				curr_player->receive(100.0);
+			}
+			else if(num_card == 24)
+			{
+				curr_player->receive(20.0);
+			}
+			else if(num_card == 25)
+			{
+				std::vector<Player*> players = game->getPlayers();
+				curr_player->receive(10.0*(numOfPlayers-1)); 
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					if(players[i] != curr_player)
+						players[i]->pay(10.0);
+				}
+			}
+			else if(num_card == 26)
+			{
+				curr_player->receive(100.0);
+			}
+			else if(num_card == 27)
+			{
+				curr_player->pay(50.0);
+			}
+			else if(num_card == 28)
+			{
+				curr_player->pay(50.0);
+			}
+			else if(num_card == 29)
+			{
+				curr_player->receive(25.0);
+			}
+			else if(num_card == 30)
+			{
+				std::vector<Property*> props = curr_player->get_properties();
+				unsigned size = props.size();
+				int num = 0;
+				int num_h = 0;
+				double total = 0;
+				for(unsigned i=0; i<size; i++)
+				{
+					int num_h = props[i]->getNumBuildings();
+					if(num_h == 5)
+						total += 115;
+					else
+						num += num_h;
+				}		
+				curr_player->pay(num * 40.0 + total);
+			}
+			else if(num_card == 31)
+			{
+				curr_player->receive(10.0);
+			}
+			else if(num_card == 32)
+			{
+				curr_player->receive(100.0);
+			}
+		}
 	} 
-
-	// if player got dice with different sides, switch to next player
-	if (dice.first != dice.second) {
-		game->nextPlayer();
-	}
-
 }
 
 void MainWindow::display_cell(const QModelIndex& index)

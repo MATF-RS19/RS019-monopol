@@ -15,6 +15,9 @@ public:
     std::vector<Player*> getPlayers() const;
     
     void showBoard() const;
+	Board* getBoard() {
+		return m_board;
+	}
     
     void printPlayers() const;
     

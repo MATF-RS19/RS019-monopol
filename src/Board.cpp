@@ -17,7 +17,7 @@ Card Board::drawChanceCard() {
     m_chanceDeck.erase(m_chanceDeck.begin());
     //TODO: if not jail card put back, else add the card to player
     //TODO: remove magic nums
-    if(result.getAction() != 7 && result.getAction() != 22){
+    if(result.getAction() != 7){
         std::cout << "Puting card back" << std::endl;
         m_chanceDeck.push_back(&result);
     }
@@ -29,7 +29,7 @@ Card Board::drawCommunityCard() {
     m_communityChestDeck.erase(m_communityChestDeck.begin());
     //TODO: if not jail card put back, else add the card to player
     //TODO: remove magic nums
-    if(result.getAction() != 7 && result.getAction() != 22){
+    if(result.getAction() != 21){
         std::cout << "Puting card back" << std::endl;
         m_communityChestDeck.push_back(&result);
     }
@@ -42,45 +42,85 @@ Board::Board() {
 	std::vector<Card*> cardDeck = Card::initialize_cards();
 	std::vector<Property*> properties = Property::initialize_properties();
     
-	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::GO))); 
+	//0 
+	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::GO)));
+	// 1
 	m_spaces.push_back(properties.at(0));
+	// 2
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::COMMUNITY_CHEST)));
+	// 3
 	m_spaces.push_back(properties.at(1));
+	// 4
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::INCOME_TAX)));
+	// 5
 	m_spaces.push_back(rails.at(0)); //reading 
+	// 6
 	m_spaces.push_back(properties.at(2));
+	// 7
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::CHANCE)));
+	// 8
 	m_spaces.push_back(properties.at(3));
+	// 9
 	m_spaces.push_back(properties.at(4));
+	// 10
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::JAIL)));
+	// 11
 	m_spaces.push_back(properties.at(5));
+	// 12
 	m_spaces.push_back(utils.at(1)); // electric company
+	// 13
 	m_spaces.push_back(properties.at(6));
+	// 14
 	m_spaces.push_back(properties.at(7));
+	// 15
 	m_spaces.push_back(rails.at(1)); //penn
+	// 16
 	m_spaces.push_back(properties.at(8));
+	// 17
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::COMMUNITY_CHEST)));
+	// 18
 	m_spaces.push_back(properties.at(9));
+	// 19
 	m_spaces.push_back(properties.at(10));
+	// 20
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::FREE_PARKING)));
+	// 21
 	m_spaces.push_back(properties.at(11));
+	// 22
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::CHANCE)));
+	// 23
 	m_spaces.push_back(properties.at(12));
+	// 24
 	m_spaces.push_back(properties.at(13));
+	// 25
 	m_spaces.push_back(rails.at(2)); //bo
+	// 26
 	m_spaces.push_back(properties.at(14));
+	// 27
 	m_spaces.push_back(properties.at(15));
+	// 28
 	m_spaces.push_back(rails.at(0)); // water works
+	// 29
 	m_spaces.push_back(properties.at(16));
+	// 30
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::GOTO_JAIL)));
+	// 31
 	m_spaces.push_back(properties.at(17));
+	// 32
 	m_spaces.push_back(properties.at(18));
+	// 33
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::COMMUNITY_CHEST)));
+	// 34
 	m_spaces.push_back(properties.at(19));
+	// 35
 	m_spaces.push_back(rails.at(3)); //sl
+	// 36
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::CHANCE)));
+	// 37
 	m_spaces.push_back(properties.at(20));
+	// 38
 	m_spaces.push_back(new ActionSpace(static_cast<int>(ActionSpace::EnumActionSpace::LUXURY_TAX)));
+	// 39
 	m_spaces.push_back(properties.at(21));
 
     //TODO: put me in a func?

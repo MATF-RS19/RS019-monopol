@@ -37,7 +37,11 @@ class ActionSpace : public Space {
         
         std::string getGroup() const override;
 		
-		void doAction(Player* p);
+		std::string getSpaceAction();
+		
+		void doAction(Player* p) {
+			return;
+		}
 		
 		std::string getType() const {
 			return "ACTION SPACE";
