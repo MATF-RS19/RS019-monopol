@@ -69,13 +69,13 @@ void Game::build(Player* player, Space* property) {
     }
 }
 
-
 double Game::pay_rent(Space* space)
 {
 	double amount = 0;
 	int dice = getDice();
     Player* curr_player = getCurrentPlayer();
-    Player* player = getPlayers().at(space->getOwner());
+	std::vector<Player*> players = getPlayers();
+    Player* player = players[space->getOwner()-1];
 	
 	std::string type = space->getType();
 	if (type == "PROPERTY")
