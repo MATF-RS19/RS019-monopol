@@ -50,6 +50,34 @@ class ActionSpace : public Space {
 		bool isOnMortgage() const {
 			return false;
 		}
+		
+		double getRentPrice() const {
+		return 0;
+		}
+		
+		double getH1Price() const {
+			return 0;
+		}
+		
+		double getH2Price() const {
+			return 0;
+		}
+		
+		double getH3Price() const {
+			return 0;
+		}
+		
+		double getH4Price() const {
+			return 0;
+		}
+		
+		double getH5Price() const {
+			return 0;
+		}
+		
+		std::string getColour() const {
+			return "TRANSPARENT";
+		}
 
  		enum class EnumActionSpace
 		{

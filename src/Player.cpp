@@ -165,10 +165,10 @@ std::vector<Space*> Player::get_spaces() const{
     return owned_spaces;
 }
 
-bool Player::check_properties(Property* p)
+bool Player::check_properties(Space* s)
 {
 	std::vector<Property*> my_properties = get_properties();		
-	std::string colour = p->getColour();
+	std::string colour = s->getColour();
 	int count = 0;
 	unsigned i = 0;
 	bool has_all = false;

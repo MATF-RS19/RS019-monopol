@@ -74,7 +74,7 @@ public:
     std::vector<Utility*> get_utilities() const;
     std::vector<Railroad*> get_railroads() const;
 	
-	bool check_properties(Property* p);
+	bool check_properties(Space* s);
 	bool check_utilities();
 	int check_railroads();
     

@@ -51,6 +51,30 @@ public:
 	void setMortgage(Player* p);
 	void revertMortgage(Player* p);
     bool isOnMortgage() const override;
+	
+	double getH1Price() const {
+		return 0;
+	}
+	
+	double getH2Price() const {
+		return 0;
+	}
+	
+	double getH3Price() const {
+		return 0;
+	}
+	
+	double getH4Price() const {
+		return 0;
+	}
+	
+	double getH5Price() const {
+		return 0;
+	}
+	
+	std::string getColour() const {
+		return "TRANSPARENT";
+	}
     
 private:
 	double _buy_price,  _rent_price, _mortgage;

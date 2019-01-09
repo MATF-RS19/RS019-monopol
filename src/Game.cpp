@@ -69,31 +69,30 @@ void Game::build(Player* player, Space* property) {
     }
 }
 
-double Game::pay_rent(Space* space)
+double Game::pay_rent(Space* s)
 {
 	double amount = 0;
 	int dice = getDice();
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
-    Player* player = players[space->getOwner()-1];
+    Player* player = players[s->getOwner()-1];
 	
-	std::string type = space->getType();
+	std::string type = s->getType();
 	if (type == "PROPERTY")
 	{
-		Property* p = (Property*)space;
-		amount = p->getRentPrice();
-		if(player->check_properties(p))
+		amount = s->getRentPrice();
+		if(player->check_properties(s))
 			amount *= 2;
-		else if(p->getNumBuildings() == 1)
-			amount = p->getH1Price();
-		else if(p->getNumBuildings() == 2)
-			amount = p->getH2Price();
-		else if(p->getNumBuildings() == 3)
-			amount = p->getH3Price();
-		else if(p->getNumBuildings() == 4)
-			amount = p->getH4Price();
-		else if(p->getNumBuildings() == 5)
-			amount = p->getH5Price();
+		else if(s->getNumBuildings() == 1)
+			amount = s->getH1Price();
+		else if(s->getNumBuildings() == 2)
+			amount = s->getH2Price();
+		else if(s->getNumBuildings() == 3)
+			amount = s->getH3Price();
+		else if(s->getNumBuildings() == 4)
+			amount = s->getH4Price();
+		else if(s->getNumBuildings() == 5)
+			amount = s->getH5Price();
 	}
 	else if (type == "UTILITY")
 	{
@@ -105,10 +104,9 @@ double Game::pay_rent(Space* space)
 	}
 	else if (type == "RAILROAD")
 	{
-		Railroad* r = (Railroad*)space;
 		int num_railroads = player->check_railroads();
 		
-		amount = r->getRentPrice();
+		amount = s->getRentPrice();
 		if(num_railroads == 2)
 			amount *= 2;
 		else if(num_railroads == 3)
