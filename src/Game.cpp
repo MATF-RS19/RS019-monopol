@@ -75,16 +75,26 @@ void Game::build(Player* player, Space* property) {
 
 double Game::pay_rent(Space* s)
 {
+    //TODO: remove me
+    std::cout << "PAYRENT" << std::endl;
+
 	double amount = 0;
 	int dice = getDice();
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
-    Player* player = players[s->getOwner()-1];
+
+    for(const auto& p : players){
+        std::cout << "PLAYER: " << p->get_name() << " ID: " << p->getId() << std::endl;
+    }
+    std::cout << "TRY ACCESSING PLAYERS.AT(" << s->getOwner()-1 << ")" << std::endl;
+    Player* player = players.at(s->getOwner()-1);
+    std::cout << "SUCCESS: " << player->get_name() << "," << player->getId() << std::endl;
 
 	std::string type = s->getType();
 /* BUG: segmentation fault!*/	
 	if (type == "PROPERTY")
 	{
+
 		amount = s->getRentPrice();
 		if(player->check_properties(s))
 			amount *= 2;
@@ -98,17 +108,21 @@ double Game::pay_rent(Space* s)
 			amount = s->getH4Price();
 		else if(s->getNumBuildings() == 5)
 			amount = s->getH5Price();
+
 	}
 	else if (type == "UTILITY")
 	{
+
 		bool both_utilities = player->check_utilities();
 		if(!both_utilities)
 			amount = dice * 4;
 		else
 			amount = dice * 10;
+
 	}
 	else if (type == "RAILROAD")
 	{
+
 		int num_railroads = player->check_railroads();
 		
 		amount = s->getRentPrice();
@@ -118,9 +132,11 @@ double Game::pay_rent(Space* s)
 			amount *= 4;
 		else if(num_railroads == 4)
 			amount *= 8;
+
 	}
-/*	
-	double player_balance = curr_player->balance().second;
+
+    //double player_balance = curr_player->balance().second;
+    /*
 	if(amount > player_balance)
 	{
 		std::cout << "BANKRUPCY" << std::endl;
@@ -145,10 +161,11 @@ double Game::pay_rent(Space* s)
 		
 		//TODO: destroy current player
 		return amount;
-	}
-*/	
+    }*/
+	
     curr_player->pay(amount);
 	player->receive(amount);
+
 
     return amount;
 }

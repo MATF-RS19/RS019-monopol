@@ -5,6 +5,7 @@
 #include "Property.hpp"
 #include "Utility.hpp"
 #include "Railroad.hpp"
+#include <string>
 
 namespace {
    int const num_of_houses = 32;
