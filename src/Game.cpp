@@ -10,6 +10,10 @@ void Game::movePlayer(Player *player, int steps) {
     player->set_pos((player->get_pos() + steps) % 40);
 }
 
+void Game::moveToPos(Player *player, int pos) {
+	player->set_pos(pos);
+}
+
 std::pair<int , int> Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
 	setDice(num.first + num.second);
@@ -78,6 +82,7 @@ double Game::pay_rent(Space* s)
 	int dice = getDice();
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
+
     for(const auto& p : players){
         std::cout << "PLAYER: " << p->get_name() << " ID: " << p->getId() << std::endl;
     }
@@ -86,6 +91,7 @@ double Game::pay_rent(Space* s)
     std::cout << "SUCCESS: " << player->get_name() << "," << player->getId() << std::endl;
 
 	std::string type = s->getType();
+/* BUG: segmentation fault!*/	
 	if (type == "PROPERTY")
 	{
 
@@ -128,7 +134,6 @@ double Game::pay_rent(Space* s)
 			amount *= 8;
 
 	}
-	
 
     double player_balance = curr_player->balance().second;
     /*
@@ -158,6 +163,7 @@ double Game::pay_rent(Space* s)
 		return amount;
     }
 	
+
     */
 
     curr_player->pay(amount);

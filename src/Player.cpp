@@ -99,7 +99,6 @@ std::pair<double, double> Player::balance()
     }
 	
 	// both utils have the same mortgage value
-
 	std::vector<Utility*> my_utils = get_utilities();
     if(my_utils.size())
         utils_val += my_utils.at(0)->getMortgage() * my_utils.size();

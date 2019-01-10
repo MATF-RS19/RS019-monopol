@@ -26,6 +26,8 @@ private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
 	void upgrade_property();
+	void scroll_to_bottom();
+	void proceed_action();
 
 private:
     void createDockWindows();
@@ -44,8 +46,11 @@ private:
 	QLabel* die_2;
 	QWidget* dice_widget;
 	std::map<int, QPixmap*> die_sides;
-	std::vector<QLabel*> player_tabs; 
+	std::vector<QTextEdit*> player_tabs; 
 	QTabWidget* players_widget;
+	QTextEdit *game_info;
+	QString *game_info_text;
+	QPushButton *proceed_button;
 
     //Added in order to be visible inside of function for creating docks
     QStandardItemModel *model;

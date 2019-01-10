@@ -36,6 +36,8 @@ public:
     void build(Player* player, Space* property);
     
     void movePlayer(Player *player, int steps);
+	
+	void moveToPos(Player *player, int pos);
     
     int getDice() {
 		return _dice;
