@@ -130,7 +130,7 @@ double Game::pay_rent(Space* s)
 	}
 	
 
-    //double player_balance = curr_player->balance().second;
+    double player_balance = curr_player->balance().second;
     /*
 	if(amount > player_balance)
 	{
@@ -156,9 +156,9 @@ double Game::pay_rent(Space* s)
 		
 		//TODO: destroy current player
 		return amount;
-    }*/
+    }
 	
-
+    */
 
     curr_player->pay(amount);
 	player->receive(amount);

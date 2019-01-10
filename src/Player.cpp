@@ -90,22 +90,24 @@ std::pair<double, double> Player::balance()
 	double rails_val = 0;
 	
 	std::vector<Property*> my_props = get_properties();
-	unsigned size = my_props.size();
-	for(unsigned i=0; i<size; i++)
-	{
-		props_val += my_props[i]->getMortgage();
-		int buildings = my_props[i]->getNumBuildings();
-		if(buildings)
-			props_val += buildings * my_props[i]->getHousePrice()/2; 
-	}
+
+    for(const auto &i : my_props){
+        props_val += i->getMortgage();
+        int buildings = i->getNumBuildings();
+        if(buildings)
+            props_val += buildings * i->getHousePrice()/2;
+    }
 	
 	// both utils have the same mortgage value
+
 	std::vector<Utility*> my_utils = get_utilities();
-	utils_val += my_utils[0]->getMortgage() * my_utils.size();
+    if(my_utils.size())
+        utils_val += my_utils.at(0)->getMortgage() * my_utils.size();
 	
 	// all rails have the same mortgage value
 	std::vector<Railroad*> my_rails = get_railroads();
-	rails_val += my_rails[0]->getMortgage() * my_rails.size();
+    if(my_rails.size())
+        rails_val += my_rails.at(0)->getMortgage() * my_rails.size();
 	
 	balance.second = props_val + utils_val + rails_val + m_wallet;
 	
