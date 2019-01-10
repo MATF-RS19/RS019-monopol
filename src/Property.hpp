@@ -18,24 +18,24 @@ public:
 
     std::string getInfo() const override;
 
-	std::string getName() const {
+    std::string getName() const override{
 		return _name;
 	}
 	
-	std::string getColour() const {
+    std::string getColour() const override{
         return _colour;
     }
 
-	double getBuyPrice() const {
+    double getBuyPrice() const override{
         //std::cout << "Property" << std::endl;
 		return _buy_price;
 	}
 	
-	int getNumBuildings() const {
+    int getNumBuildings() const override{
         return _num_buildings;
     }
     
-    double getRentPrice() const {
+    double getRentPrice() const override{
 		return _rent_price;
     }
     
@@ -47,7 +47,7 @@ public:
 		return _house_price;
     }
     
-    void setNumBuildings(int num) {
+    void setNumBuildings(int num) override{
         _num_buildings = num;
     }
     
@@ -59,42 +59,42 @@ public:
         _owned = true;
     }
     
-    void setOwner(int id) {
+    void setOwner(int id) override{
         std::cout << "Hey" << std::endl;
         id_owner = id;
     }
     
-    int getOwner() const {
+    int getOwner() const override{
         return id_owner;
     }
     
-    std::string getType() const {
+    std::string getType() const override{
 		return "PROPERTY";
     }
     
-    double getH1Price() const {
+    double getH1Price() const override{
 		return _h1_price;
     }
     
-    double getH2Price() const {
+    double getH2Price() const override{
 		return _h2_price;
     }
     
-    double getH3Price() const {
+    double getH3Price() const override{
 		return _h3_price;
     }
     
-    double getH4Price() const {
+    double getH4Price() const override{
 		return _h4_price;
     }
     
-    double getH5Price() const {
+    double getH5Price() const override{
 		return _h5_price;
     }
     
     void setMortgage(Player* p);
     void revertMortgage(Player* p);
-	bool isOnMortgage() const{
+    bool isOnMortgage() const override{
 		return _is_on_mortgage;
 	}
     
@@ -102,7 +102,7 @@ public:
     
     int getAction() const override;
 
-    void doAction(Player* p){
+    void doAction(Player* p) override{
         return;
     }
     

@@ -24,7 +24,7 @@ public:
 
     double getBuyPrice() const override;
 	
-    double getRentPrice() const;
+    double getRentPrice() const override;
 	
     bool isOwned() const override;
 	
@@ -44,7 +44,7 @@ public:
     
     int getAction() const override;
 	
-    void doAction(Player* p){
+    void doAction(Player* p) override{
         return;
     }
 
@@ -52,27 +52,27 @@ public:
 	void revertMortgage(Player* p);
     bool isOnMortgage() const override;
 	
-	double getH1Price() const {
+    double getH1Price() const override{
 		return 0;
 	}
 	
-	double getH2Price() const {
+    double getH2Price() const override{
 		return 0;
 	}
 	
-	double getH3Price() const {
+    double getH3Price() const override{
 		return 0;
 	}
 	
-	double getH4Price() const {
+    double getH4Price() const override{
 		return 0;
 	}
 	
-	double getH5Price() const {
+    double getH5Price() const override{
 		return 0;
 	}
 	
-	std::string getColour() const {
+    std::string getColour() const override{
 		return "TRANSPARENT";
 	}
     

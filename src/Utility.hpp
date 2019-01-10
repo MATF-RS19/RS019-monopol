@@ -18,19 +18,19 @@ public:
 
     virtual std::string getInfo() const override;
 
-    void doAction(Player* p){
+    void doAction(Player* p) override{
         return;
     }
 
-	double getBuyPrice() const {
+    double getBuyPrice() const override{
 		return _buy_price;
 	}
 
-	std::string getName() const {
+    std::string getName() const override{
 		return _group;
 	}
 	
-	std::string getType() const {
+    std::string getType() const override{
 		return "UTILITY";
     }
     
@@ -42,15 +42,15 @@ public:
         return _owned;
     }
     
-    void setOwner(int id) {
+    void setOwner(int id) override{
         id_owner = id;
     }
 	
-	int getOwner() const {
+    int getOwner() const override{
         return id_owner;
     }
 	
-	void setOwned() {
+    void setOwned() override{
         _owned = true;
     }
     
@@ -64,35 +64,35 @@ public:
 	
 	void setMortgage(Player* p);
 	void revertMortgage(Player* p);
-	bool isOnMortgage() const {
+    bool isOnMortgage() const override{
 		return _is_on_mortgage;
 	}
 	
-	double getRentPrice() const {
+    double getRentPrice() const override{
 		return 0;
 	}
 	
-	double getH1Price() const {
+    double getH1Price() const override{
 		return 0;
 	}
 	
-	double getH2Price() const {
+    double getH2Price() const override{
 		return 0;
 	}
 	
-	double getH3Price() const {
+    double getH3Price() const override{
 		return 0;
 	}
 	
-	double getH4Price() const {
+    double getH4Price() const override{
 		return 0;
 	}
 	
-	double getH5Price() const {
+    double getH5Price() const override{
 		return 0;
 	}
 	
-	std::string getColour() const {
+    std::string getColour() const override{
 		return "TRANSPARENT";
 	}
 
