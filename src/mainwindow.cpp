@@ -121,6 +121,9 @@ MainWindow::MainWindow()
 	connect(roll_button, SIGNAL(clicked(bool)),
 			this, SLOT(roll_dice()));
 
+	connect(roll_button, SIGNAL(clicked(bool)),
+			this, SLOT(select_tab()));
+
 	connect(view, SIGNAL(clicked(const QModelIndex&)),
 			this, SLOT(display_cell(const QModelIndex&)));
 
@@ -282,11 +285,17 @@ void MainWindow::createDockWindows()
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 }
 
+void MainWindow::select_tab() {
+	players_widget->setCurrentIndex(game->getCurrentPlayer()->getId()-1);
+}
+
 // roll dice -> move player -> do specific action depending on the current position
 void MainWindow::roll_dice()
 {
-	std::pair<int, int> dice = game->throwDice();
+//	std::pair<int, int> dice = game->throwDice();
+	game->throwDice();
 
+	std::pair<int, int> dice = game->getDice();
 	die_1->setPixmap(*(die_sides[dice.first]));
 	die_2->setPixmap(*(die_sides[dice.second]));
 	game_info->append("- " + QString::fromStdString(game->getCurrentPlayer()->get_name()) + " rolled a " 
@@ -297,6 +306,12 @@ void MainWindow::roll_dice()
 
     game->movePlayer(curr_player, dice.first+dice.second);
 	reactToField();
+
+	// SLOT method proceed_action will do the rest
+	if (proceed_button->isVisible()) {
+		return;
+	}
+
 	infoText->setText(QString());
 	// if player got dice with different sides, switch to next player
 	if (dice.first != dice.second) {
@@ -315,6 +330,10 @@ void MainWindow::proceed_action()
 {
 	proceed_button->setVisible(false);
 	reactToField();
+	if (game->getDice().first != game->getDice().second) {
+		game->nextPlayer();
+		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
+	}
 	roll_button->setVisible(true);
 }
 
@@ -349,8 +368,6 @@ void MainWindow::reactToField()
 			game_info->append("~ " + QString::fromStdString(curr_player->get_name())
 							  + " bought " + QString::fromStdString(curr_space->getName()));
 
-            game->getBank()->sellSpace(curr_player, curr_space);
-
             int index = curr_player->getId();
 
             std::string owned_spaces;
@@ -380,9 +397,14 @@ void MainWindow::reactToField()
             QMessageBox rent_msg;
             rent_msg.setWindowTitle("PAY RENT");
 
+			QString owner;
+			owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name());
             rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
-                             + QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name()));
+                             + owner);
             rent_msg.exec();
+
+			game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
+
             int index = curr_player->getId();
 
             //create string of owned spaces
@@ -390,7 +412,7 @@ void MainWindow::reactToField()
             foreach(const auto& i, curr_player->get_spaces()){
                 owned_spaces += i->getName() + "\n";
             }
-            player_tabs.at(index-1)->setText("Rent payed Current balance: \n"
+            player_tabs.at(index-1)->setText("Current balance: \n"
                                              + QString::number(curr_player->get_wallet())
                                              + "\nOwned spaces: \n"
                                              + QString::fromStdString(owned_spaces));
@@ -402,8 +424,9 @@ void MainWindow::reactToField()
             }
             //FIXME: doesn't update when pay rent
             Player* reciever = playersTest.at(index-1);
-            player_tabs.at(index-1)->setText("Rent recieved Current balance: \n"
-                                           + QString::number(reciever->get_wallet())
+            player_tabs.at(index-1)->setText("Current balance: \n"
+              //                             + QString::number(reciever->get_wallet())
+			                                 + QString::number(playersTest.at(index-1)->get_wallet())
                                            + "\nOwned spaces: \n"
                                            + QString::fromStdString(owned_spaces));
 

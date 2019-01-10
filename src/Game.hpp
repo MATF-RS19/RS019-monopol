@@ -10,7 +10,7 @@ class Game {
 public:
     Game(int numPlayers, std::vector<std::string> player_names);
     
-    std::pair<int, int> throwDice();
+    void throwDice();
     
     std::vector<Player*> getPlayers() const;
     
@@ -39,12 +39,13 @@ public:
 	
 	void moveToPos(Player *player, int pos);
     
-    int getDice() {
+	std::pair<int, int> getDice() {
 		return _dice;
     }
     
-    void setDice(int num) {
-		_dice = num;
+    void setDice(int die_1, int die_2) {
+		_dice.first = die_1;
+		_dice.second = die_2;
     }
     
     Bank* getBank() const {
@@ -64,7 +65,7 @@ private:
     std::vector<Player*> m_players;
     Player* m_current_player;
     Bank* m_bank;
-    int _dice;
+	std::pair<int,int> _dice;
     const std::map<int, std::pair<int,int>> posToMatrixMap =
                                                           {{ 0, std::make_pair(10,10) },
                                                            { 1, std::make_pair(10,9) },

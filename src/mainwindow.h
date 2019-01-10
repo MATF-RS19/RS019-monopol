@@ -28,6 +28,7 @@ private Q_SLOTS:
 	void upgrade_property();
 	void scroll_to_bottom();
 	void proceed_action();
+	void select_tab();
 
 private:
     void createDockWindows();

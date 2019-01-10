@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <iterator>
 
 void Game::printPlayers() const {
     for(const auto i : m_players){
@@ -14,10 +15,11 @@ void Game::moveToPos(Player *player, int pos) {
 	player->set_pos(pos);
 }
 
-std::pair<int , int> Game::throwDice() {
+//std::pair<int , int> Game::throwDice() {
+void Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
-	setDice(num.first + num.second);
-    return num;
+	setDice(num.first, num.second);
+    //return num;
 }
 
 //NOTE: Only current player will build because game is turn based at this point
@@ -79,7 +81,8 @@ double Game::pay_rent(Space* s)
     std::cout << "PAYRENT" << std::endl;
 
 	double amount = 0;
-	int dice = getDice();
+	std::pair<int, int> d = getDice();
+	int dice = d.first + d.second;
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
 
@@ -89,6 +92,9 @@ double Game::pay_rent(Space* s)
     std::cout << "TRY ACCESSING PLAYERS.AT(" << s->getOwner()-1 << ")" << std::endl;
     Player* player = players.at(s->getOwner()-1);
     std::cout << "SUCCESS: " << player->get_name() << "," << player->getId() << std::endl;
+	foreach(const auto& p, players) {
+		std::cout << p->get_name() << std::endl;
+	}
 
 	std::string type = s->getType();
 /* BUG: segmentation fault!*/	
@@ -136,7 +142,7 @@ double Game::pay_rent(Space* s)
 	}
 
     double player_balance = curr_player->balance().second;
-    /*
+
 	if(amount > player_balance)
 	{
 		std::cout << "BANKRUPCY" << std::endl;
@@ -162,9 +168,6 @@ double Game::pay_rent(Space* s)
 		//TODO: destroy current player
 		return amount;
     }
-	
-
-    */
 
     curr_player->pay(amount);
 	player->receive(amount);
@@ -174,10 +177,13 @@ double Game::pay_rent(Space* s)
 }
 
 void Game::nextPlayer() {
+	/*
     Player* p = m_players.front();
     m_players.erase(m_players.begin());
     m_players.push_back(p);
-    m_current_player = m_players.at(0);
+	*/
+	int index = m_current_player->getId()-1;
+    m_current_player = m_players.at((index+1)%m_players.size());
 }
 
 Player* Game::getCurrentPlayer() const {
