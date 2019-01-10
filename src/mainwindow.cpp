@@ -302,11 +302,7 @@ void MainWindow::reactToField()
 		buy_msg.exec();
 
 		if (buy_msg.clickedButton() == yesButton) {
-            std::cout << "Old owner: " << curr_space->getOwner() << std::endl;
-            std::cout << "Money before: " << curr_player->get_wallet() << std::endl;
-			game->getBank()->sellSpace(curr_player, curr_space);
-            std::cout << "New owner: " << curr_space->getOwner() << std::endl;
-            std::cout << "Money after: " << curr_player->get_wallet() << std::endl;
+            game->getBank()->sellSpace(curr_player, curr_space);
             int index = curr_player->getId();
 
             std::string owned_spaces;
@@ -315,10 +311,14 @@ void MainWindow::reactToField()
             }
 
             //TODO: initialize these tabs and add if player is in jail,
-            //has get out of jail free card etc...
+            //has get out of jail free card etc... (formating)
+
+            //TODO: put me in a function
+            //void update_tab(index i) -> sets some kind of text (which should also be
+            //in a function) in the appropriate tab specified by index i
             player_tabs.at(index-1)->setText("Current balance: \n"
                                              + QString::number(curr_player->get_wallet())
-                                             + "Owned spaces: \n"
+                                             + "\nOwned spaces: \n"
                                              + QString::fromStdString(owned_spaces));
 
 
@@ -334,8 +334,38 @@ void MainWindow::reactToField()
             rent_msg.setWindowTitle("PAY RENT");
 
             rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
-                             + QString::fromStdString(playersTest.at(curr_space->getOwner())->get_name()));
+                             + QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name()));
             rent_msg.exec();
+            int index = curr_player->getId();
+
+            //create string of owned spaces
+            std::string owned_spaces;
+            foreach(const auto& i, curr_player->get_spaces()){
+                owned_spaces += i->getName() + "\n";
+            }
+            player_tabs.at(index-1)->setText("Rent payed Current balance: \n"
+                                             + QString::number(curr_player->get_wallet())
+                                             + "\nOwned spaces: \n"
+                                             + QString::fromStdString(owned_spaces));
+
+            //update tab for player recieving rent:
+            index = curr_space->getOwner();
+            foreach(const auto& i, playersTest.at(index-1)->get_spaces()){
+                owned_spaces += i->getName() + "\n";
+            }
+            //FIXME: doesn't update when pay rent
+            Player* reciever = playersTest.at(index-1);
+            player_tabs.at(index-1)->setText("Rent recieved Current balance: \n"
+                                           + QString::number(reciever->get_wallet())
+                                           + "\nOwned spaces: \n"
+                                           + QString::fromStdString(owned_spaces));
+
+            //std::cout << "==========================" << "Rent recieved Current balance: \n"
+              //        << reciever->get_wallet()
+                //      << "\nOwned spaces: \n"
+                  //    << owned_spaces;
+
+            //TODO: tidy up
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		ActionSpace* curr_act_space = (ActionSpace*)curr_space;

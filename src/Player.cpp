@@ -118,16 +118,18 @@ int Player::get_wallet() const{
 
 void Player::pay(double amount)
 {
-	m_wallet -= amount;
+    if(get_wallet() >= amount){
+        std::cout << "i have" << get_wallet() << std::endl;
+        m_wallet -= amount;
+        std::cout << "i have payed" << std::endl;
+        std::cout << "Now i have " << get_wallet() << std::endl;
+    }
 }
 
 void Player::receive(double amount)
 {
 	m_wallet += amount;
 }
-
-// TODO: void move(int i) -> pokrece se i polja po tabli => treba neko ko ima pristup tabli da pomera (Game)
-// TODO: void build(std::string building)
 
 void Player::set_name(std::string name){
 	m_name = name;
@@ -147,6 +149,14 @@ int Player::get_pos() const{
 
 void Player::add_property(Property* p){
     owned_properties.push_back(p);
+}
+
+void Player::add_utility(Utility* p){
+    owned_utilities.push_back(p);
+}
+
+void Player::add_railroad(Railroad* p){
+    owned_railroads.push_back(p);
 }
 
 std::vector<Property*> Player::get_properties() const{
@@ -198,7 +208,7 @@ bool Player::check_utilities()
 int Player::check_railroads()
 {
 	std::vector<Railroad*> my_railroads = get_railroads();
-	return my_railroads.size();
+    return my_railroads.size()==3;
 }
 
 void Player::add_space(Space* s){
