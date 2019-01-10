@@ -10,6 +10,10 @@ void Game::movePlayer(Player *player, int steps) {
     player->set_pos((player->get_pos() + steps) % 40);
 }
 
+void Game::moveToPos(Player *player, int pos) {
+	player->set_pos(pos);
+}
+
 std::pair<int , int> Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
 	setDice(num.first + num.second);
@@ -76,8 +80,9 @@ double Game::pay_rent(Space* s)
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
     Player* player = players[s->getOwner()-1];
-	
+
 	std::string type = s->getType();
+/* BUG: segmentation fault!*/	
 	if (type == "PROPERTY")
 	{
 		amount = s->getRentPrice();
@@ -114,7 +119,7 @@ double Game::pay_rent(Space* s)
 		else if(num_railroads == 4)
 			amount *= 8;
 	}
-	
+/*	
 	double player_balance = curr_player->balance().second;
 	if(amount > player_balance)
 	{
@@ -141,7 +146,7 @@ double Game::pay_rent(Space* s)
 		//TODO: destroy current player
 		return amount;
 	}
-	
+*/	
     curr_player->pay(amount);
 	player->receive(amount);
 
