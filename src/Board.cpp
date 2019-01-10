@@ -18,7 +18,6 @@ Card Board::drawChanceCard() {
     //TODO: if not jail card put back, else add the card to player
     //TODO: remove magic nums
     if(result.getAction() != 7){
-        std::cout << "Puting card back" << std::endl;
         m_chanceDeck.push_back(&result);
     }
     return result;
@@ -30,7 +29,6 @@ Card Board::drawCommunityCard() {
     //TODO: if not jail card put back, else add the card to player
     //TODO: remove magic nums
     if(result.getAction() != 21){
-        std::cout << "Puting card back" << std::endl;
         m_communityChestDeck.push_back(&result);
     }
     return result;
@@ -141,5 +139,4 @@ std::vector<Space*> Board::getSpacesByGroup(std::string group) const {
 }
 
 Board::~Board() {
-    std::cout << "Destroying board" << std::endl;
 }

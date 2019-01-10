@@ -107,10 +107,12 @@ MainWindow::MainWindow()
     view = new QTableView();
     view->setModel(model);
     view->resize(500, 500);
-    view->setStyleSheet("selection-background-color : red;");
+    view->setStyleSheet("selection-background-color : red; border-style: none;");
     view->setSortingEnabled(false);
     view->resizeColumnsToContents();
     view->resizeRowsToContents();
+    view->verticalHeader()->setVisible(false);
+    view->horizontalHeader()->setVisible(false);
 
     view->setIconSize(QSize(100,100));
 
@@ -223,11 +225,6 @@ void MainWindow::createDockWindows()
     // set layout for right dock area widget
     right_dock->setLayout(right_dock_layout);
 
-    //infoText->setText()
-    int row = view->selectionModel()->currentIndex().row();
-    int col = view->selectionModel()->currentIndex().column();
-
-    std::cout << "ROW " << row << " COL " << col << std::endl;
     infoText->setReadOnly(true);
 
 	// setting right dock
@@ -258,9 +255,7 @@ void MainWindow::createDockWindows()
         tab = new QTextEdit(left_dock);
 		tab->setReadOnly(true);
         tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
-							// TODO: banka jos ne da novce 
-							// + "\nMoney: " + QString::number(players[0]->balance().first)
-							// + "\nProperty value: " + QString::number(players[0]->balance().second)
+
 
 		player_tabs.push_back(tab);
 		++i;
@@ -302,7 +297,6 @@ void MainWindow::roll_dice()
 						+ QString::number(dice.first) + " and a " + QString::number(dice.second) + ".");
 
     Player* curr_player = game->getCurrentPlayer();
-    std::cout << "Before" << curr_player->get_pos() << std::endl;
 
     game->movePlayer(curr_player, dice.first+dice.second);
 	reactToField();

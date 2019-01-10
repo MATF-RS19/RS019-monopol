@@ -120,10 +120,7 @@ int Player::get_wallet() const{
 void Player::pay(double amount)
 {
     if(get_wallet() >= amount){
-        std::cout << "i have" << get_wallet() << std::endl;
         m_wallet -= amount;
-        std::cout << "i have payed" << std::endl;
-        std::cout << "Now i have " << get_wallet() << std::endl;
     }
 }
 
