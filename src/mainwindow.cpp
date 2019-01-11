@@ -384,6 +384,7 @@ void MainWindow::reactToField()
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
 		if(curr_space->getOwner() == curr_player->getId()) {
+
 			upgrade_button->setVisible(true);
         }else{
             double amt = game->pay_rent(curr_space);
@@ -751,8 +752,8 @@ void MainWindow::display_cell(const QModelIndex& index)
 		std::string test_string = data.value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
 
-		if (data.value<Space*>()->getOwner() == game->getCurrentPlayerSpace()->getOwner()
-			&& game->getCurrentPlayerSpace()->getType() == "PROPERTY") {
+        if (data.value<Space*>()->getOwner() == game->getCurrentPlayer()->getId()
+            && data.value<Space*>()->getType() == "PROPERTY" && game->getCurrentPlayer()->check_properties(data.value<Space*>())) {
 			upgrade_button->setVisible(true);
 		} else {
 			upgrade_button->setVisible(false);
