@@ -1,6 +1,5 @@
 #include "Player.hpp"
 
-//TODO: incorporate in qt (ako ostane vremena) neka za sada bude arg kom linije
 std::vector<Player*> Player::initializePlayers(std::vector<std::string> player_names){
     std::vector<Player*> players;
     Player* p;
