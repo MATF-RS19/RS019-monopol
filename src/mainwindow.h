@@ -34,6 +34,7 @@ private:
     void createDockWindows();
     void mainMenu(std::vector<std::string>& names);
 	void reactToField();
+	void display_tabs();
 	
 	// right dock
     QWidget* right_dock;

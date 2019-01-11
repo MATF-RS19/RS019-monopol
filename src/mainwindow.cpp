@@ -300,6 +300,7 @@ void MainWindow::roll_dice()
 
     game->movePlayer(curr_player, dice.first+dice.second);
 	reactToField();
+	display_tabs();
 
 	// SLOT method proceed_action will do the rest
 	if (proceed_button->isVisible()) {
@@ -329,6 +330,22 @@ void MainWindow::proceed_action()
 		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
 	}
 	roll_button->setVisible(true);
+}
+
+void MainWindow::display_tabs()
+{
+	Player* curr_player = game->getCurrentPlayer();
+	int index = curr_player->getId();
+
+    std::string owned_spaces;
+    foreach(const auto& i, curr_player->get_spaces()){
+        owned_spaces += "    ->" + i->getName() + "\n";
+    }
+
+	player_tabs.at(index-1)->setText("Current balance: \n"
+                                             + QString::number(curr_player->get_wallet())
+                                             + "\nOwned spaces: \n"
+                                             + QString::fromStdString(owned_spaces));
 }
 
 void MainWindow::reactToField()
@@ -361,30 +378,14 @@ void MainWindow::reactToField()
 			game->getBank()->sellSpace(curr_player, curr_space);
 			game_info->append("~ " + QString::fromStdString(curr_player->get_name())
 							  + " bought " + QString::fromStdString(curr_space->getName()));
-
-            int index = curr_player->getId();
-
-            std::string owned_spaces;
-            foreach(const auto& i, curr_player->get_spaces()){
-                owned_spaces += "    ->" + i->getName() + "\n";
-            }
-
-            //TODO: initialize these tabs and add if player is in jail,
-            //has get out of jail free card etc... (formating)
-
-            //TODO: put me in a function
-            //void update_tab(index i) -> sets some kind of text (which should also be
-            //in a function) in the appropriate tab specified by index i
-            player_tabs.at(index-1)->setText("Current balance: \n"
-                                             + QString::number(curr_player->get_wallet())
-                                             + "\nOwned spaces: \n"
-                                             + QString::fromStdString(owned_spaces));
 		}
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
-		if(curr_space->getOwner() == curr_player->getId()) {
-
+		if(curr_space->getOwner() == curr_player->getId()
+	       && curr_space->getType() == "PROPERTY" 
+		   && game->getCurrentPlayer()->check_properties(curr_space)) 
+		{
 			upgrade_button->setVisible(true);
         }else{
             double amt = game->pay_rent(curr_space);
@@ -399,38 +400,6 @@ void MainWindow::reactToField()
             rent_msg.exec();
 
 			game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
-
-            int index = curr_player->getId();
-
-            //create string of owned spaces
-            std::string owned_spaces;
-            foreach(const auto& i, curr_player->get_spaces()){
-                owned_spaces += i->getName() + "\n";
-            }
-            player_tabs.at(index-1)->setText("Current balance: \n"
-                                             + QString::number(curr_player->get_wallet())
-                                             + "\nOwned spaces: \n"
-                                             + QString::fromStdString(owned_spaces));
-
-            //update tab for player recieving rent:
-            index = curr_space->getOwner();
-            foreach(const auto& i, playersTest.at(index-1)->get_spaces()){
-                owned_spaces += i->getName() + "\n";
-            }
-            //FIXME: doesn't update when pay rent
-            Player* reciever = playersTest.at(index-1);
-            player_tabs.at(index-1)->setText("Current balance: \n"
-              //                             + QString::number(reciever->get_wallet())
-			                                 + QString::number(playersTest.at(index-1)->get_wallet())
-                                           + "\nOwned spaces: \n"
-                                           + QString::fromStdString(owned_spaces));
-
-            //std::cout << "==========================" << "Rent recieved Current balance: \n"
-              //        << reciever->get_wallet()
-                //      << "\nOwned spaces: \n"
-                  //    << owned_spaces;
-
-            //TODO: tidy up
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// action space is not upgradeable
