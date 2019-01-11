@@ -353,13 +353,8 @@ void MainWindow::reactToField()
 	Player* curr_player = game->getCurrentPlayer();
 	Space* curr_space = game->getCurrentPlayerSpace();
 
-    std::cout << curr_space->getName() << std::endl;
-
-    std::cout << curr_player->get_pos() << std::endl;
-
-
     std::pair<int, int> matrixCoordinates = game->getMatrixAtPos(curr_player->get_pos());
-    std::cout << matrixCoordinates.first << ", " << matrixCoordinates.second << std::endl;
+
     QModelIndex index = view->model()->index(matrixCoordinates.first,matrixCoordinates.second);
     view->setCurrentIndex(index);
 

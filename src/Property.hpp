@@ -60,7 +60,6 @@ public:
     }
     
     void setOwner(int id) override{
-        std::cout << "Hey" << std::endl;
         id_owner = id;
     }
     
