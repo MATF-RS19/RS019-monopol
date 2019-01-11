@@ -96,14 +96,7 @@ double Game::pay_rent(Space* s)
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
 
-    for(const auto& p : players){
-        std::cout << "PLAYER: " << p->get_name() << " ID: " << p->getId() << std::endl;
-    }
     Player* player = players.at(s->getOwner()-1);
-	
-	foreach(const auto& p, players) {
-		std::cout << p->get_name() << std::endl;
-	}
 
 	std::string type = s->getType();
 	if (type == "PROPERTY")

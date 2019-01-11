@@ -25,7 +25,8 @@ public:
 private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
-	void upgrade_property();
+    void upgrade_property();
+    void putUnderMortgage();
 	void scroll_to_bottom();
 	void proceed_action();
 	void select_tab();
@@ -40,6 +41,7 @@ private:
     QWidget* right_dock;
     QPushButton* roll_button;
     QPushButton* upgrade_button;
+    QPushButton* mortgage_button;
 	QVBoxLayout* right_dock_layout;
 	
 	// left dock
@@ -64,6 +66,9 @@ private:
 	static Game* game;
 	static std::vector<Space*> spaces;
     static std::vector<Player*> playersTest;
+
+    //HACK: global variable used to store currently selected field
+    QVariant currentSelection;
 };
 
 

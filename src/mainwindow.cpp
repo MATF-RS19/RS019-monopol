@@ -135,6 +135,9 @@ MainWindow::MainWindow()
 	connect(game_info, SIGNAL(textChanged()),
 			this, SLOT(scroll_to_bottom()));
 	
+    connect(mortgage_button, SIGNAL(clicked(bool)),
+            this, SLOT(putUnderMortgage()));
+
 	connect(proceed_button, SIGNAL(clicked(bool)),
 			this, SLOT(proceed_action()));
 
@@ -194,6 +197,10 @@ void MainWindow::createDockWindows()
 	upgrade_button = new QPushButton(tr("Upgrade"), right_dock);
 	upgrade_button->setVisible(false);
 
+    // mortage button is visible only when current player selects his property
+    mortgage_button = new QPushButton(tr("Put under mortgage"), right_dock);
+    mortgage_button->setVisible(false);
+
 	// displays info for the selected space
     infoText = new QTextEdit(right_dock);
 
@@ -218,6 +225,7 @@ void MainWindow::createDockWindows()
     right_dock_layout = new QVBoxLayout();
 	right_dock_layout->addWidget(infoText);
 	right_dock_layout->addWidget(upgrade_button);
+    right_dock_layout->addWidget(mortgage_button);
     right_dock_layout->addWidget(dice_widget);
 	right_dock_layout->addWidget(proceed_button);
 	right_dock_layout->addWidget(roll_button);
@@ -720,6 +728,10 @@ void MainWindow::display_cell(const QModelIndex& index)
 			return;
 		}
 		QVariant data = index.data(Qt::UserRole+1);
+
+        //HACK: set global selection var
+        currentSelection = data;
+
 		std::string test_string = data.value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
 
@@ -729,15 +741,30 @@ void MainWindow::display_cell(const QModelIndex& index)
 		} else {
 			upgrade_button->setVisible(false);
 		}
+
+        if (data.value<Space*>()->getOwner() == game->getCurrentPlayer()->getId()){
+            mortgage_button->setVisible(true);
+        } else {
+            mortgage_button->setVisible(false);
+        }
+
 	} else {
 		return;
 	}
 }
 
+//TODO: implement me
+void MainWindow::putUnderMortgage(){
+    return;
+}
+
+//FIXME: doesn't allow player to upgrade more than once, don't know why
 void MainWindow::upgrade_property()
 {
-	Player* curr_player = game->getCurrentPlayer();
-	Space* curr_space = game->getCurrentPlayerSpace();
 
-	game->build(curr_player, curr_space);
+
+    Space* upgradeMe = currentSelection.value<Space*>();
+    Player* curr_player = game->getCurrentPlayer();
+
+    game->build(curr_player, upgradeMe);
 }
