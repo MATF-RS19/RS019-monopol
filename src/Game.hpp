@@ -8,7 +8,7 @@
 
 class Game {
 public:
-    Game(int numPlayers, std::vector<std::string> player_names);
+    Game(std::vector<std::string> player_names);
     
     void throwDice();
     

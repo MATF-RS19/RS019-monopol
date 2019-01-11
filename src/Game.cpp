@@ -215,7 +215,7 @@ Space* Game::getCurrentPlayerSpace() const {
     return m_board->getSpaces().at(m_current_player->get_pos());
 }
 
-Game::Game(int numPlayers, std::vector<std::string> player_names) {
+Game::Game(std::vector<std::string> player_names) {
     // Init players
     std::vector<Player*> players = Player::initializePlayers(player_names);
 	unsigned i = 0;

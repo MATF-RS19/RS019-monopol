@@ -24,7 +24,7 @@ MainWindow::MainWindow()
 	}
 
     //Create game for selected number of players
-    game = new Game(numOfPlayers, names);
+    game = new Game(names);
 
     //Get spaces
 	spaces = game->getBoard()->getSpaces();
