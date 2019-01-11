@@ -15,6 +15,19 @@ void Game::moveToPos(Player *player, int pos) {
 	player->set_pos(pos);
 }
 
+void Game::send_to_jail(Player *player) {
+	player->send_to_jail();
+	player->set_num_turns(1);
+}
+
+void Game::release_from_jail(Player *player) {
+	player->release_from_jail();
+}
+
+void Game::give_jail_card(Player *player) {
+	player->receive_jail_card();
+}
+
 //std::pair<int , int> Game::throwDice() {
 void Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);

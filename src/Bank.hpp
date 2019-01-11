@@ -19,6 +19,8 @@ public:
 
     void sellSpace(Player *player, Space *space);
     void sellHouse(Player *player);
+	void giveMoney(Player *player, int amount);
+	void takeMoney(Player *player, int amount);
     int getHouses() const;
     void setHouses(int num);
     int getHotels() const;

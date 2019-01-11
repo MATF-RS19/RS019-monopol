@@ -446,23 +446,22 @@ void MainWindow::reactToField()
 		{
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " passed GO.\n"
 							  + "  " + QString::fromStdString(curr_player->get_name()) + " receives 200$.");
-			curr_player->receive(200.0);
+			game->getBank()->giveMoney(curr_player, 200);
 		}
 		else if(action == "GOTO_JAIL")
 		{
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " goes to jail.");
-			curr_player->send_to_jail();
-			curr_player->set_num_turns(1);
+			game->send_to_jail(curr_player);
 		}
 		else if(action == "INCOME_TAX")
 		{
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays income tax (200$).");
-			curr_player->pay(200.0);
+			game->getBank()->takeMoney(curr_player, 200);
 		}
 		else if(action == "LUXURY_TAX")
 		{
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays luxury tax (75%).");
-			curr_player->pay(75.0);
+			game->getBank()->takeMoney(curr_player, 75);
 		}
 		else if(action == "CHANCE")
 		{
@@ -471,7 +470,7 @@ void MainWindow::reactToField()
 			if(num_card == 0)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
-				curr_player->set_pos(0);
+				game->moveToPos(curr_player, 0);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -480,9 +479,9 @@ void MainWindow::reactToField()
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				// if they pass go, they get $200
 				if(curr_player->get_pos() > 24)
-					curr_player->receive(200.0);
+					game->getBank()->giveMoney(curr_player, 200);
 				// Illinos Avenue
-				curr_player->set_pos(24);
+				game->moveToPos(curr_player, 24);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -491,9 +490,9 @@ void MainWindow::reactToField()
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				// if they pass go, they get $200
 				if(curr_player->get_pos() > 11)
-					curr_player->receive(200.0);
+					game->getBank()->giveMoney(curr_player, 200);
 				// St. Charles Place
-				curr_player->set_pos(11);
+				game->moveToPos(curr_player, 11);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -508,7 +507,7 @@ void MainWindow::reactToField()
 				else
 					nearest = 28;
 				// nearest utility
-				curr_player->set_pos(nearest);
+				game->moveToPos(curr_player, nearest);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -518,7 +517,7 @@ void MainWindow::reactToField()
 				int quotient = curr_player->get_pos() / 10;
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
-				curr_player->set_pos(move_to);
+				game->moveToPos(curr_player, move_to);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -528,35 +527,35 @@ void MainWindow::reactToField()
 				int quotient = curr_player->get_pos() / 10;
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
-				curr_player->set_pos(move_to);
+				game->moveToPos(curr_player, move_to);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
 			else if(num_card == 6)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
-				curr_player->receive(50.0);
+				game->getBank()->giveMoney(curr_player, 50);
 			}
 			else if(num_card == 7)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				if(curr_player->is_in_jail())
-					curr_player->release_from_jail();
+					game->release_from_jail(curr_player);
 				else
-					curr_player->receive_jail_card();
+					game->give_jail_card(curr_player);
 			}
 			else if(num_card == 8)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				int current = curr_player->get_pos();
 				if(current == 0)
-					curr_player->set_pos(37);
+					game->moveToPos(curr_player, 37);
 				else if(current == 1)
-					curr_player->set_pos(38);
+					game->moveToPos(curr_player, 38);
 				else if(current == 2)
-					curr_player->set_pos(39);
+					game->moveToPos(curr_player, 39);
 				else 
-					curr_player->set_pos(current-3);
+					game->moveToPos(curr_player, current-3);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -564,7 +563,7 @@ void MainWindow::reactToField()
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				// placing him at the go to jail action field for a moment
-				curr_player->set_pos(30);
+				game->moveToPos(curr_player, 30);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -577,20 +576,20 @@ void MainWindow::reactToField()
 				for(unsigned i=0; i<size; i++)
 					num += props[i]->getNumBuildings();
 	
-				curr_player->pay(num*25.0);
+				game->getBank()->takeMoney(curr_player, num*25);
 			}
 			else if(num_card == 11)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
-				curr_player->pay(15.0);
+				game->getBank()->takeMoney(curr_player, 15);
 			}
 			else if(num_card == 12)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				if(curr_player->get_pos() > 5)
-					curr_player->receive(200.0);
+					game->getBank()->giveMoney(curr_player, 200);
 				// Reading Railroad
-				curr_player->set_pos(5);
+				game->moveToPos(curr_player, 5);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -598,7 +597,7 @@ void MainWindow::reactToField()
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				// Boardwalk
-				curr_player->set_pos(39);
+				game->moveToPos(curr_player, 39);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
@@ -606,22 +605,22 @@ void MainWindow::reactToField()
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
 				std::vector<Player*> players = game->getPlayers();
-				curr_player->pay(50.0*(numOfPlayers-1)); 
+				game->getBank()->takeMoney(curr_player, 50*(numOfPlayers-1));
 				for(int i=0; i<numOfPlayers; i++)
 				{
 					if(players[i] != curr_player)
-						players[i]->receive(50.0);
+						game->getBank()->giveMoney(players[i], 50);
 				}
 			}
 			else if(num_card == 15)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
-				curr_player->receive(150.0);
+				game->getBank()->giveMoney(curr_player, 150);
 			}
 			else if(num_card == 16)
 			{
 				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
-				curr_player->receive(100.0);
+				game->getBank()->giveMoney(curr_player, 100);
 			}
 		}
 		else if(action == "COMMUNITY_CHEST")
@@ -631,84 +630,84 @@ void MainWindow::reactToField()
 			if(num_card == 17)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->set_pos(0);
+				game->moveToPos(curr_player, 0);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
 			else if(num_card == 18)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(200.0);
+				game->getBank()->giveMoney(curr_player, 200);
 			}
 			else if(num_card == 19)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->pay(50.0);
+				game->getBank()->takeMoney(curr_player, 50);
 			}
 			else if(num_card == 20)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(50.0);
+				game->getBank()->giveMoney(curr_player, 50);
 			}
 			else if(num_card == 21)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
 				if(curr_player->is_in_jail())
-					curr_player->release_from_jail();
+					game->release_from_jail(curr_player);
 				else
-					curr_player->receive_jail_card();
+					game->give_jail_card(curr_player);
 			}
 			else if(num_card == 22)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
 				std::vector<Player*> players = game->getPlayers();
-				curr_player->receive(50.0*(numOfPlayers-1)); 
+				game->getBank()->takeMoney(curr_player, 50*(numOfPlayers-1));
 				for(int i=0; i<numOfPlayers; i++)
 				{
 					if(players[i] != curr_player)
-						players[i]->pay(50.0);
+						game->getBank()->giveMoney(players[i], 50);
 				}
 			}
 			else if(num_card == 23)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(100.0);
+				game->getBank()->giveMoney(curr_player, 100);
 			}
 			else if(num_card == 24)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(20.0);
+				game->getBank()->giveMoney(curr_player, 20);
 			}
 			else if(num_card == 25)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
 				std::vector<Player*> players = game->getPlayers();
-				curr_player->receive(10.0*(numOfPlayers-1)); 
+				game->getBank()->giveMoney(curr_player, 10*(numOfPlayers-1));
 				for(int i=0; i<numOfPlayers; i++)
 				{
 					if(players[i] != curr_player)
-						players[i]->pay(10.0);
+						game->getBank()->takeMoney(players[i], 10);
 				}
 			}
 			else if(num_card == 26)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(100.0);
+				game->getBank()->giveMoney(curr_player, 100);
 			}
 			else if(num_card == 27)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->pay(50.0);
+				game->getBank()->takeMoney(curr_player, 50);
 			}
 			else if(num_card == 28)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->pay(50.0);
+				game->getBank()->takeMoney(curr_player, 50);
 			}
 			else if(num_card == 29)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(25.0);
+				game->getBank()->giveMoney(curr_player, 25);
 			}
 			else if(num_card == 30)
 			{
@@ -726,17 +725,17 @@ void MainWindow::reactToField()
 					else
 						num += num_h;
 				}		
-				curr_player->pay(num * 40.0 + total);
+				game->getBank()->takeMoney(curr_player, num * 40 + total);
 			}
 			else if(num_card == 31)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(10.0);
+				game->getBank()->giveMoney(curr_player, 10);
 			}
 			else if(num_card == 32)
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
-				curr_player->receive(100.0);
+				game->getBank()->giveMoney(curr_player, 100);
 			}
 		}
 	} 

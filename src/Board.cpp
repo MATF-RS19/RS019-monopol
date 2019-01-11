@@ -97,7 +97,7 @@ Board::Board() {
 	// 27
 	m_spaces.push_back(properties.at(15));
 	// 28
-	m_spaces.push_back(rails.at(0)); // water works
+	m_spaces.push_back(utils.at(0)); // water works
 	// 29
 	m_spaces.push_back(properties.at(16));
 	// 30

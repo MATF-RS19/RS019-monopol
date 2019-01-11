@@ -33,6 +33,14 @@ void Bank::sellSpace(Player *player, Space *space) {
 
 }
 
+void Bank::giveMoney(Player *player, int amount) {
+	player->receive(amount);
+}
+
+void Bank::takeMoney(Player *player, int amount) {
+	player->pay(amount);
+}
+
 int Bank::getHouses() const {
     return m_houses;
 }

@@ -38,7 +38,13 @@ public:
     void movePlayer(Player *player, int steps);
 	
 	void moveToPos(Player *player, int pos);
+	
+	void send_to_jail(Player *player);
+
+	void release_from_jail(Player *player);
     
+	void give_jail_card(Player *player);
+
 	std::pair<int, int> getDice() {
 		return _dice;
     }
