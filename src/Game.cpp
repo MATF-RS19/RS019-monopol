@@ -174,7 +174,9 @@ double Game::pay_rent(Space* s)
 		
 		curr_player->set_bankrupt();
 		
-		//TODO: destroy current player
+		Player* pTemp = curr_player;
+		curr_player = m_players.at(curr_player->getId());
+		delete pTemp;
 		return amount;
     }
 

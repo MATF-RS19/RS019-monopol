@@ -389,7 +389,6 @@ void MainWindow::reactToField()
 			upgrade_button->setVisible(true);
         }else{
             double amt = game->pay_rent(curr_space);
-			//TODO: ako je bankrotirao, prelaz na sledeceg igraca
             QMessageBox rent_msg;
             rent_msg.setWindowTitle("PAY RENT");
 
