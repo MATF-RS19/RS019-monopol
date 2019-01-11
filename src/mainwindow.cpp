@@ -332,6 +332,12 @@ void MainWindow::scroll_to_bottom()
 void MainWindow::proceed_action()
 {
 	proceed_button->setVisible(false);
+	Player* p = game->getCurrentPlayer(); 
+	if(p->is_in_jail()) 
+	{ 
+		p->set_num_turns(p->get_num_turns()+1); 
+		return; 
+	}
 	reactToField();
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
@@ -435,11 +441,29 @@ void MainWindow::reactToField()
 		}
 		else if(action == "INCOME_TAX")
 		{
+			if(curr_player->balance().first < 200.0)
+			{
+				std::vector<Player*> players = game->getPlayers();
+				curr_player->set_bankrupt();
+				Player* pTemp = curr_player;
+				curr_player = players.at(curr_player->getId());
+				delete pTemp;
+				return;
+			}
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays income tax (200$).");
 			game->getBank()->takeMoney(curr_player, 200);
 		}
 		else if(action == "LUXURY_TAX")
 		{
+			if(curr_player->balance().first < 75.0)
+			{
+				std::vector<Player*> players = game->getPlayers();
+				curr_player->set_bankrupt();
+				Player* pTemp = curr_player;
+				curr_player = players.at(curr_player->getId());
+				delete pTemp;
+				return;
+			}
 			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays luxury tax (75%).");
 			game->getBank()->takeMoney(curr_player, 75);
 		}
