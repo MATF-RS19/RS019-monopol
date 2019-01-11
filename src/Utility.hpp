@@ -16,8 +16,6 @@ public:
 
 	virtual void printSpace() const override;
 
-    virtual std::string getInfo() const override;
-
     void doAction(Player* p) override{
         return;
     }
@@ -59,6 +57,7 @@ public:
 	void setNumBuildings(int num) override;
     
     std::string getGroup() const override;
+	std::string getInfo() const;
     
     int getAction() const override;
 	

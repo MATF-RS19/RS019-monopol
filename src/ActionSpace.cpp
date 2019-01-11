@@ -1,5 +1,39 @@
 #include "ActionSpace.hpp" 
 
+std::string ActionSpace::getInfo() const {
+	std::ostringstream info;
+	ActionSpace::EnumActionSpace action = static_cast<ActionSpace::EnumActionSpace>(getAction());
+    switch (action) {
+        case ActionSpace::EnumActionSpace::CHANCE :
+            info << "DRAW CHANCE CARD" << std::endl;
+        break;
+        case ActionSpace::EnumActionSpace::COMMUNITY_CHEST :
+            info << "DRAW COMMUNITY CHEST CARD" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::GO :
+        info << "COLLECT $200" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::GOTO_JAIL :
+        info << "GO TO JAIL" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::INCOME_TAX :
+        info << "PAY $200" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::JAIL :
+        info << "JAIL/JUST VISITING" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::LUXURY_TAX :
+        info << "PAY $75" << std::endl;
+        break;
+    case ActionSpace::EnumActionSpace::FREE_PARKING :
+        info << "FREE PARKING" << std::endl;
+        break;
+    default:
+        break;
+    }
+    return info.str();
+}
+
 std::string ActionSpace::getName() const {
     return "ActionSpace";
 }
@@ -9,10 +43,6 @@ std::string ActionSpace::getName() const {
 //TODO: Find better solution for this kind of ineheritance
 void ActionSpace::setOwner(int id) {
     (void)id;
-}
-
-std::string ActionSpace::getInfo() const{
-    return "";
 }
 
 int ActionSpace::getOwner() const {

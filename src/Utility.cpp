@@ -1,14 +1,20 @@
 #include "Utility.hpp"
 
-void Utility::printSpace() const {
-	std::cout << "Utility: " << Utility::getName() << ", price: " << Utility::getBuyPrice() << std::endl; 
+std::string Utility::getInfo() const {
+	std::ostringstream info;
+	info << getName() << std::endl;
+	if(!isOwned())
+		info << "Not owned" << std::endl;
+	else
+		info << "Owned by playerId: " << getOwner() << std::endl;
+	info << "RENT $" << "number on dice * 4" << std::endl;
+	info << "Mortgage value $75" << std::endl;
+	info << "If a player owns BOTH utilities, the rent is number on dice * 10" << std::endl;
+	return info.str();
 }
 
-std::string Utility::getInfo() const {
-    std::ostringstream info;
-    info << getName() << std::endl;
-    info << "Mortgage value $" << getMortgage() << std::endl;
-    return info.str();
+void Utility::printSpace() const {
+	std::cout << "Utility: " << Utility::getName() << ", price: " << Utility::getBuyPrice() << std::endl; 
 }
 
 std::string Utility::getGroup() const {

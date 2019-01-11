@@ -240,7 +240,7 @@ void MainWindow::createDockWindows()
 	
 	// initializing game info widget
 	game_info = new QTextEdit(left_dock);
-	game_info->setText("Welcome!\nIt's" 
+	game_info->setText("Welcome!\nIt's " 
 					+ QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
 
     players_widget = new QTabWidget(left_dock);
@@ -402,7 +402,7 @@ void MainWindow::reactToField()
 			game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
-		// action space is not upgradeable
+		// action space is not upgradable
 		if (upgrade_button->isVisible()) {
 			upgrade_button->setVisible(false);
 		}

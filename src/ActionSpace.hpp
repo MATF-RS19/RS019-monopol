@@ -18,8 +18,6 @@ class ActionSpace : public Space {
 		void printSpace() const override;
 
         std::string getName() const override;
-
-        std::string getInfo() const override;
         
         double getBuyPrice() const override;
         
@@ -36,6 +34,7 @@ class ActionSpace : public Space {
 		void setNumBuildings(int num) override;
         
         std::string getGroup() const override;
+		std::string getInfo() const;
 		
 		std::string getSpaceAction();
 		

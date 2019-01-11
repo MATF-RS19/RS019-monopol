@@ -1,5 +1,18 @@
 #include "Railroad.hpp"
 
+std::string Railroad::getInfo() const {
+	std::ostringstream info;
+	info << getName() << std::endl;
+	if(!isOwned())
+		info << "Not owned" << std::endl;
+	else
+		info << "Owned by playerId: " << getOwner() << std::endl;
+	info << "RENT $25" << std::endl;
+	info << "Mortgage value $100" << std::endl;
+	info << "If a player owns 2 railroads, the rent is $50, 3 railroads $100 and all of them $200." << std::endl;
+	return info.str();
+}
+
 void Railroad::printSpace() const {
 	std::cout << "Railroad: " << Railroad::getName() << ", price: " << Railroad::getBuyPrice() << std::endl;
 }
@@ -37,16 +50,6 @@ std::string Railroad::getName() const{
 
 std::string Railroad::getType() const{
     return "RAILROAD";
-}
-
-std::string Railroad::getInfo() const{
-    std::ostringstream info;
-    info << getName() << std::endl;
-    info << "RENT $" << getRentPrice() << std::endl;
-    info << "Owned by playerId: " << getOwner() << std::endl;
-    //TODO: add getOwnerName method => this implies that all of the Space class instances
-    //      should have ref to owner (Player class object)
-    return info.str();
 }
 
 void Railroad::setMortgage(Player* p) {

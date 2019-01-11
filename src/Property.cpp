@@ -6,6 +6,10 @@
 std::string Property::getInfo() const{
     std::ostringstream info;
     info << getName() << std::endl;
+	if(!isOwned())
+		info << "Not owned" << std::endl;
+	else
+		info << "Owned by playerId: " << getOwner() << std::endl;
     info << "RENT $" << getRentPrice() << std::endl;
     info << "With 1 house $" << getH1Price() << std::endl;
     info << "With 2 houses $" << getH2Price() << std::endl;
@@ -16,9 +20,6 @@ std::string Property::getInfo() const{
     info << "Houses cost $" << getHousePrice() << "each" << std::endl;
     info << "Hotels, $" << getHousePrice() << " plus 4 houses" << std::endl;
     info << "If a player owns ALL the lots of any Colour-Group, the rent is doubled on unimproved lots in that group" << std::endl;
-    //TODO: add getOwnerName method => this implies that all of the Space class instances
-    //      should have ref to owner (Player class object)
-    info << "PlayerId: " << getOwner() << std::endl;
     return info.str();
 }
 

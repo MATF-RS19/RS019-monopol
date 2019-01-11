@@ -14,7 +14,7 @@ public:
 	
 	static std::vector<Railroad*> initialize_railroads();
 
-    virtual std::string getInfo() const override;
+    std::string getInfo() const;
 
     std::string getName() const override;
 	

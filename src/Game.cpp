@@ -90,9 +90,6 @@ void Game::build(Player* player, Space* property) {
 
 double Game::pay_rent(Space* s)
 {
-    //TODO: remove me
-    std::cout << "PAYRENT" << std::endl;
-
 	double amount = 0;
 	std::pair<int, int> d = getDice();
 	int dice = d.first + d.second;
@@ -110,7 +107,6 @@ double Game::pay_rent(Space* s)
 	}
 
 	std::string type = s->getType();
-/* BUG: segmentation fault!*/	
 	if (type == "PROPERTY")
 	{
 
