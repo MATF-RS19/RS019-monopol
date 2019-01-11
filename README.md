@@ -14,6 +14,6 @@ Download the repository, then in terminal, run:
 ```
 
 ## Authors
-* [**Dalma Beara**] (https://github.com/dalma6)
-* [**Aleksandar Vračarević**] (https://github.com/rubidijum)
-* [**Jovan Ležaja**] (https://github.com/ramanujan257)
+* [**Dalma Beara**](https://github.com/dalma6)
+* [**Aleksandar Vračarević**](https://github.com/rubidijum)
+* [**Jovan Ležaja**](https://github.com/ramanujan257)
