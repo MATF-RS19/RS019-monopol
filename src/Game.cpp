@@ -101,6 +101,7 @@ double Game::pay_rent(Space* s)
     }
     std::cout << "TRY ACCESSING PLAYERS.AT(" << s->getOwner()-1 << ")" << std::endl;
     Player* player = players.at(s->getOwner()-1);
+	
     std::cout << "SUCCESS: " << player->get_name() << "," << player->getId() << std::endl;
 	foreach(const auto& p, players) {
 		std::cout << p->get_name() << std::endl;

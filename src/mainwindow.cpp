@@ -369,6 +369,12 @@ void MainWindow::reactToField()
 		// display message
 		QMessageBox buy_msg;
 		buy_msg.setWindowTitle(QString::fromStdString(curr_space->getName()));
+		double balance = curr_player->balance().first;
+		if(balance < curr_space->getBuyPrice())
+		{
+			std::cout << "You can't afford this." << std::endl;
+			return;
+		}
 		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
 		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
 		QPushButton *noButton = buy_msg.addButton(QMessageBox::No);

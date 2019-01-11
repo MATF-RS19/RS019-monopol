@@ -10,6 +10,7 @@ std::string Property::getInfo() const{
 		info << "Not owned" << std::endl;
 	else
 		info << "Owned by playerId: " << getOwner() << std::endl;
+		info << "Number of buildings: " << getNumBuildings() << std::endl;
     info << "RENT $" << getRentPrice() << std::endl;
     info << "With 1 house $" << getH1Price() << std::endl;
     info << "With 2 houses $" << getH2Price() << std::endl;
