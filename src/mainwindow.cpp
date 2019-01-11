@@ -388,11 +388,13 @@ void MainWindow::reactToField()
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
-		if(curr_space->getOwner() == curr_player->getId()
-	       && curr_space->getType() == "PROPERTY" 
-		   && game->getCurrentPlayer()->check_properties(curr_space)) 
+		if(curr_space->getOwner() == curr_player->getId()) 
 		{
-			upgrade_button->setVisible(true);
+			if (curr_space->getType() == "PROPERTY" 
+		   		&& game->getCurrentPlayer()->check_properties(curr_space)) {
+
+				upgrade_button->setVisible(true);
+			}
         }else{
             double amt = game->pay_rent(curr_space);
             QMessageBox rent_msg;
