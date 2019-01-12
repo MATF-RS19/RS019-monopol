@@ -69,6 +69,11 @@ private:
 
     //HACK: global variable used to store currently selected field
     QVariant currentSelection;
+    QModelIndex currentSelectionIndex;
+
+Q_SIGNALS:
+    void dataChanged();
+
 };
 
 

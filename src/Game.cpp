@@ -96,6 +96,7 @@ double Game::pay_rent(Space* s)
     Player* curr_player = getCurrentPlayer();
 	std::vector<Player*> players = getPlayers();
 
+    // Get player which recieves rent
     Player* player = players.at(s->getOwner()-1);
 
 	std::string type = s->getType();

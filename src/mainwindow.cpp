@@ -35,20 +35,6 @@ MainWindow::MainWindow()
     //Populate model for players
     playersTest = game->getPlayers();
 
-    /*
-    int playerModelPos = 0;
-    foreach(const auto& p, playersTest){
-        QStandardItem *playerItem = new QStandardItem();
-        QVariant v_data;
-        v_data.setValue(p->get_wallet());
-        playerItem->setData(v_data);
-        //playerItem->setText(QString("Current balance:\n" + QString::number(p->get_wallet())));
-
-        players_model->setItem(playerModelPos,playerItem);
-
-    }
-    */
-
     //Create model for all spaces on the board
     model = new QStandardItemModel(11,11);
     int img_num = 0;
@@ -386,7 +372,7 @@ void MainWindow::reactToField()
 		}
 		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
 		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
-		QPushButton *noButton = buy_msg.addButton(QMessageBox::No);
+        QPushButton *noButton = buy_msg.addButton(QMessageBox::No); //TODO: start auction
 		buy_msg.exec();
 
 		if (buy_msg.clickedButton() == yesButton) {
@@ -779,7 +765,24 @@ void MainWindow::display_cell(const QModelIndex& index)
 
 //TODO: implement me
 void MainWindow::putUnderMortgage(){
-    return;
+
+
+    QMessageBox *mortgageMsg = new QMessageBox;
+
+
+    Property *p = dynamic_cast<Property*>(currentSelection.value<Space*>());
+    if(!p->isOnMortgage()){
+        p->setMortgage(game->getCurrentPlayer());
+        mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
+        mortgageMsg->exec();
+    } else{
+        mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
+        mortgageMsg->exec();
+    }
+
+    display_tabs();
+
+    //return;
 }
 
 //FIXME: doesn't allow player to upgrade more than once, don't know why
