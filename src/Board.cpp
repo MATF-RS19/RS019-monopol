@@ -139,4 +139,5 @@ std::vector<Space*> Board::getSpacesByGroup(std::string group) const {
 }
 
 Board::~Board() {
+	std::cout << "bpard" << std::endl;
 }

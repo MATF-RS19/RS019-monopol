@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QStandardItemModel>
@@ -58,7 +57,6 @@ private:
 
     //Added in order to be visible inside of function for creating docks
     QStandardItemModel *model;
-    QStandardItemModel *players_model;
     QListView* player_view;
     QTableView *view;
     QTextEdit *infoText;
@@ -69,12 +67,8 @@ private:
 
     //HACK: global variable used to store currently selected field
     QVariant currentSelection;
-    QModelIndex currentSelectionIndex;
 
 Q_SIGNALS:
     void dataChanged();
 
 };
-
-
-#endif // MAINWINDOW_H

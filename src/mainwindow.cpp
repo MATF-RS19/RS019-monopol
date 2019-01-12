@@ -29,9 +29,6 @@ MainWindow::MainWindow()
     //Get spaces
 	spaces = game->getBoard()->getSpaces();
 
-    //Create model for players
-    players_model = new QStandardItemModel(this);
-
     //Populate model for players
     playersTest = game->getPlayers();
 
@@ -60,6 +57,7 @@ MainWindow::MainWindow()
 		// setting cell icon (space on the board)
         QString filename = "./images/image" + QString::number(img_num) + ".png";
 	    spaceItem->setIcon(QIcon(filename));
+		spaceItem->setEditable(false);
 
 		// setting item in the model
         model->setItem(i,j,spaceItem);

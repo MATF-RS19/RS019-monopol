@@ -228,3 +228,9 @@ Game::Game(std::vector<std::string> player_names) {
     // Create Bank
     m_bank = new Bank();
 }
+
+Game::~Game()
+{
+	delete m_bank;
+	delete m_board;
+}

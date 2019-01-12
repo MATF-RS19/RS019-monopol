@@ -9,7 +9,9 @@
 class Game {
 public:
     Game(std::vector<std::string> player_names);
-    
+
+	~Game();
+
     void throwDice();
     
     std::vector<Player*> getPlayers() const;
