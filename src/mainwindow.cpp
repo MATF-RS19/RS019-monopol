@@ -90,6 +90,7 @@ MainWindow::MainWindow()
 		}
 	}
 
+	// setting view
     view = new QTableView();
     view->setModel(model);
     view->resize(500, 500);
@@ -102,28 +103,37 @@ MainWindow::MainWindow()
 
     view->setIconSize(QSize(100,100));
 
+	// add view to central widget and create dock widgets
     setCentralWidget(view);
     createDockWindows();
 	setWindowState(Qt::WindowMaximized);
 
+	// set up connection to buttons in GUI
+	// "Roll" button clicked -> roll_dice function is called
 	connect(roll_button, SIGNAL(clicked(bool)),
 			this, SLOT(roll_dice()));
 
+	// "Roll" button clicked -> set tab to current player
 	connect(roll_button, SIGNAL(clicked(bool)),
 			this, SLOT(select_tab()));
 
+	// space on the board clicked -> display space info
 	connect(view, SIGNAL(clicked(const QModelIndex&)),
 			this, SLOT(display_cell(const QModelIndex&)));
 
+	// "Upgrade" button clicked -> build on the property
 	connect(upgrade_button, SIGNAL(clicked(bool)),
 			this, SLOT(upgrade_property()));
 
+	// when the text in game_info is changed, scroll (if necessary) to bottom 
 	connect(game_info, SIGNAL(textChanged()),
 			this, SLOT(scroll_to_bottom()));
 	
+	// "Mortgage" button clicked -> put property under mortgage
     connect(mortgage_button, SIGNAL(clicked(bool)),
             this, SLOT(putUnderMortgage()));
 
+	// "Proceed" button clicked -> proceed with action
 	connect(proceed_button, SIGNAL(clicked(bool)),
 			this, SLOT(proceed_action()));
 
@@ -247,9 +257,8 @@ void MainWindow::createDockWindows()
 	int i = 0;
 	while(i < numOfPlayers) {
         tab = new QTextEdit(left_dock);
-		tab->setReadOnly(true);
+		tab->setReadOnly(true); // player info is read-only
         tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
-
 
 		player_tabs.push_back(tab);
 		++i;
@@ -274,6 +283,7 @@ void MainWindow::createDockWindows()
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 }
 
+// called when the "Roll" button is clicked
 void MainWindow::select_tab() {
 	players_widget->setCurrentIndex(game->getCurrentPlayer()->getId()-1);
 }
@@ -294,7 +304,7 @@ void MainWindow::roll_dice()
 
     game->movePlayer(curr_player, dice.first+dice.second);
 	reactToField();
-	display_tabs();
+	display_tabs(); // update tabs for every player
 
 	// SLOT method proceed_action will do the rest
 	if (proceed_button->isVisible()) {
@@ -309,29 +319,43 @@ void MainWindow::roll_dice()
 	}
 }
 
+// called when the text in game_info is changed
 void MainWindow::scroll_to_bottom()
 {
 	game_info->verticalScrollBar()->setValue(game_info->verticalScrollBar()->maximum());
 	return;
 }
 
+// called when the "Proceed" button is clicked
 void MainWindow::proceed_action()
 {
+	// show "Proceed" button instead of the "Roll" button
 	proceed_button->setVisible(false);
 	Player* p = game->getCurrentPlayer(); 
+
+	// if player is in jail, prolong stay for one more turn
+	// FIXME: not working?
+	/*
 	if(p->is_in_jail()) 
 	{ 
 		p->set_num_turns(p->get_num_turns()+1); 
 		return; 
 	}
+	*/
+
 	reactToField();
+
+	// if player got dice with different sides, switch to next player
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
 		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
 	}
+
+	// "Roll" button is visible again
 	roll_button->setVisible(true);
 }
 
+// function that updates players info
 void MainWindow::display_tabs()
 {
 	Player* curr_player = game->getCurrentPlayer();
@@ -353,33 +377,42 @@ void MainWindow::reactToField()
 	Player* curr_player = game->getCurrentPlayer();
 	Space* curr_space = game->getCurrentPlayerSpace();
 
+	// get table coordinates
     std::pair<int, int> matrixCoordinates = game->getMatrixAtPos(curr_player->get_pos());
 
+	// take current index of the table, and set view to that index (that cell is now selected in GUI)
     QModelIndex index = view->model()->index(matrixCoordinates.first,matrixCoordinates.second);
     view->setCurrentIndex(index);
 
 	// if space is not action space and is not owned
 	if (curr_space->getType() != "ACTION SPACE" && !curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
-		// display message
+
+		// message to be displayed when player steps onto an unowned field
 		QMessageBox buy_msg;
 		buy_msg.setWindowTitle(QString::fromStdString(curr_space->getName()));
+
 		double balance = curr_player->balance().first;
 		if(balance < curr_space->getBuyPrice())
 		{
 			std::cout << "You can't afford this." << std::endl;
+			game_info->append(QString::fromStdString(curr_player->get_name()) + " can't afford this. :(");
 			return;
 		}
+		
 		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
 		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
         QPushButton *noButton = buy_msg.addButton(QMessageBox::No); //TODO: start auction
 		buy_msg.exec();
 
+		// if player cliked "Yes"
 		if (buy_msg.clickedButton() == yesButton) {
+			// player buys space
 			game->getBank()->sellSpace(curr_player, curr_space);
 			game_info->append("~ " + QString::fromStdString(curr_player->get_name())
 							  + " bought " + QString::fromStdString(curr_space->getName()));
 		}
+	// if player stepped on an owned field
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
@@ -739,6 +772,7 @@ void MainWindow::reactToField()
 	} 
 }
 
+// called when a cell on the board is clicked
 void MainWindow::display_cell(const QModelIndex& index)
 {
 	if (index.isValid()) {
@@ -771,7 +805,6 @@ void MainWindow::display_cell(const QModelIndex& index)
 	}
 }
 
-//TODO: implement me
 void MainWindow::putUnderMortgage(){
 
 
@@ -811,18 +844,16 @@ void MainWindow::putUnderMortgage(){
         }
     }
 
-
-
+	// update tabs for every player
     display_tabs();
 
     //return;
 }
 
 //FIXME: doesn't allow player to upgrade more than once, don't know why
+// TESTME: check_properties wasn't implemented well
 void MainWindow::upgrade_property()
 {
-
-
     Space* upgradeMe = currentSelection.value<Space*>();
     Player* curr_player = game->getCurrentPlayer();
 

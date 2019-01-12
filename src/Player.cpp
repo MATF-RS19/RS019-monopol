@@ -183,7 +183,7 @@ bool Player::check_properties(Space* s)
 		count = 1;
 	for(; i < my_properties.size(); i++)
 	{
-		if(my_properties[i]->getColour() == colour && my_properties[i]->getNumBuildings() == 0)
+		if(my_properties[i]->getColour() == colour && my_properties[i]->getNumBuildings() >= 0)
 			count ++;
 	}		
 	
