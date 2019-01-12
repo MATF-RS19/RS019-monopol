@@ -383,6 +383,7 @@ void MainWindow::reactToField()
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
+        // You can upgrade your property when you step on it
 		if(curr_space->getOwner() == curr_player->getId()) 
 		{
 			if (curr_space->getType() == "PROPERTY" 
@@ -390,18 +391,25 @@ void MainWindow::reactToField()
 
 				upgrade_button->setVisible(true);
 			}
-        }else{
+        }else{ // You have to pay rent to the owner of the current space
             double amt = game->pay_rent(curr_space);
             QMessageBox rent_msg;
             rent_msg.setWindowTitle("PAY RENT");
 
-			QString owner;
-			owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name());
-            rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
-                             + owner);
-            rent_msg.exec();
+            //Dangerous, could not work
+            if(amt != -1.0){
+                QString owner;
+                owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name());
+                rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
+                                 + owner);
+                rent_msg.exec();
+                game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
+            }else{
+                rent_msg.setText("Space is under mortgage, you don't have to pay");
+                rent_msg.exec();
+            }
 
-			game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
+
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// action space is not upgradable
@@ -768,17 +776,42 @@ void MainWindow::putUnderMortgage(){
 
 
     QMessageBox *mortgageMsg = new QMessageBox;
+    mortgageMsg->setWindowTitle("MORTGAGE");
 
-
-    Property *p = dynamic_cast<Property*>(currentSelection.value<Space*>());
-    if(!p->isOnMortgage()){
-        p->setMortgage(game->getCurrentPlayer());
-        mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-        mortgageMsg->exec();
-    } else{
-        mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-        mortgageMsg->exec();
+    Space *s = currentSelection.value<Space*>();
+    if(s->getType() == "PROPERTY"){
+        Property *p = dynamic_cast<Property*>(s);
+        if(!p->isOnMortgage()){
+            p->setMortgage(game->getCurrentPlayer());
+            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
+            mortgageMsg->exec();
+        } else{
+            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
+            mortgageMsg->exec();
+        }
+    } else if(s->getType() == "RAILROAD"){
+        Railroad *p = dynamic_cast<Railroad*>(s);
+        if(!p->isOnMortgage()){
+            p->setMortgage(game->getCurrentPlayer());
+            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
+            mortgageMsg->exec();
+        } else{
+            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
+            mortgageMsg->exec();
+        }
+    } else if(s->getType() == "UTILITY"){
+        Utility *p = dynamic_cast<Utility*>(s);
+        if(!p->isOnMortgage()){
+            p->setMortgage(game->getCurrentPlayer());
+            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
+            mortgageMsg->exec();
+        } else{
+            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
+            mortgageMsg->exec();
+        }
     }
+
+
 
     display_tabs();
 

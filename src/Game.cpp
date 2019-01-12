@@ -90,6 +90,11 @@ void Game::build(Player* player, Space* property) {
 
 double Game::pay_rent(Space* s)
 {
+
+    //TODO: prettify me later
+    if(s->isOnMortgage())
+        return -1;
+
 	double amount = 0;
 	std::pair<int, int> d = getDice();
 	int dice = d.first + d.second;
