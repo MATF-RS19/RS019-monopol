@@ -70,7 +70,7 @@ public:
     std::string getType() const override{
 		return "PROPERTY";
     }
-    
+
     double getH1Price() const override{
 		return _h1_price;
     }

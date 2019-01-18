@@ -243,7 +243,7 @@ void MainWindow::createDockWindows()
 	// initializing game info widget
 	game_info = new QTextEdit(left_dock);
 	game_info->setText("Welcome!\nIt's " 
-					+ QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
+					+ QString::fromStdString(game->getCurrentPlayer()->getName() + "'s turn."));
 
     players_widget = new QTabWidget(left_dock);
     std::vector<Player*> players;
@@ -264,7 +264,7 @@ void MainWindow::createDockWindows()
 
 	// initialize tab for every player
 	for (int i = 0; i < numOfPlayers; i++) {
-		players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->get_name()));
+		players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->getName()));
 	}
 
     // set layout
@@ -295,7 +295,7 @@ void MainWindow::roll_dice()
 	std::pair<int, int> dice = game->getDice();
 	die_1->setPixmap(*(die_sides[dice.first]));
 	die_2->setPixmap(*(die_sides[dice.second]));
-	game_info->append("- " + QString::fromStdString(game->getCurrentPlayer()->get_name()) + " rolled a " 
+	game_info->append("- " + QString::fromStdString(game->getCurrentPlayer()->getName()) + " rolled a " 
 						+ QString::number(dice.first) + " and a " + QString::number(dice.second) + ".");
 
     Player* curr_player = game->getCurrentPlayer();
@@ -313,7 +313,7 @@ void MainWindow::roll_dice()
 	// if player got dice with different sides, switch to next player
 	if (dice.first != dice.second) {
 		game->nextPlayer();
-		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
+		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->getName() + "'s turn."));
 	}
 }
 
@@ -346,7 +346,7 @@ void MainWindow::proceed_action()
 	// if player got dice with different sides, switch to next player
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
-		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->get_name() + "'s turn."));
+		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->getName() + "'s turn."));
 	}
 
 	// "Roll" button is visible again
@@ -374,6 +374,8 @@ void MainWindow::reactToField()
 {
 	Player* curr_player = game->getCurrentPlayer();
 	Space* curr_space = game->getCurrentPlayerSpace();
+	QString playerName = QString::fromStdString(curr_player->getName());
+	QString spaceName = QString::fromStdString(curr_space->getName());
 
 	// get table coordinates
     std::pair<int, int> matrixCoordinates = game->getMatrixAtPos(curr_player->get_pos());
@@ -382,35 +384,27 @@ void MainWindow::reactToField()
     QModelIndex index = view->model()->index(matrixCoordinates.first,matrixCoordinates.second);
     view->setCurrentIndex(index);
 
-	// if space is not action space and is not owned
+	// You can buy space that's not owned
 	if (curr_space->getType() != "ACTION SPACE" && !curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
-		// message to be displayed when player steps onto an unowned field
 		QMessageBox buy_msg;
-		buy_msg.setWindowTitle(QString::fromStdString(curr_space->getName()));
-
-		double balance = curr_player->balance().first;
-		if(balance < curr_space->getBuyPrice())
-		{
-			std::cout << "You can't afford this." << std::endl;
-			game_info->append(QString::fromStdString(curr_player->get_name()) + " can't afford this. :(");
-			return;
-		}
-		
+		buy_msg.setWindowTitle(spaceName);
 		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
 		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
         QPushButton *noButton = buy_msg.addButton(QMessageBox::No); //TODO: start auction
 		buy_msg.exec();
 
-		// if player cliked "Yes"
+		// Player buys space
 		if (buy_msg.clickedButton() == yesButton) {
-			// player buys space
-			game->getBank()->sellSpace(curr_player, curr_space);
-			game_info->append("~ " + QString::fromStdString(curr_player->get_name())
-							  + " bought " + QString::fromStdString(curr_space->getName()));
+			if (game->isAffordable(curr_player, curr_space)) {
+				game->getBank()->sellSpace(curr_player, curr_space);
+				game_info->append("~ " + playerName + " bought " + spaceName);
+			} else {
+				game_info->append(playerName + " can't afford this. :(");
+			}
 		}
-	// if player stepped on an owned field
+	// If player stepped on an owned field
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
@@ -419,7 +413,6 @@ void MainWindow::reactToField()
 		{
 			if (curr_space->getType() == "PROPERTY" 
 		   		&& game->getCurrentPlayer()->check_properties(curr_space)) {
-
 				upgrade_button->setVisible(true);
 			}
         }else{ // You have to pay rent to the owner of the current space
@@ -430,11 +423,11 @@ void MainWindow::reactToField()
             //Dangerous, could not work
             if(amt != -1.0){
                 QString owner;
-                owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->get_name());
+                owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->getName());
                 rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
                                  + owner);
                 rent_msg.exec();
-                game_info->append(owner + " received rent from " + QString::fromStdString(curr_player->get_name()) + ".");
+                game_info->append(owner + " received rent from " + playerName + ".");
             }else{
                 rent_msg.setText("Space is under mortgage, you don't have to pay");
                 rent_msg.exec();
@@ -455,13 +448,13 @@ void MainWindow::reactToField()
 
 		if(action == "GO")
 		{
-			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " passed GO.\n"
-							  + "  " + QString::fromStdString(curr_player->get_name()) + " receives 200$.");
+			game_info->append("* " + playerName + " passed GO.\n"
+							  + "  " + playerName + " receives 200$.");
 			game->getBank()->giveMoney(curr_player, 200);
 		}
 		else if(action == "GOTO_JAIL")
 		{
-			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " goes to jail.");
+			game_info->append("* " + playerName + " goes to jail.");
 			game->send_to_jail(curr_player);
 		}
 		else if(action == "INCOME_TAX")
@@ -475,7 +468,7 @@ void MainWindow::reactToField()
 				delete pTemp;
 				return;
 			}
-			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays income tax (200$).");
+			game_info->append("* " + playerName + " pays income tax (200$).");
 			game->getBank()->takeMoney(curr_player, 200);
 		}
 		else if(action == "LUXURY_TAX")
@@ -489,23 +482,24 @@ void MainWindow::reactToField()
 				delete pTemp;
 				return;
 			}
-			game_info->append("* " + QString::fromStdString(curr_player->get_name()) + " pays luxury tax (75%).");
+			game_info->append("* " + playerName + " pays luxury tax (75%).");
 			game->getBank()->takeMoney(curr_player, 75);
 		}
 		else if(action == "CHANCE")
 		{
 			Card chance = game->getBoard()->drawChanceCard();
+			QString chanceMsg = QString::fromStdString(chance.getMsg());
 			int num_card = chance.getAction();
 			if(num_card == 0)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				game->moveToPos(curr_player, 0);
 				proceed_button->setVisible(true);
 				roll_button->setVisible(false);
 			}
 			else if(num_card == 1)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				// if they pass go, they get $200
 				if(curr_player->get_pos() > 24)
 					game->getBank()->giveMoney(curr_player, 200);
@@ -516,7 +510,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 2)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				// if they pass go, they get $200
 				if(curr_player->get_pos() > 11)
 					game->getBank()->giveMoney(curr_player, 200);
@@ -527,7 +521,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 3)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				int electric_distance = abs(12-curr_player->get_pos());
 				int water_distance = abs(28-curr_player->get_pos());
 				int nearest;
@@ -542,7 +536,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 4)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				int quotient = curr_player->get_pos() / 10;
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
@@ -552,7 +546,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 5)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				int quotient = curr_player->get_pos() / 10;
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
@@ -562,12 +556,12 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 6)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				game->getBank()->giveMoney(curr_player, 50);
 			}
 			else if(num_card == 7)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				if(curr_player->is_in_jail())
 					game->release_from_jail(curr_player);
 				else
@@ -575,7 +569,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 8)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				int current = curr_player->get_pos();
 				if(current == 0)
 					game->moveToPos(curr_player, 37);
@@ -590,7 +584,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 9)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				// placing him at the go to jail action field for a moment
 				game->moveToPos(curr_player, 30);
 				proceed_button->setVisible(true);
@@ -598,7 +592,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 10)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				std::vector<Property*> props = curr_player->get_properties();
 				unsigned size = props.size();
 				int num = 0;
@@ -609,12 +603,12 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 11)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				game->getBank()->takeMoney(curr_player, 15);
 			}
 			else if(num_card == 12)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				if(curr_player->get_pos() > 5)
 					game->getBank()->giveMoney(curr_player, 200);
 				// Reading Railroad
@@ -624,7 +618,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 13)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				// Boardwalk
 				game->moveToPos(curr_player, 39);
 				proceed_button->setVisible(true);
@@ -632,7 +626,7 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 14)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				std::vector<Player*> players = game->getPlayers();
 				game->getBank()->takeMoney(curr_player, 50*(numOfPlayers-1));
 				for(int i=0; i<numOfPlayers; i++)
@@ -643,12 +637,12 @@ void MainWindow::reactToField()
 			}
 			else if(num_card == 15)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				game->getBank()->giveMoney(curr_player, 150);
 			}
 			else if(num_card == 16)
 			{
-				game_info->append("* Chance: " + QString::fromStdString(chance.getMsg()));
+				game_info->append("* Chance: " + chanceMsg);
 				game->getBank()->giveMoney(curr_player, 100);
 			}
 		}
@@ -792,55 +786,52 @@ void MainWindow::display_cell(const QModelIndex& index)
 			upgrade_button->setVisible(false);
 		}
 
+		// FIXME? mortgage_button->setVisible(owner == id)
         if (data.value<Space*>()->getOwner() == game->getCurrentPlayer()->getId()){
             mortgage_button->setVisible(true);
         } else {
             mortgage_button->setVisible(false);
         }
 
-	} else {
-		return;
 	}
 }
 
-void MainWindow::putUnderMortgage(){
-
+void MainWindow::putUnderMortgage()
+{
 
     QMessageBox *mortgageMsg = new QMessageBox;
     mortgageMsg->setWindowTitle("MORTGAGE");
 
     Space *s = currentSelection.value<Space*>();
-    if(s->getType() == "PROPERTY"){
+    if(s->getType() == "PROPERTY") {
         Property *p = dynamic_cast<Property*>(s);
-        if(!p->isOnMortgage()){
-            p->setMortgage(game->getCurrentPlayer());
-            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
-        } else{
-            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-            mortgageMsg->exec();
-        }
-    } else if(s->getType() == "RAILROAD"){
-        Railroad *p = dynamic_cast<Railroad*>(s);
-        if(!p->isOnMortgage()){
-            p->setMortgage(game->getCurrentPlayer());
-            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
-        } else{
-            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-            mortgageMsg->exec();
-        }
-    } else if(s->getType() == "UTILITY"){
+		if(!p->isOnMortgage()){
+    		p->setMortgage(game->getCurrentPlayer());
+       		 mortgageMsg->setText("You have put " + QString::fromStdString(p->getName()) + " under mortgage");
+    	} else {
+   			mortgageMsg->setText("This space is already on mortgage");
+    	}
+    } else if(s->getType() == "RAILROAD") {
+    	Railroad *p = dynamic_cast<Railroad*>(s);
+		if(!p->isOnMortgage()){
+    		p->setMortgage(game->getCurrentPlayer());
+        	mortgageMsg->setText("You have put " + QString::fromStdString(p->getName()) + " under mortgage");
+    	} else {
+   			mortgageMsg->setText("This space is already on mortgage");
+    	}
+    } else if(s->getType() == "UTILITY") {
         Utility *p = dynamic_cast<Utility*>(s);
-        if(!p->isOnMortgage()){
-            p->setMortgage(game->getCurrentPlayer());
-            mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
-        } else{
-            mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-            mortgageMsg->exec();
-        }
+		if(!p->isOnMortgage()){
+    		p->setMortgage(game->getCurrentPlayer());
+        	mortgageMsg->setText("You have put " + QString::fromStdString(p->getName()) + " under mortgage");
+    	} else {
+   			mortgageMsg->setText("This space is already on mortgage");
+    	}
     }
+	
+	
+
+    mortgageMsg->exec();
 
 	// update tabs for every player
     display_tabs();
@@ -848,8 +839,6 @@ void MainWindow::putUnderMortgage(){
     //return;
 }
 
-//FIXME: doesn't allow player to upgrade more than once, don't know why
-// TESTME: check_properties wasn't implemented well
 void MainWindow::upgrade_property()
 {
     Space* upgradeMe = currentSelection.value<Space*>();

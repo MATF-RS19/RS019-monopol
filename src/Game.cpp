@@ -3,7 +3,7 @@
 
 void Game::printPlayers() const {
     for(const auto i : m_players){
-        std::cerr << "Player " << i->get_name() << std::endl;
+        std::cerr << "Player " << i->getName() << std::endl;
     }
 }
 
@@ -33,6 +33,11 @@ void Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
 	setDice(num.first, num.second);
     //return num;
+}
+
+bool Game::isAffordable(Player* player, Space* space)
+{
+	return player->balance().first > space->getBuyPrice();
 }
 
 //NOTE: Only current player will build because game is turn based at this point

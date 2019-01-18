@@ -35,6 +35,9 @@ public:
 
     //Current player pays to the owner of the space
     double pay_rent(Space* space);
+
+	bool isAffordable(Player* player, Space* space);
+
     void build(Player* player, Space* property);
     
     void movePlayer(Player *player, int steps);

@@ -50,13 +50,26 @@ class Space{
 		virtual bool isOnMortgage() const = 0;
 		
 		virtual double getRentPrice() const = 0;
+
 		virtual double getH1Price() const = 0;
+
 		virtual double getH2Price() const = 0;
+
 		virtual double getH3Price() const = 0;
+
 		virtual double getH4Price() const = 0;
+
 		virtual double getH5Price() const = 0;
-		
+
 		virtual std::string getColour() const = 0;
+
+		enum class EnumSpace
+		{
+			PROPERTY,
+			ACTION_SPACE,
+			UTILITY,
+			RAILROAD
+		};
 };
 
 Q_DECLARE_METATYPE(Space*);
