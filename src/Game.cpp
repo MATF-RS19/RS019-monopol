@@ -185,13 +185,12 @@ double Game::pay_rent(Space* s)
     return amount;
 }
 
+//FIXME:
 void Game::nextPlayer() {
-	/*
-    Player* p = m_players.front();
-    m_players.erase(m_players.begin());
-    m_players.push_back(p);
-	*/
-	int index = m_current_player->getId()-1;
+    auto iter = std::find_if(m_players.begin(), m_players.end(), [&] (Player *p) { return p->getId() == m_current_player->getId(); });
+    qDebug() << "Next Player" << QString::fromStdString((*iter)->get_name());
+    auto index = std::distance(m_players.begin(), iter);
+
     m_current_player = m_players.at((index+1)%m_players.size());
 }
 
@@ -211,6 +210,20 @@ Space* Game::getCurrentPlayerSpace() const {
     return m_board->getSpaces().at(m_current_player->get_pos());
 }
 
+Game::Game(std::vector<Player*> players){
+    m_players = players;
+    m_current_player = m_players.front();
+
+    //TEST
+    m_board = new Board();
+
+    m_bank = new Bank();
+
+    m_numOfPlayers = m_players.size();
+    //
+
+}
+
 Game::Game(std::vector<std::string> player_names) {
     // Init players
     std::vector<Player*> players = Player::initializePlayers(player_names);
@@ -227,10 +240,13 @@ Game::Game(std::vector<std::string> player_names) {
     
     // Create Bank
     m_bank = new Bank();
+
+    m_numOfPlayers = m_players.size();
 }
 
 Game::~Game()
 {
+    qDebug() << "~Game()";
 	delete m_bank;
 	delete m_board;
 }

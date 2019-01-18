@@ -6,6 +6,7 @@
 
 #include "mainwindow.h"
 #include "Game.hpp"
+#include "LoadXML.h"
 
 int numOfPlayers;
 Game* MainWindow::game;
@@ -18,6 +19,9 @@ MainWindow::MainWindow()
     std::vector<std::string> names(numOfPlayers);
 	
 	mainMenu(names);
+
+    createActions();
+    createMenus();
 
 	for (int i=1; i<7; i++) {
 	    die_sides[i] = new QPixmap("./images/die" + QString::number(i) + ".png");
@@ -32,61 +36,7 @@ MainWindow::MainWindow()
     //Populate model for players
     playersTest = game->getPlayers();
 
-    //Create model for all spaces on the board
-    model = new QStandardItemModel(11,11);
-    int img_num = 0;
-
-    //Populate model with space images
-    int i=10,j=10,i_increment=0,j_increment=-1;
-    foreach(const auto& s, spaces){
-
-		// initializing item for the model
-        QStandardItem *spaceItem = new QStandardItem();
-		QVariant v_data;
-		v_data.setValue(s);
-        spaceItem->setData(v_data);
-
-		if ((i==10 && j==10) || (i==10 && j==0) || (i==0 && j==10) || (i==0 && j==0)) {
-	        spaceItem->setSizeHint(QSize(100,100));
-		} else if (j==10 || j==0) {
-			spaceItem->setSizeHint(QSize(100, 60));
-		} else {
-			spaceItem->setSizeHint(QSize(60, 100));
-		}
-
-		// setting cell icon (space on the board)
-        QString filename = "./images/image" + QString::number(img_num) + ".png";
-	    spaceItem->setIcon(QIcon(filename));
-		spaceItem->setEditable(false);
-
-		// setting item in the model
-        model->setItem(i,j,spaceItem);
-
-        img_num++;
-        i+=i_increment;
-        j+=j_increment;
-        if(i==10 && j==0){
-            i_increment=-1;
-            j_increment=0;
-        }
-        if(i==0 && j==0){
-            i_increment=0;
-            j_increment=1;
-        }
-        if(i==0 && j==10){
-            i_increment=1;
-            j_increment=0;
-        }
-
-    }
-		
-	for (int i=1; i<10; i++) {
-		for (int j=1; j<10; j++) {
-			QStandardItem *item = new QStandardItem();
-			item->setFlags(Qt::NoItemFlags);
-			model->setItem(i,j,item);
-		}
-	}
+    setModel();
 
 	// setting view
     view = new QTableView();
@@ -137,6 +87,143 @@ MainWindow::MainWindow()
 
 }
 
+void MainWindow::setModel(){
+    //Create model for all spaces on the board
+    model = new QStandardItemModel(11,11);
+    int img_num = 0;
+
+    //Populate model with space images
+    int i=10,j=10,i_increment=0,j_increment=-1;
+    foreach(const auto& s, spaces){
+
+        // initializing item for the model
+        QStandardItem *spaceItem = new QStandardItem();
+        QVariant v_data;
+        v_data.setValue(s);
+        spaceItem->setData(v_data);
+
+        if ((i==10 && j==10) || (i==10 && j==0) || (i==0 && j==10) || (i==0 && j==0)) {
+            spaceItem->setSizeHint(QSize(100,100));
+        } else if (j==10 || j==0) {
+            spaceItem->setSizeHint(QSize(100, 60));
+        } else {
+            spaceItem->setSizeHint(QSize(60, 100));
+        }
+
+        // setting cell icon (space on the board)
+        QString filename = "./images/image" + QString::number(img_num) + ".png";
+        spaceItem->setIcon(QIcon(filename));
+        spaceItem->setEditable(false);
+
+        // setting item in the model
+        model->setItem(i,j,spaceItem);
+
+        img_num++;
+        i+=i_increment;
+        j+=j_increment;
+        if(i==10 && j==0){
+            i_increment=-1;
+            j_increment=0;
+        }
+        if(i==0 && j==0){
+            i_increment=0;
+            j_increment=1;
+        }
+        if(i==0 && j==10){
+            i_increment=1;
+            j_increment=0;
+        }
+
+    }
+
+    for (int i=1; i<10; i++) {
+        for (int j=1; j<10; j++) {
+            QStandardItem *item = new QStandardItem();
+            item->setFlags(Qt::NoItemFlags);
+            model->setItem(i,j,item);
+        }
+    }
+}
+
+void MainWindow::createActions(){
+    loadAct = new QAction(tr("&Load game"), this);
+    loadAct->setStatusTip(tr("Load game from a file"));
+    connect(loadAct, &QAction::triggered, this, &MainWindow::loadGame);
+
+    saveAct = new QAction(tr("&Save game"), this);
+    saveAct->setStatusTip(tr("Save game to a file"));
+    connect(saveAct, &QAction::triggered, this, &MainWindow::saveGame);
+}
+
+void MainWindow::createMenus(){
+    loadSaveMenu = menuBar()->addMenu(tr("&Load/Save"));
+    loadSaveMenu->addAction(loadAct);
+    loadSaveMenu->addAction(saveAct);
+}
+
+void MainWindow::load(const QString& fileName){
+
+    LoadXML loader(fileName);
+
+    delete game;
+    std::vector<Player*> loadedPlayers = loader.processPlayers();
+
+    numOfPlayers = loadedPlayers.size();
+    game = new Game(loadedPlayers);
+    playersTest = game->getPlayers();
+    spaces = game->getBoard()->getSpaces();
+
+    setModel();
+    view->setModel(model);
+    view->update();
+
+    qDebug() << "Name: " << QString::fromStdString(game->getCurrentPlayer()->get_name());
+
+    game_info->clear();
+    infoText->clear();
+    player_tabs.clear();
+    updateTabs(loadedPlayers);
+
+}
+
+void MainWindow::save(){
+
+}
+
+void MainWindow::loadGame(){
+    qDebug() << "load invoked";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load from file"),
+                                                    ".",
+                                                    tr("(*.xml)"));
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Warning", "Are you sure? (Current game will be lost)",
+                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Save);
+
+    switch (reply) {
+        case QMessageBox::Yes:
+            qDebug() << "yes";
+            load(fileName);
+            break;
+        case QMessageBox::No:
+            qDebug() << "no";
+            break;
+        case QMessageBox::Save:
+            qDebug() << "save";
+            saveGame();
+            break;
+        default:
+            break;
+
+    }
+
+    qDebug() << fileName << " selected";
+}
+
+void MainWindow::saveGame(){
+    qDebug() << "save invoked";
+}
+
 void MainWindow::mainMenu(std::vector<std::string>& names) 
 {
 	// ask for number of players
@@ -172,6 +259,30 @@ void MainWindow::mainMenu(std::vector<std::string>& names)
         else
             i--;
     }
+}
+
+void MainWindow::updateTabs(std::vector<Player*> players){
+
+    QTextEdit *tab;
+
+    players_widget->clear();
+
+    // setting widget for every player
+    int i = 0;
+    while(i < numOfPlayers) {
+        qDebug() << "Player wallet" << QString::number(players[i]->get_wallet());
+        tab = new QTextEdit(left_dock);
+        tab->setReadOnly(true);
+        tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
+
+        player_tabs.push_back(tab);
+        ++i;
+    }
+
+    for (int i = 0; i < numOfPlayers; i++) {
+        players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->get_name()));
+    }
+
 }
 
 void MainWindow::createDockWindows()
@@ -255,9 +366,9 @@ void MainWindow::createDockWindows()
 	int i = 0;
 	while(i < numOfPlayers) {
         tab = new QTextEdit(left_dock);
-		tab->setReadOnly(true); // player info is read-only
+        tab->setReadOnly(true);
         tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
-
+        qDebug() << "BEAUTIFUL DEBUG" << QString::fromStdString(players[i]->get_name()) << QString::number(players[i]->get_wallet());
 		player_tabs.push_back(tab);
 		++i;
 	}
@@ -283,7 +394,9 @@ void MainWindow::createDockWindows()
 
 // called when the "Roll" button is clicked
 void MainWindow::select_tab() {
-	players_widget->setCurrentIndex(game->getCurrentPlayer()->getId()-1);
+    auto iter = std::find_if(playersTest.begin(), playersTest.end(), [&] (Player *p) { return p->getId() == game->getCurrentPlayer()->getId(); });
+    auto index = std::distance(playersTest.begin(), iter);
+    players_widget->setCurrentIndex(index);
 }
 
 // roll dice -> move player -> do specific action depending on the current position
@@ -357,17 +470,17 @@ void MainWindow::proceed_action()
 void MainWindow::display_tabs()
 {
 	Player* curr_player = game->getCurrentPlayer();
-	int index = curr_player->getId();
+    qDebug() << "DISPLAY TABS DEBUG CURR PL = " << QString::fromStdString(curr_player->get_name());
+    auto iter = std::find_if(playersTest.begin(), playersTest.end(), [&] (Player *p) { return p->getId() == curr_player->getId(); });
+    auto index = std::distance(playersTest.begin(), iter);
 
     std::string owned_spaces;
     foreach(const auto& i, curr_player->get_spaces()){
         owned_spaces += "    ->" + i->getName() + "\n";
     }
 
-	player_tabs.at(index-1)->setText("Current balance: \n"
-                                             + QString::number(curr_player->get_wallet())
-                                             + "\nOwned spaces: \n"
-                                             + QString::fromStdString(owned_spaces));
+    std::string player_tab_info = "Current balance" + std::to_string(curr_player->get_wallet()) + "\nOwned spaces: \n" + owned_spaces;
+    player_tabs.at(index)->setText(QString::fromStdString(player_tab_info));
 }
 
 void MainWindow::reactToField()
@@ -393,7 +506,6 @@ void MainWindow::reactToField()
 		double balance = curr_player->balance().first;
 		if(balance < curr_space->getBuyPrice())
 		{
-			std::cout << "You can't afford this." << std::endl;
 			game_info->append(QString::fromStdString(curr_player->get_name()) + " can't afford this. :(");
 			return;
 		}
@@ -409,6 +521,9 @@ void MainWindow::reactToField()
 			game->getBank()->sellSpace(curr_player, curr_space);
 			game_info->append("~ " + QString::fromStdString(curr_player->get_name())
 							  + " bought " + QString::fromStdString(curr_space->getName()));
+
+            qDebug() << "AFTER SELLING IN MAINWIN" << QString::fromStdString(curr_space->getInfo());
+
 		}
 	// if player stepped on an owned field
     } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
@@ -815,7 +930,6 @@ void MainWindow::putUnderMortgage(){
         if(!p->isOnMortgage()){
             p->setMortgage(game->getCurrentPlayer());
             mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
         } else{
             mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
             mortgageMsg->exec();
@@ -825,23 +939,20 @@ void MainWindow::putUnderMortgage(){
         if(!p->isOnMortgage()){
             p->setMortgage(game->getCurrentPlayer());
             mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
         } else{
             mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-            mortgageMsg->exec();
         }
     } else if(s->getType() == "UTILITY"){
         Utility *p = dynamic_cast<Utility*>(s);
         if(!p->isOnMortgage()){
             p->setMortgage(game->getCurrentPlayer());
             mortgageMsg->setText(QString::fromStdString("You have put ") + QString::fromStdString(p->getName()) + QString(" under mortgage"));
-            mortgageMsg->exec();
         } else{
             mortgageMsg->setText(QString::fromStdString("This space is already on mortgage"));
-            mortgageMsg->exec();
         }
     }
 
+    mortgageMsg->exec();
 	// update tabs for every player
     display_tabs();
 

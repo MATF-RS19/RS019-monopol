@@ -5,12 +5,17 @@
 #include <QTableView>
 #include <QTextEdit>
 #include <QListView>
+#include <QFile>
+#include <QDomDocument>
 #include "Game.hpp"
 
 class QListWidget;
 class QPushButton;
 class QLabel;
 class QVBoxLayout;
+class QMenu;
+class QAction;
+class QWidget;
 
 extern int numOfPlayers;
 
@@ -29,13 +34,26 @@ private Q_SLOTS:
 	void scroll_to_bottom();
 	void proceed_action();
 	void select_tab();
+    void loadGame();
+    void saveGame();
 
 private:
     void createDockWindows();
+    void updateTabs(std::vector<Player*> players);
+    void setModel();
     void mainMenu(std::vector<std::string>& names);
 	void reactToField();
 	void display_tabs();
+    void createActions();
+    void createMenus();
+    void load(const QString& fileName);
+    void save();
 	
+    // menus
+    QMenu* loadSaveMenu;
+    QAction* saveAct;
+    QAction* loadAct;
+
 	// right dock
     QWidget* right_dock;
     QPushButton* roll_button;

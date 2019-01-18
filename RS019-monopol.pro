@@ -5,7 +5,8 @@
 TEMPLATE = app
 TARGET = RS019-monopol
 INCLUDEPATH += .
-QT += widgets
+QT += widgets \
+      xml
 
 # Input
 HEADERS += src/ActionSpace.hpp \
@@ -19,7 +20,9 @@ HEADERS += src/ActionSpace.hpp \
            src/Property.hpp \
            src/Railroad.hpp \
            src/Space.hpp \
-           src/Utility.hpp
+           src/Utility.hpp \
+    LoadXML.h \
+    src/LoadXML.h
 SOURCES += src/ActionSpace.cpp \
            src/AuctionHouse.cpp \
            src/Bank.cpp \
@@ -32,4 +35,5 @@ SOURCES += src/ActionSpace.cpp \
            src/Property.cpp \
            src/Railroad.cpp \
            src/Space.cpp \
-           src/Utility.cpp
+           src/Utility.cpp \
+    src/LoadXML.cpp

@@ -91,6 +91,10 @@ bool Railroad::isOwned() const{
     return _owned;
 }
 
+void Railroad::setIsOnMortgage(){
+    _is_on_mortgage = true;
+}
+
 bool Railroad::isOnMortgage() const{
     return _is_on_mortgage;
 }

@@ -2,6 +2,7 @@
 
 #include "Space.hpp"
 #include "Player.hpp"
+#include <QString>
 
 class Player;
 
@@ -92,6 +93,9 @@ public:
     }
     
     void setMortgage(Player* p);
+
+    void setIsOnMortgage();
+
     void revertMortgage(Player* p);
     bool isOnMortgage() const override{
 		return _is_on_mortgage;

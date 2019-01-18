@@ -21,6 +21,9 @@ std::string Property::getInfo() const{
     info << "Houses cost $" << getHousePrice() << "each" << std::endl;
     info << "Hotels, $" << getHousePrice() << " plus 4 houses" << std::endl;
     info << "If a player owns ALL the lots of any Colour-Group, the rent is doubled on unimproved lots in that group" << std::endl;
+
+    qDebug() << "INFO DEBUG:" << QString::fromStdString(info.str());
+
     return info.str();
 }
 
@@ -74,6 +77,10 @@ std::vector<Property*> Property::initialize_properties() {
 	std::vector<Property*> properties = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22};
 	
 	return properties;
+}
+
+void Property::setIsOnMortgage(){
+    _is_on_mortgage = true;
 }
 
 int Property::getAction() const {

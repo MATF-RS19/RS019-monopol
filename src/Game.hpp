@@ -5,10 +5,13 @@
 #include "Bank.hpp"
 #include <algorithm>
 #include <vector>
+#include <QDebug>
 
 class Game {
 public:
     Game(std::vector<std::string> player_names);
+
+    Game(std::vector<Player*> players);
 
 	~Game();
 
@@ -73,6 +76,7 @@ private:
     std::vector<Player*> m_players;
     Player* m_current_player;
     Bank* m_bank;
+    int m_numOfPlayers;
 	std::pair<int,int> _dice;
     const std::map<int, std::pair<int,int>> posToMatrixMap =
                                                           {{ 0, std::make_pair(10,10) },

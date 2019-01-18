@@ -7,6 +7,7 @@
 #include "ActionSpace.hpp"
 #include <map>
 #include <vector>
+#include <QDebug>
 
 class Property;
 class Utility;
@@ -26,6 +27,8 @@ class Player {
 public:
 
 	Player();
+
+    Player(unsigned int id, std::string name, int wallet, bool jail, int pos, int turns_in_jail, bool jail_card);
 
 	~Player();
 
@@ -94,7 +97,7 @@ private:
     static int m_obj_count;
 	unsigned m_id;
 	std::string m_name;
-	int m_wallet; // player's money
+    int m_wallet;
 	bool m_in_jail;
 	std::vector<Property*> owned_properties;
     std::vector<Utility*> owned_utilities;

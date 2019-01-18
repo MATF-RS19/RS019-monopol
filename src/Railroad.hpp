@@ -38,6 +38,8 @@ public:
 
 	void setNumBuildings(int num) override;
     
+    void setIsOnMortgage();
+
 	void printSpace() const override;
     
     std::string getGroup() const override;

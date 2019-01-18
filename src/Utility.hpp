@@ -95,6 +95,10 @@ public:
 		return "TRANSPARENT";
 	}
 
+    void setIsOnMortgage(){
+        _is_on_mortgage = true;
+    }
+
 private:
 	double _buy_price, _mortgage;
 	std::string _group;
