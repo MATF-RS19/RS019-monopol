@@ -138,7 +138,7 @@ void Player::set_name(std::string name){
 	m_name = name;
 }
 
-std::string Player::get_name() const{
+std::string Player::getName() const{
     return m_name;
 }
 

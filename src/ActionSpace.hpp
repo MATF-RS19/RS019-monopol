@@ -65,15 +65,15 @@ class ActionSpace : public Space {
 		double getH3Price() const {
 			return 0;
 		}
-		
+
 		double getH4Price() const {
 			return 0;
 		}
-		
+
 		double getH5Price() const {
 			return 0;
 		}
-		
+
 		std::string getColour() const {
 			return "TRANSPARENT";
 		}

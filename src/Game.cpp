@@ -3,7 +3,7 @@
 
 void Game::printPlayers() const {
     for(const auto i : m_players){
-        std::cerr << "Player " << i->get_name() << std::endl;
+        std::cerr << "Player " << i->getName() << std::endl;
     }
 }
 
@@ -33,6 +33,11 @@ void Game::throwDice() {
 	std::pair<int, int> num = std::make_pair(rand()%6+1, rand()%6+1);
 	setDice(num.first, num.second);
     //return num;
+}
+
+bool Game::isAffordable(Player* player, Space* space)
+{
+	return player->balance().first > space->getBuyPrice();
 }
 
 //NOTE: Only current player will build because game is turn based at this point
@@ -188,7 +193,7 @@ double Game::pay_rent(Space* s)
 //FIXME:
 void Game::nextPlayer() {
     auto iter = std::find_if(m_players.begin(), m_players.end(), [&] (Player *p) { return p->getId() == m_current_player->getId(); });
-    qDebug() << "Next Player" << QString::fromStdString((*iter)->get_name());
+    qDebug() << "Next Player" << QString::fromStdString((*iter)->getName());
     auto index = std::distance(m_players.begin(), iter);
 
     m_current_player = m_players.at((index+1)%m_players.size());

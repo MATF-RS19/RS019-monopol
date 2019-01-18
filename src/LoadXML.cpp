@@ -92,7 +92,7 @@ std::vector<Player*> LoadXML::processPlayers(){
     qDebug() << playersVector.size();
 
     for(const auto& i : playersVector){
-        qDebug() << QString::fromStdString(i->get_name());
+        qDebug() << QString::fromStdString(i->getName());
     }
 
     return playersVector;
