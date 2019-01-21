@@ -31,6 +31,7 @@ private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
     void upgrade_property();
+    void sell_house();
     void putUnderMortgage();
 	void scroll_to_bottom();
 	void proceed_action();
@@ -42,7 +43,7 @@ private Q_SLOTS:
 private:
     void createDockWindows();
     void updateTabs(std::vector<Player*> players);
-    void setModel();
+    void updateModel();
     void mainMenu(std::vector<std::string>& names);
 	void reactToField();
 	void display_tabs();
@@ -61,6 +62,7 @@ private:
     QPushButton* roll_button;
     QPushButton* upgrade_button;
     QPushButton* mortgage_button;
+    QPushButton* sell_house_button;
 	QVBoxLayout* right_dock_layout;
 	
 	// left dock

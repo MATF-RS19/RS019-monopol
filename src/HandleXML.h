@@ -19,9 +19,6 @@
 class HandleXML
 {
 
-Q_SIGNALS:
-    void badXML();
-
 
 public:
     enum class XMLMode{
@@ -46,10 +43,17 @@ public:
     void saveUtilities(const Player* player, QXmlStreamWriter& writer) const;
     void saveRailroads(const Player* player, QXmlStreamWriter& writer) const;
 
+    Board* board();
+    Bank* bank();
+
 private:
     QFile m_file;
     QString m_filename;
     QDomDocument m_doc;
     QXmlStreamWriter m_writer;
+
+    int num_houses = 32, num_hotels = 12;
+    Board *m_board;
+    Bank *m_bank;
 
 };

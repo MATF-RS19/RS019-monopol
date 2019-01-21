@@ -34,6 +34,10 @@ Card Board::drawCommunityCard() {
     return result;
 }
 
+void Board::setSpace(int index, Space* space){
+    m_spaces.at(index) = space;
+}
+
 Board::Board() {
     std::vector<Utility*> utils = Utility::initialize_utilities();
 	std::vector<Railroad*> rails = Railroad::initialize_railroads();

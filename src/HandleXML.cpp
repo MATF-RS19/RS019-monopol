@@ -7,11 +7,17 @@ HandleXML::HandleXML(const QString &filename, HandleXML::XMLMode mode)
     if(mode == HandleXML::XMLMode::LOAD){
         if (!m_file.open(QIODevice::ReadOnly) || !m_doc.setContent(&m_file))
             return;
-    } /*else {
-        if(!m_file.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            return;
-    }*/
+        m_board = new Board();
+    }
 
+}
+
+Board* HandleXML::board(){
+    return m_board;
+}
+
+Bank* HandleXML::bank(){
+    return m_bank;
 }
 
 void HandleXML::saveGame(const Game* game) const{
@@ -181,8 +187,6 @@ std::vector<Player*> HandleXML::processPlayers(bool &ok){
         qDebug() << name.text() << " " << id.text() << " " << wallet.text() << " " << jail.text()
                  << " " << pos.text() << " " << turnsInJail.text() << " " << hasJailCard.text();
 
-        qDebug() << id.text().toInt();
-
         Player *p = new Player(id.text().toUInt(),name.text().toStdString(),wallet.text().toInt(), jail.text().toInt(), pos.text().toInt(), turnsInJail.text().toInt(), hasJailCard.text().toInt());
 
         QDomElement properties = playerRoot.firstChildElement("properties");
@@ -208,7 +212,7 @@ std::vector<Player*> HandleXML::processPlayers(bool &ok){
         qDebug() << QString::fromStdString(i->getName());
     }
 
-
+    m_bank = new Bank(num_houses, num_hotels);
     return playersVector;
 
 }
@@ -271,6 +275,24 @@ bool HandleXML::processProperties(QDomElement &properties, Player* p){
                                       h2Price.text().toDouble(),h3Price.text().toDouble(),h4Price.text().toDouble(),h5Price.text().toDouble(),
                                       mortgage.text().toDouble(), housePrice.text().toDouble(), name.text().toStdString(), colour.text().toStdString());
 
+
+        // NOTE: couldn't get it to work with std::find_if + std::distance, don't know why ...
+        // Find and set space in board
+        int index;
+        for(int i = 0; i < m_board->getSpaces().size(); i++){
+            if(m_board->getSpaces().at(i)->getName() == prop->getName()){
+                index = i;
+                break;
+            }
+        }
+
+        m_board->setSpace(index, prop);
+
+        if(numBuildings.text().toInt() < 5 && numBuildings.text().toInt() > 0)
+            num_houses--;
+        else
+            num_hotels--;
+
         prop->setNumBuildings(numBuildings.text().toInt());
         if(owned.text().toInt()){
             prop->setOwned();
@@ -327,6 +349,18 @@ bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
             util->setOwned();
             util->setOwner(ownerId.text().toInt());
         }
+
+
+        // Find and set place on board
+        int index;
+        for(int i = 0; i < m_board->getSpaces().size(); i++){
+            if(m_board->getSpaces().at(i)->getName() == util->getName()){
+                index = i;
+                break;
+            }
+        }
+        m_board->setSpace(index, util);
+
         if(onMortgage.text().toInt()){
             util->setIsOnMortgage();
         }
@@ -375,6 +409,16 @@ bool HandleXML::processRailroads(QDomElement &railroads, Player* p){
         // ============================================================================================================
 
         Railroad *rail = new Railroad(buyPrice.text().toDouble(), rentPrice.text().toDouble(), mortgage.text().toDouble(), name.text().toStdString());
+
+        // Find and set place in board
+        int index;
+        for(int i = 0; i < m_board->getSpaces().size(); i++){
+            if(m_board->getSpaces().at(i)->getName() == rail->getName()){
+                index = i;
+                break;
+            }
+        }
+        m_board->setSpace(index, rail);
 
         if(owned.text().toInt()){
             rail->setOwned();

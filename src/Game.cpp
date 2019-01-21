@@ -40,51 +40,64 @@ bool Game::isAffordable(Player* player, Space* space)
 	return player->balance().first > space->getBuyPrice();
 }
 
-//NOTE: Only current player will build because game is turn based at this point
-//      
+bool Game::buildingAllowed(Player* player, Space* space){
+    if(space->getType() != "PROPERTY")
+        return false;
+    std::vector<Space*> groupSpaces = m_board->getSpacesByGroup(space->getGroup());
+    for(const auto i : groupSpaces){
+        if(i->getOwner() != player->getId() || space->getNumBuildings() - i->getNumBuildings() >= 1
+                || static_cast<Property*>(space)->getHousePrice() > player->get_wallet())
+            return false;
+    }
+    return true;
+}
+
+// NOTE: We are relying on proper usage : this function won't be called unless
+// player owns all properties in particular group and has houses on them
+bool Game::sellingHouseAllowed(Space* space){
+    std::vector<Space*> groupSpaces = m_board->getSpacesByGroup(space->getGroup());
+    for(const auto i : groupSpaces){
+        if(i->getNumBuildings() - space->getNumBuildings() >= 1 || space->getNumBuildings() == 0)
+            return false;
+    }
+    return true;
+}
+
+//NOTE: Only current player will build because there is no game server at this point
 void Game::build(Player* player, Space* property) {
 	if (property->getType() != "PROPERTY") {
-		std::cerr << "Space is not upgradeable\n" << std::endl;
+        qDebug() << "Space is not upgradeable\n";
 		return;
 	}
     if(property->getOwner() == player->getId()){
-        // Check if player has purchased all properties in a particular group and
-        // if building order is valid
-        std::vector<Space*> group = m_board->getSpacesByGroup(property->getGroup());
-        bool valid = true;
-        for(auto i: group){
-            if(i->getOwner() != player->getId() || (abs(property->getNumBuildings() - i->getNumBuildings() + 1) > 1)){
-                std::cerr << "Building not allowed" << std::endl;
-                valid = false;
-                break;
-            }
-        }
         
-        if(valid){
+        if(buildingAllowed(player, property)){
             //Ask for a normal house
             if(property->getNumBuildings() < 4){
-                std::cerr << "Normal house\n";
+                qDebug() << "Normal house";
                 int availableHouses = m_bank->getHouses();
-                std::cerr << "availableHouses" << availableHouses << std::endl;
+                qDebug() << "availableHouses" << availableHouses;
                 if(availableHouses > 0){ //if there is enough houses in the bank
                     m_bank->setHouses(availableHouses-1);
                     property->setNumBuildings(property->getNumBuildings()+1);
+                    m_bank->takeMoney(player, static_cast<Property*>(property)->getHousePrice());
                 }else{
-                    std::cerr << "Not enough houses\n";
+                    qDebug() << "Not enough houses";
                 }
             
             }
             //Ask for a hotel
             else if(property->getNumBuildings() == 4){
-                std::cerr << "Hotel\n";
+                qDebug() << "Hotel";
                 int availableHotels = m_bank->getHotels();
                 if(m_bank->getHotels() > 0){
                     //if there is enough houses in the bank
                     
                     m_bank->setHotels(availableHotels-1);
                     property->setNumBuildings(property->getNumBuildings()+1);
+                    m_bank->takeMoney(player, static_cast<Property*>(property)->getHousePrice());
                 }else{
-                    std::cerr << "Not enough hotels\n";
+                    qDebug() << "Not enough hotels";
                 }
                 
             }else return;
@@ -215,17 +228,15 @@ Space* Game::getCurrentPlayerSpace() const {
     return m_board->getSpaces().at(m_current_player->get_pos());
 }
 
-Game::Game(std::vector<Player*> players){
+Game::Game(std::vector<Player*> players, Board* board, Bank* bank){
     m_players = players;
     m_current_player = m_players.front();
 
-    //TEST
-    m_board = new Board();
+    m_board = board;
 
-    m_bank = new Bank();
+    m_bank = bank;
 
     m_numOfPlayers = m_players.size();
-    //
 
 }
 
