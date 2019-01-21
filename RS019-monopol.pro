@@ -21,8 +21,7 @@ HEADERS += src/ActionSpace.hpp \
            src/Railroad.hpp \
            src/Space.hpp \
            src/Utility.hpp \
-    LoadXML.h \
-    src/LoadXML.h
+           src/HandleXML.h
 SOURCES += src/ActionSpace.cpp \
            src/AuctionHouse.cpp \
            src/Bank.cpp \
@@ -36,4 +35,4 @@ SOURCES += src/ActionSpace.cpp \
            src/Railroad.cpp \
            src/Space.cpp \
            src/Utility.cpp \
-    src/LoadXML.cpp
+           src/HandleXML.cpp

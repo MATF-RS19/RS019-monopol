@@ -6,7 +6,7 @@
 
 #include "mainwindow.h"
 #include "Game.hpp"
-#include "LoadXML.h"
+#include "HandleXML.h"
 
 int numOfPlayers;
 Game* MainWindow::game;
@@ -161,33 +161,52 @@ void MainWindow::createMenus(){
     loadSaveMenu->addAction(saveAct);
 }
 
+void MainWindow::handleBadXML(){
+    QMessageBox *error = new QMessageBox;
+    error->setText("XML file is corrupted");
+    error->exec();
+}
+
 void MainWindow::load(const QString& fileName){
 
-    LoadXML loader(fileName);
+    HandleXML loader(fileName, HandleXML::XMLMode::LOAD);
 
-    delete game;
-    std::vector<Player*> loadedPlayers = loader.processPlayers();
+    bool ok;
+    std::vector<Player*> loadedPlayers = loader.processPlayers(ok);
 
-    numOfPlayers = loadedPlayers.size();
-    game = new Game(loadedPlayers);
-    playersTest = game->getPlayers();
-    spaces = game->getBoard()->getSpaces();
+    if(ok){
+        delete game;
+        numOfPlayers = loadedPlayers.size();
+        game = new Game(loadedPlayers);
+        playersTest = game->getPlayers();
+        spaces = game->getBoard()->getSpaces();
 
-    setModel();
-    view->setModel(model);
-    view->update();
+        setModel();
+        view->setModel(model);
+        view->update();
 
-    qDebug() << "Name: " << QString::fromStdString(game->getCurrentPlayer()->getName());
+        qDebug() << "Name: " << QString::fromStdString(game->getCurrentPlayer()->getName());
 
-    game_info->clear();
-    infoText->clear();
-    player_tabs.clear();
-    updateTabs(loadedPlayers);
+        game_info->clear();
+        infoText->clear();
+        player_tabs.clear();
+        updateTabs(loadedPlayers);
+    } else {
+        QMessageBox *error = new QMessageBox;
+        error->setWindowTitle("Error!");
+        error->setText("Loading from file failed : bad XML file!");
+        error->exec();
+    }
+
+
 
 }
 
-void MainWindow::save(){
+void MainWindow::save(const QString& fileName){
 
+    HandleXML saver(fileName,HandleXML::XMLMode::SAVE);
+
+    saver.saveGame(game);
 }
 
 void MainWindow::loadGame(){
@@ -196,25 +215,28 @@ void MainWindow::loadGame(){
                                                     ".",
                                                     tr("(*.xml)"));
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Warning", "Are you sure? (Current game will be lost)",
-                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Save);
+    if(!fileName.isNull()){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning", "Are you sure? (Current game will be lost)",
+                                      QMessageBox::Yes | QMessageBox::No | QMessageBox::Save);
 
-    switch (reply) {
-        case QMessageBox::Yes:
-            qDebug() << "yes";
-            load(fileName);
-            break;
-        case QMessageBox::No:
-            qDebug() << "no";
-            break;
-        case QMessageBox::Save:
-            qDebug() << "save";
-            saveGame();
-            break;
-        default:
-            break;
+        switch (reply) {
+            case QMessageBox::Yes:
+                qDebug() << "yes";
+                load(fileName);
+                break;
+            case QMessageBox::No:
+                qDebug() << "no";
+                break;
+            case QMessageBox::Save:
+                qDebug() << "save";
+                saveGame();
+                loadGame();
+                break;
+            default:
+                break;
 
+        }
     }
 
     qDebug() << fileName << " selected";
@@ -222,6 +244,14 @@ void MainWindow::loadGame(){
 
 void MainWindow::saveGame(){
     qDebug() << "save invoked";
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save to a file"),
+                                                    ".", tr("(*.xml)"));
+
+    // Overwrite is automaticaly handled -> if 'yes' is clicked, file will be overwritten
+    // else, null will be returned as fileName
+    save(fileName);
+
 }
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
@@ -267,16 +297,23 @@ void MainWindow::updateTabs(std::vector<Player*> players){
 
     players_widget->clear();
 
-    // setting widget for every player
+    std::string owned_spaces;
+
     int i = 0;
     while(i < numOfPlayers) {
         qDebug() << "Player wallet" << QString::number(players[i]->get_wallet());
         tab = new QTextEdit(left_dock);
         tab->setReadOnly(true);
-        tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
+
+        foreach(const auto& i, players.at(i)->get_spaces()){
+            owned_spaces += "    ->" + i->getName() + "\n";
+        }
+
+        tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())) + "\nOwned spaces: \n" + QString::fromStdString(owned_spaces));
 
         player_tabs.push_back(tab);
         ++i;
+        owned_spaces.clear();
     }
 
     for (int i = 0; i < numOfPlayers; i++) {

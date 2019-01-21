@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include <QListView>
 #include <QFile>
+#include <QFileInfo>
 #include <QDomDocument>
 #include "Game.hpp"
 
@@ -36,6 +37,7 @@ private Q_SLOTS:
 	void select_tab();
     void loadGame();
     void saveGame();
+    void handleBadXML();
 
 private:
     void createDockWindows();
@@ -46,8 +48,8 @@ private:
 	void display_tabs();
     void createActions();
     void createMenus();
-    void load(const QString& fileName);
-    void save();
+    inline void load(const QString& fileName);
+    inline void save(const QString& fileName);
 	
     // menus
     QMenu* loadSaveMenu;

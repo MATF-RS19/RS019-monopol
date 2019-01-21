@@ -8,8 +8,8 @@ class Player;
 class Utility : public Space
 {
 public:
-	Utility(double buy_price, double mortgage, std::string group)
-	: _buy_price(buy_price), _mortgage(mortgage), _group(group)
+    Utility(double buy_price, double mortgage, std::string group)
+    : _buy_price(buy_price), _mortgage(mortgage), _group(group)
 	{}
 	
 	static std::vector<Utility*> initialize_utilities();
@@ -25,7 +25,7 @@ public:
 	}
 
     std::string getName() const override{
-		return _group;
+        return _group;
 	}
 	
     std::string getType() const override{

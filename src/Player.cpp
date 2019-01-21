@@ -44,6 +44,10 @@ bool Player::is_in_jail() const
 	return m_in_jail;
 }
 
+bool Player::jail_card() const{
+    return has_jail_card;
+}
+
 void Player::send_to_jail()
 {
 	if (m_in_jail == true) return;

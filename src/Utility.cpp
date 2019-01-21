@@ -18,7 +18,7 @@ void Utility::printSpace() const {
 }
 
 std::string Utility::getGroup() const {
-    return "Utility";
+    return _group;
 }
 
 int Utility::getNumBuildings() const {
