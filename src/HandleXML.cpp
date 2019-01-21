@@ -134,8 +134,6 @@ void HandleXML::saveRailroads(const Player* player, QXmlStreamWriter& writer) co
 
 std::vector<Player*> HandleXML::processPlayers(bool &ok){
 
-    qDebug() << "ProcessPlayers() invoked";
-
     std::vector<Player*> playersVector;
     // Potential bug
 
@@ -146,7 +144,6 @@ std::vector<Player*> HandleXML::processPlayers(bool &ok){
 
     if(!numOfPlayers){
         ok = false;
-        qDebug() << "No players";
         return playersVector;
     }
 
@@ -181,11 +178,7 @@ std::vector<Player*> HandleXML::processPlayers(bool &ok){
         //TODO: Stop loading if .xml file is corrupt and notify mainwindow about it (add signal)
         if(std::any_of(domElements.cbegin(), domElements.cend(), [] (QDomElement c) { return c.text() == ""; })){
             ok = false;
-            qDebug() << "Bad loading";
         }
-
-        qDebug() << name.text() << " " << id.text() << " " << wallet.text() << " " << jail.text()
-                 << " " << pos.text() << " " << turnsInJail.text() << " " << hasJailCard.text();
 
         Player *p = new Player(id.text().toUInt(),name.text().toStdString(),wallet.text().toInt(), jail.text().toInt(), pos.text().toInt(), turnsInJail.text().toInt(), hasJailCard.text().toInt());
 
@@ -206,20 +199,12 @@ std::vector<Player*> HandleXML::processPlayers(bool &ok){
 
     }
 
-    qDebug() << playersVector.size();
-
-    for(const auto& i : playersVector){
-        qDebug() << QString::fromStdString(i->getName());
-    }
-
     m_bank = new Bank(num_houses, num_hotels);
     return playersVector;
 
 }
 
 bool HandleXML::processProperties(QDomElement &properties, Player* p){
-
-    qDebug() << "processProperties invoked";
 
     QDomNodeList propertiesList = properties.elementsByTagName("property");
     for(int i = 0 ; i < propertiesList.size(); i ++){
@@ -261,12 +246,6 @@ bool HandleXML::processProperties(QDomElement &properties, Player* p){
         domElements.push_back(ownerId);
 
         if(std::any_of(domElements.cbegin(), domElements.cend(), [] (QDomElement e) { return e.text() == ""; })){
-            qDebug() << "Property loading failed, some elements are empty";
-            qDebug() << "\t" << buyPrice.text() << " " << rentPrice.text() << " " << h1Price.text() << " "
-                     << h2Price.text() << " " << h3Price.text() << " " << h4Price.text() << " " << h5Price.text()
-                     << " " << mortgage.text() << " " << housePrice.text() << " " << name.text() << " "
-                     << colour.text() << " " << numBuildings.text() << " " << owned.text() << " "
-                     << onMortgage.text() << " " << ownerId.text();
             return false;
         }
         // ============================================================================================================
@@ -314,8 +293,6 @@ bool HandleXML::processProperties(QDomElement &properties, Player* p){
 
 bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
 
-    qDebug() << "processUtilities invoked";
-
     QDomNodeList utilitiesList = utilities.elementsByTagName("utility");
     for(int i = 0 ; i < utilitiesList.size(); i ++){
         QDomNode propertyRoot = utilitiesList.item(i);
@@ -339,7 +316,6 @@ bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
         domElements.push_back(name);
 
         if(std::any_of(domElements.cbegin(), domElements.cend(), [] (QDomElement e) { return e.text() == ""; })){
-            qDebug() << "Loading utilities failed";
             return false;
         }
         // ============================================================================================================
@@ -368,8 +344,6 @@ bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
         p->add_utility(util);
         p->add_space(util);
 
-        qDebug() << "\t" <<  buyPrice.text() << " " << mortgage.text() << " " << ownerId.text()
-                 << " " << group.text() << " " << owned.text() << " " << onMortgage.text();
     }
 
     return true;
@@ -378,7 +352,6 @@ bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
 
 bool HandleXML::processRailroads(QDomElement &railroads, Player* p){
 
-    qDebug() << "processRailroads invoked";
 
     QDomNodeList railroadList = railroads.elementsByTagName("railroad");
     for(int i = 0 ; i < railroadList.size(); i ++){
@@ -403,7 +376,6 @@ bool HandleXML::processRailroads(QDomElement &railroads, Player* p){
         domElements.push_back(onMortgage);
 
         if(std::any_of(domElements.cbegin(), domElements.cend(), [] (QDomElement e) { return e.text() == ""; })){
-            qDebug() << "Loading railroads failed";
             return false;
         }
         // ============================================================================================================

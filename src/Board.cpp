@@ -143,5 +143,4 @@ std::vector<Space*> Board::getSpacesByGroup(std::string group) const {
 }
 
 Board::~Board() {
-    qDebug() << "~Board()";
 }

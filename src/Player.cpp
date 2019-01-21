@@ -27,7 +27,6 @@ Player::Player()
 Player::Player(unsigned int id, std::string name, int wallet, bool jail, int pos, int turns_in_jail, bool jail_card)
     :m_id(id), m_name(name), m_wallet(wallet), m_in_jail(jail), m_pos(pos), num_turns_in_jail(turns_in_jail), has_jail_card(jail_card)
 {
-    qDebug() << "Creating player with id" << m_id;
 }
 
 Player::~Player()

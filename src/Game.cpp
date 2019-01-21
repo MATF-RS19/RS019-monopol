@@ -66,7 +66,6 @@ bool Game::sellingHouseAllowed(Space* space){
 //NOTE: Only current player will build because there is no game server at this point
 void Game::build(Player* player, Space* property) {
 	if (property->getType() != "PROPERTY") {
-        qDebug() << "Space is not upgradeable\n";
 		return;
 	}
     if(property->getOwner() == player->getId()){
@@ -74,9 +73,7 @@ void Game::build(Player* player, Space* property) {
         if(buildingAllowed(player, property)){
             //Ask for a normal house
             if(property->getNumBuildings() < 4){
-                qDebug() << "Normal house";
                 int availableHouses = m_bank->getHouses();
-                qDebug() << "availableHouses" << availableHouses;
                 if(availableHouses > 0){ //if there is enough houses in the bank
                     m_bank->setHouses(availableHouses-1);
                     property->setNumBuildings(property->getNumBuildings()+1);
@@ -88,11 +85,9 @@ void Game::build(Player* player, Space* property) {
             }
             //Ask for a hotel
             else if(property->getNumBuildings() == 4){
-                qDebug() << "Hotel";
                 int availableHotels = m_bank->getHotels();
                 if(m_bank->getHotels() > 0){
-                    //if there is enough houses in the bank
-                    
+                    //if there is enough houses in the bank    
                     m_bank->setHotels(availableHotels-1);
                     property->setNumBuildings(property->getNumBuildings()+1);
                     m_bank->takeMoney(player, static_cast<Property*>(property)->getHousePrice());
@@ -206,7 +201,6 @@ double Game::pay_rent(Space* s)
 //FIXME:
 void Game::nextPlayer() {
     auto iter = std::find_if(m_players.begin(), m_players.end(), [&] (Player *p) { return p->getId() == m_current_player->getId(); });
-    qDebug() << "Next Player" << QString::fromStdString((*iter)->getName());
     auto index = std::distance(m_players.begin(), iter);
 
     m_current_player = m_players.at((index+1)%m_players.size());
@@ -262,7 +256,6 @@ Game::Game(std::vector<std::string> player_names) {
 
 Game::~Game()
 {
-    qDebug() << "~Game()";
 	delete m_bank;
 	delete m_board;
 }
