@@ -11,7 +11,7 @@ class Game {
 public:
     Game(std::vector<std::string> player_names);
 
-    Game(std::vector<Player*> players);
+    Game(std::vector<Player*> players, Board* board, Bank* bank);
 
 	~Game();
 
@@ -42,6 +42,10 @@ public:
 	bool isAffordable(Player* player, Space* space);
 
     void build(Player* player, Space* property);
+
+    bool buildingAllowed(Player* player, Space* space);
+
+    bool sellingHouseAllowed(Space* space);
     
     void movePlayer(Player *player, int steps);
 	

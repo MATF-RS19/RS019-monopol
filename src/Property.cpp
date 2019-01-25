@@ -22,8 +22,6 @@ std::string Property::getInfo() const{
     info << "Hotels, $" << getHousePrice() << " plus 4 houses" << std::endl;
     info << "If a player owns ALL the lots of any Colour-Group, the rent is doubled on unimproved lots in that group" << std::endl;
 
-    qDebug() << "INFO DEBUG:" << QString::fromStdString(info.str());
-
     return info.str();
 }
 

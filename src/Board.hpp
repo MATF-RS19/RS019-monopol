@@ -29,6 +29,8 @@ class Board {
         Card drawChanceCard();
 
         void printBoard() const;
+
+        void setSpace(int index, Space* space);
         
         std::vector<Space*> getSpacesByGroup(std::string group) const;
         

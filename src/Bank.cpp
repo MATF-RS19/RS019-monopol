@@ -12,13 +12,11 @@ Bank::Bank(int houses, int hotels)
 void Bank::sellSpace(Player *player, Space *space) {
     //Make sure not to sell already owned space
     if(!space->isOwned()){
-        qDebug() << "SELLSPACE DEBUG";
         player->pay(space->getBuyPrice());
         player->add_space(space);
         space->setOwned();
         space->setOwner(player->getId());
 
-        qDebug() << "AFTER SELLSPACE" << QString::fromStdString(space->getInfo());
 
         //HACK: downcast to appropriate subclass and add it to list of
         //properties/utilities/railroads for usage in other functions

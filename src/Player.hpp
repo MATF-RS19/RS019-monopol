@@ -44,6 +44,8 @@ public:
 	void receive_jail_card() {
 		has_jail_card = true;
 	}
+	
+	bool jail_card() const;
 
 	std::pair<double, double> balance();
 	void pay(double amount);

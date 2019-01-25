@@ -24,6 +24,8 @@ HEADERS += src/ActionSpace.hpp \
            src/Space.hpp \
            src/SpaceDelegate.hpp \
            src/Utility.hpp
+           src/Utility.hpp \
+           src/HandleXML.h
 SOURCES += src/ActionSpace.cpp \
            src/AuctionHouse.cpp \
            src/Bank.cpp \
@@ -40,3 +42,5 @@ SOURCES += src/ActionSpace.cpp \
            src/Space.cpp \
            src/SpaceDelegate.cpp \
            src/Utility.cpp
+           src/Utility.cpp \
+           src/HandleXML.cpp

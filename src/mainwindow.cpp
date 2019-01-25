@@ -7,7 +7,7 @@
 #include "mainwindow.h"
 #include "SpaceDelegate.hpp"
 #include "Game.hpp"
-#include "LoadXML.h"
+#include "HandleXML.h"
 
 int numOfPlayers;
 Game* MainWindow::game;
@@ -36,6 +36,8 @@ MainWindow::MainWindow()
 
     //Populate model for players
     playersTest = game->getPlayers();
+
+    updateModel();
 
 	// setting view
     view = new QTableView();
@@ -80,6 +82,9 @@ MainWindow::MainWindow()
 	connect(upgrade_button, SIGNAL(clicked(bool)),
 			this, SLOT(upgrade_property()));
 
+    connect(sell_house_button, SIGNAL(clicked(bool)),
+            this, SLOT(sell_house()));
+
 	// when the text in game_info is changed, scroll (if necessary) to bottom 
 	connect(game_info, SIGNAL(textChanged()),
 			this, SLOT(scroll_to_bottom()));
@@ -94,7 +99,7 @@ MainWindow::MainWindow()
 
 }
 
-void MainWindow::setModel(){
+void MainWindow::updateModel(){
     //Create model for all spaces on the board
     model = new QStandardItemModel(11,11);
     int img_num = 0;
@@ -170,67 +175,91 @@ void MainWindow::createMenus(){
     loadSaveMenu->addAction(saveAct);
 }
 
+void MainWindow::handleBadXML(){
+    QMessageBox *error = new QMessageBox;
+    error->setText("XML file is corrupted");
+    error->exec();
+}
+
 void MainWindow::load(const QString& fileName){
 
-    LoadXML loader(fileName);
+    HandleXML loader(fileName, HandleXML::XMLMode::LOAD);
 
-    delete game;
-    std::vector<Player*> loadedPlayers = loader.processPlayers();
+    bool ok;
+    std::vector<Player*> loadedPlayers = loader.processPlayers(ok);
 
-    numOfPlayers = loadedPlayers.size();
-    game = new Game(loadedPlayers);
-    playersTest = game->getPlayers();
-    spaces = game->getBoard()->getSpaces();
+    if(ok){
+        delete game;
+        numOfPlayers = loadedPlayers.size();
 
-    setModel();
-    view->setModel(model);
-    view->update();
+        game = new Game(loadedPlayers, loader.board(), loader.bank());
+        playersTest = game->getPlayers();
+        spaces = game->getBoard()->getSpaces();
 
-    qDebug() << "Name: " << QString::fromStdString(game->getCurrentPlayer()->getName());
+        updateModel();
+        view->setModel(model);
+        view->update();
 
-    game_info->clear();
-    infoText->clear();
-    player_tabs.clear();
-    updateTabs(loadedPlayers);
+        game_info->clear();
+        infoText->clear();
+        player_tabs.clear();
+        updateTabs(loadedPlayers);
+    } else {
+        QMessageBox *error = new QMessageBox;
+        error->setWindowTitle("Error!");
+        error->setText("Loading from file failed : bad XML file!");
+        error->exec();
+    }
+
+
 
 }
 
-void MainWindow::save(){
+void MainWindow::save(const QString& fileName){
 
+    HandleXML saver(fileName,HandleXML::XMLMode::SAVE);
+
+    saver.saveGame(game);
 }
 
 void MainWindow::loadGame(){
-    qDebug() << "load invoked";
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Load from file"),
-                                                    ".",
+                                                    "./saves",
                                                     tr("(*.xml)"));
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Warning", "Are you sure? (Current game will be lost)",
-                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Save);
+    if(!fileName.isNull()){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning", "Are you sure? (Current game will be lost)",
+                                      QMessageBox::Yes | QMessageBox::No | QMessageBox::Save);
 
-    switch (reply) {
-        case QMessageBox::Yes:
-            qDebug() << "yes";
-            load(fileName);
-            break;
-        case QMessageBox::No:
-            qDebug() << "no";
-            break;
-        case QMessageBox::Save:
-            qDebug() << "save";
-            saveGame();
-            break;
-        default:
-            break;
+        switch (reply) {
+            case QMessageBox::Yes:
+                load(fileName);
+                break;
+            case QMessageBox::No:
+                break;
+            case QMessageBox::Save:
+                saveGame();
+                loadGame();
+                break;
+            default:
+                break;
 
+        }
     }
 
-    qDebug() << fileName << " selected";
 }
 
 void MainWindow::saveGame(){
-    qDebug() << "save invoked";
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save to a file"),
+                                                    ".", tr("(*.xml)"));
+
+    // Overwrite is automaticaly handled -> if 'yes' is clicked, file will be overwritten
+    // else, null will be returned as fileName
+    save(fileName);
+
 }
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
@@ -276,16 +305,22 @@ void MainWindow::updateTabs(std::vector<Player*> players){
 
     players_widget->clear();
 
-    // setting widget for every player
+    std::string owned_spaces;
+
     int i = 0;
     while(i < numOfPlayers) {
-        qDebug() << "Player wallet" << QString::number(players[i]->get_wallet());
         tab = new QTextEdit(left_dock);
         tab->setReadOnly(true);
-        tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
+
+        foreach(const auto& i, players.at(i)->get_spaces()){
+            owned_spaces += "    ->" + i->getName() + "\n";
+        }
+
+        tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())) + "\nOwned spaces: \n" + QString::fromStdString(owned_spaces));
 
         player_tabs.push_back(tab);
         ++i;
+        owned_spaces.clear();
     }
 
     for (int i = 0; i < numOfPlayers; i++) {
@@ -310,6 +345,10 @@ void MainWindow::createDockWindows()
 	// upgrade button is visible only when current player selects his property
 	upgrade_button = new QPushButton(tr("Upgrade"), right_dock);
 	upgrade_button->setVisible(false);
+
+    // sell house button is visible only when you own houses to sell
+    sell_house_button = new QPushButton(tr("Sell house"), right_dock);
+    sell_house_button->setVisible(false);
 
     // mortage button is visible only when current player selects his property
     mortgage_button = new QPushButton(tr("Put under mortgage"), right_dock);
@@ -340,6 +379,7 @@ void MainWindow::createDockWindows()
 	right_dock_layout->addWidget(infoText);
 	right_dock_layout->addWidget(upgrade_button);
     right_dock_layout->addWidget(mortgage_button);
+    right_dock_layout->addWidget(sell_house_button);
     right_dock_layout->addWidget(dice_widget);
 	right_dock_layout->addWidget(proceed_button);
 	right_dock_layout->addWidget(roll_button);
@@ -377,7 +417,6 @@ void MainWindow::createDockWindows()
         tab = new QTextEdit(left_dock);
         tab->setReadOnly(true);
         tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
-        qDebug() << "BEAUTIFUL DEBUG" << QString::fromStdString(players[i]->getName()) << QString::number(players[i]->get_wallet());
 		player_tabs.push_back(tab);
 		++i;
 	}
@@ -479,7 +518,7 @@ void MainWindow::proceed_action()
 void MainWindow::display_tabs()
 {
 	Player* curr_player = game->getCurrentPlayer();
-    qDebug() << "DISPLAY TABS DEBUG CURR PL = " << QString::fromStdString(curr_player->getName());
+
     auto iter = std::find_if(playersTest.begin(), playersTest.end(), [&] (Player *p) { return p->getId() == curr_player->getId(); });
     auto index = std::distance(playersTest.begin(), iter);
 
@@ -537,7 +576,9 @@ void MainWindow::reactToField()
 			if (curr_space->getType() == "PROPERTY" 
 		   		&& game->getCurrentPlayer()->check_properties(curr_space)) {
 				upgrade_button->setVisible(true);
-			}
+            } if(curr_space->getNumBuildings() > 0){
+                sell_house_button->setVisible(true);
+            }
         }else{ // You have to pay rent to the owner of the current space
             double amt = game->pay_rent(curr_space);
             QMessageBox rent_msg;
@@ -890,22 +931,30 @@ void MainWindow::reactToField()
 // called when a cell on the board is clicked
 void MainWindow::display_cell(const QModelIndex& index)
 {
+    updateModel();
+
 	if (index.isValid()) {
 		if (index.row()>0 && index.row()<10 && index.column()>0 && index.column()<10) {
 			return;
 		}
 		QVariant data = index.data(Qt::UserRole+1);
 
-        //HACK: set global selection var
+        //HACK: set global selection var to allow building, mortgage etc.
         currentSelection = data;
 
-		std::string test_string = data.value<Space*>()->getInfo();
+        std::string test_string = data.value<Space*>()->getInfo();
 		infoText->setText(QString::fromStdString(test_string));
 
+        if (data.value<Space*>()->getOwner() == game->getCurrentPlayer()->getId() && data.value<Space*>()->getNumBuildings() > 0){
+            sell_house_button->setVisible(true);
+        } else {
+            sell_house_button->setVisible(false);
+        }
+
         if (data.value<Space*>()->getOwner() == game->getCurrentPlayer()->getId()
-            && data.value<Space*>()->getType() == "PROPERTY" && game->getCurrentPlayer()->check_properties(data.value<Space*>())) {
+            && data.value<Space*>()->getType() == "PROPERTY" && game->buildingAllowed(game->getCurrentPlayer(), data.value<Space*>())) {
 			upgrade_button->setVisible(true);
-		} else {
+        } else {
 			upgrade_button->setVisible(false);
 		}
 
@@ -928,12 +977,14 @@ void MainWindow::putUnderMortgage()
     Space *s = currentSelection.value<Space*>();
     if(s->getType() == "PROPERTY") {
         Property *p = dynamic_cast<Property*>(s);
-		if(!p->isOnMortgage()){
+        if(!p->isOnMortgage() && p->getNumBuildings() == 0){
     		p->setMortgage(game->getCurrentPlayer());
        		 mortgageMsg->setText("You have put " + QString::fromStdString(p->getName()) + " under mortgage");
-    	} else {
-   			mortgageMsg->setText("This space is already on mortgage");
-    	}
+        } else if(p->getNumBuildings() > 0){
+            mortgageMsg->setText("You have to sell a house first");
+        } else {
+            mortgageMsg->setText("This space is already on mortgage");
+        }
     } else if(s->getType() == "RAILROAD") {
     	Railroad *p = dynamic_cast<Railroad*>(s);
 		if(!p->isOnMortgage()){
@@ -952,15 +1003,27 @@ void MainWindow::putUnderMortgage()
     	}
     }
 	
-	
-
-    mortgageMsg->exec();
-
     mortgageMsg->exec();
 	// update tabs for every player
     display_tabs();
+}
 
-    //return;
+void MainWindow::sell_house(){
+    Property* selectedSpace = static_cast<Property*>(currentSelection.value<Space*>());
+    if(game->sellingHouseAllowed(selectedSpace)){
+        selectedSpace->setNumBuildings(selectedSpace->getNumBuildings()-1);
+        game->getBank()->giveMoney(game->getCurrentPlayer(), selectedSpace->getHousePrice()/2);
+        if(selectedSpace->getNumBuildings() > 0 && selectedSpace->getNumBuildings() < 5)
+            game->getBank()->setHouses(game->getBank()->getHouses()+1);
+        else if(selectedSpace->getNumBuildings() == 5)
+            game->getBank()->setHotels(game->getBank()->getHotels()+1);
+    }
+    infoText->setText(QString::fromStdString(selectedSpace->getInfo()));
+    display_tabs();
+    if(selectedSpace->getNumBuildings() > 0)
+        sell_house_button->setVisible(true);
+    else
+        sell_house_button->setVisible(false);
 }
 
 void MainWindow::upgrade_property()
@@ -969,4 +1032,8 @@ void MainWindow::upgrade_property()
     Player* curr_player = game->getCurrentPlayer();
 
     game->build(curr_player, upgradeMe);
+    infoText->setText(QString::fromStdString(currentSelection.value<Space*>()->getInfo()));
+    upgrade_button->setVisible(false);
+    display_tabs();
+    sell_house_button->setVisible(true);
 }

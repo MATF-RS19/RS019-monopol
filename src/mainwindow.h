@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include <QListView>
 #include <QFile>
+#include <QFileInfo>
 #include <QDomDocument>
 #include "Game.hpp"
 #include "SpaceDelegate.hpp"
@@ -31,25 +32,26 @@ private Q_SLOTS:
 	void roll_dice();
 	void display_cell(const QModelIndex&);
     void upgrade_property();
+    void sell_house();
     void putUnderMortgage();
 	void scroll_to_bottom();
 	void proceed_action();
 	void select_tab();
     void loadGame();
     void saveGame();
+    void handleBadXML();
 
 private:
     void createDockWindows();
     void updateTabs(std::vector<Player*> players);
-    void setModel();
+    void updateModel();
     void mainMenu(std::vector<std::string>& names);
 	void reactToField();
 	void display_tabs();
     void createActions();
     void createMenus();
-    void load(const QString& fileName);
-    void save();
-	void populateTableView(QTableView *view);
+    inline void load(const QString& fileName);
+    inline void save(const QString& fileName);
 	
     // menus
     QMenu* loadSaveMenu;
@@ -61,6 +63,7 @@ private:
     QPushButton* roll_button;
     QPushButton* upgrade_button;
     QPushButton* mortgage_button;
+    QPushButton* sell_house_button;
 	QVBoxLayout* right_dock_layout;
 	
 	// left dock
