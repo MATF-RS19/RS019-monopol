@@ -422,6 +422,17 @@ void MainWindow::createDockWindows()
 	// initialize tab for every player
 	for (int i = 0; i < numOfPlayers; i++) {
 		players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->getName()));
+		QPixmap pix(10, 10);
+		if (i == 0) { 
+			pix.fill(Qt::red);
+		} else if (i == 1) {
+			pix.fill(Qt::blue);
+		} else if (i == 2) {
+			pix.fill(Qt::green);
+		} else if (i == 3) {
+			pix.fill(Qt::yellow);
+		}
+		players_widget->setTabIcon(i, QIcon(pix)); 
 	}
 
     // set layout
