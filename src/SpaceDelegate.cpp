@@ -26,32 +26,32 @@ void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
 	painter->setBrush(option.palette.window());
 
-	int num, dx, dy;
+	int num, dx, dy, tx, ty;
    	double sx, sy;
 	if (row == 10) {
 		num = 10 - col;
 		dx = option.rect.x();
 		dy = option.rect.y();
-		sx = 4.5;
-		sy = 7;
+		sx = 4.5; sy = 7;
+		tx = 1; ty = 0;
 	} else if (row < 10 && col == 0) {
 		num = 20 - row;
 		dx = option.rect.x() + option.rect.width() - 20;
 		dy = option.rect.y();
-		sx = 7;
-		sy = 4.5;
+		sx = 7;	sy = 4.5;
+		tx = 0; ty = 1;
 	} else if (row == 0 && col > 0) {
 		num = 20+col;
 		dx = option.rect.x() + option.rect.width() - 14;
 		dy = option.rect.y() + option.rect.height() - 20;
-		sx = 4.5;
-		sy = 7;
+		sx = 4.5; sy = 7;
+		tx = -1; ty = 0;
 	} else if (row <= 10 && col == 10) {
 		num = 30 + row;
 		dx = option.rect.x();
 		dy = option.rect.y() + option.rect.height() - 14;
-		sx = 7;
-		sy = 4.5;
+		sx = 7; sy = 4.5;
+		tx = 0; ty = -1;
 	}
 
 	QImage img("./images/image" + QString::number(num) + ".png");
@@ -67,13 +67,13 @@ void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 				x = 10; y = 30;
 			} else if (p == 2) {
 				painter->setBrush(Qt::blue);
-				x = 60; y = 30;
+				x = 30; y = 30;
 			} else if (p == 3) {
 				painter->setBrush(Qt::green);
-				x = 10; y = 60;
+				x = 10; y = 30;
 			} else if (p == 4) {
 				painter->setBrush(Qt::yellow);
-				x = 60; y = 60;
+				x = 30; y = 30;
 			}
 
 			painter->drawEllipse(option.rect.x() + x, option.rect.y() + y, 20, 20);
