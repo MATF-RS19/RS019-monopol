@@ -85,7 +85,7 @@ void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
 	painter->translate(dx, dy);
 	painter->scale(sx, sy);
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < space->getNumBuildings(); ++i) {
 		painter->drawPolygon(polygon, Qt::WindingFill);
 		painter->translate(2.5*tx, 2.5*ty);
 	}
