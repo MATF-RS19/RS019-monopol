@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "SpaceDelegate.hpp"
-#include "BoardSpace.hpp"
 #include "Space.hpp"
 
 void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -52,20 +51,22 @@ void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 	QImage img("./images/image" + QString::number(num) + ".png");
 	painter->drawImage(option.rect, img, img.rect()); 
 	
-	if (space->player() != -1) {
-		int p = space->player();
-		painter->setPen(Qt::black);
-		if (p == 1) {
-			painter->setBrush(Qt::red);
-		} else if (p == 2) {
-			painter->setBrush(Qt::blue);
-		} else if (p == 3) {
-			painter->setBrush(Qt::green);
-		} else if (p == 4) {
-			painter->setBrush(Qt::yellow);
-		}
+	if (!space->player().empty()) {
+		for (int p : space->player()) {
+			painter->setPen(Qt::black);
+			
+			if (p == 1) {
+				painter->setBrush(Qt::red);
+			} else if (p == 2) {
+				painter->setBrush(Qt::blue);
+			} else if (p == 3) {
+				painter->setBrush(Qt::green);
+			} else if (p == 4) {
+				painter->setBrush(Qt::yellow);
+			}
 
-		painter->drawEllipse(option.rect.x() + 10*(p+1), option.rect.y() + 10*(p+1), 10, 10);
+			painter->drawEllipse(option.rect.x() + 15*(p+1), option.rect.y() + 15*(p+1), 10, 10);
+		}
 	}
 
 	for (int i = 0; i < space->getNumBuildings(); i++) {

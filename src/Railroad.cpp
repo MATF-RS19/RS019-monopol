@@ -91,16 +91,17 @@ bool Railroad::isOwned() const{
     return _owned;
 }
 
-int Railroad::player() const {
+std::vector<int> Railroad::player() const {
 	return m_player;
 }
 
-void Railroad::setPlayer(int p) {
-	m_player = p;
+void Railroad::addPlayer(int p) {
+	m_player.push_back(p);
 }
 
-void Railroad::removePlayer() {
-	m_player = -1;
+void Railroad::removePlayer(int p) {
+	m_player.erase(std::remove(m_player.begin(), m_player.end(), p),
+				   m_player.end());
 }
 
 void Railroad::setIsOnMortgage(){

@@ -8,28 +8,28 @@ void Game::printPlayers() const {
 }
 
 void Game::movePlayer(Player *player, int steps) {
-	m_board->getSpaces().at(player->get_pos())->removePlayer();
+	m_board->getSpaces().at(player->get_pos())->removePlayer(player->getId());
 	
 	player->set_pos((player->get_pos() + steps) % 40);
 
-	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
+	m_board->getSpaces().at(player->get_pos())->addPlayer(player->getId());
 }
 
 void Game::moveToPos(Player *player, int pos) {
-	m_board->getSpaces().at(player->get_pos())->removePlayer();
+	m_board->getSpaces().at(player->get_pos())->removePlayer(player->getId());
 
 	player->set_pos(pos);
 
-	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
+	m_board->getSpaces().at(player->get_pos())->addPlayer(player->getId());
 }
 
 void Game::send_to_jail(Player *player) {
-	m_board->getSpaces().at(player->get_pos())->removePlayer();
+	m_board->getSpaces().at(player->get_pos())->removePlayer(player->getId());
 
 	player->send_to_jail();
 	player->set_num_turns(1);
 
-	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
+	m_board->getSpaces().at(player->get_pos())->addPlayer(player->getId());
 }
 
 void Game::release_from_jail(Player *player) {
@@ -244,6 +244,8 @@ Game::Game(std::vector<Player*> players, Board* board, Bank* bank){
 
     m_numOfPlayers = m_players.size();
 
+	std::for_each(m_players.cbegin(), m_players.cend(), 
+					[this] (const Player* p) { m_board->getSpaces().at(p->get_pos())->addPlayer(p->getId()); });
 }
 
 Game::Game(std::vector<std::string> player_names) {
@@ -264,6 +266,9 @@ Game::Game(std::vector<std::string> player_names) {
     m_bank = new Bank();
 
     m_numOfPlayers = m_players.size();
+
+	std::for_each(m_players.cbegin(), m_players.cend(), 
+					[this] (const Player* p) { m_board->getSpaces().at(p->get_pos())->addPlayer(p->getId()); });
 }
 
 Game::~Game()

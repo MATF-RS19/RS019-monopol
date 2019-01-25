@@ -3,6 +3,7 @@
 #include "Space.hpp"
 #include "Player.hpp" 
 #include <iostream>
+#include <iterator>
 
 class Player;
 
@@ -29,11 +30,11 @@ class ActionSpace : public Space {
         
         int getOwner() const override;
 
-		int player() const override;
+		std::vector<int> player() const override;
 
-		void setPlayer(int p) override;
+		void addPlayer(int p) override;
 
-		void removePlayer() override;
+		void removePlayer(int p) override;
 
         int getNumBuildings() const override;
 
@@ -97,5 +98,5 @@ class ActionSpace : public Space {
 		};
 private:
 	int m_action;
-   	int m_player = -1;
+	std::vector<int> m_player = {};
 };

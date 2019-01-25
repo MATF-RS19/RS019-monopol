@@ -46,8 +46,6 @@ MainWindow::MainWindow()
 	view->setEditTriggers(QAbstractItemView::SelectedClicked); // NOVO
 	view->setSelectionBehavior(QAbstractItemView::SelectItems); // NOVO
 	
-    setModel();
-	
     view->setModel(model);
 
     view->resize(500, 500);
@@ -1024,6 +1022,8 @@ void MainWindow::sell_house(){
         sell_house_button->setVisible(true);
     else
         sell_house_button->setVisible(false);
+
+	view->update();
 }
 
 void MainWindow::upgrade_property()
@@ -1036,4 +1036,6 @@ void MainWindow::upgrade_property()
     upgrade_button->setVisible(false);
     display_tabs();
     sell_house_button->setVisible(true);
+
+	view->update();
 }

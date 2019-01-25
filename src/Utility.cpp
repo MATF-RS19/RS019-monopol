@@ -1,4 +1,5 @@
 #include "Utility.hpp"
+#include <algorithm>
 
 std::string Utility::getInfo() const {
 	std::ostringstream info;
@@ -29,16 +30,17 @@ void Utility::setNumBuildings(int num) {
 	return;
 }
 
-int Utility::player() const {
+std::vector<int> Utility::player() const {
 	return m_player;
 }
 
-void Utility::setPlayer(int p) {
-	m_player = p;
+void Utility::addPlayer(int p) {
+	m_player.push_back(p);
 }
 
-void Utility::removePlayer() {
-	m_player = -1;
+void Utility::removePlayer(int p) {
+	m_player.erase(std::remove(m_player.begin(), m_player.end(), p),
+				   m_player.end());
 }
 
 std::vector<Utility*> Utility::initialize_utilities()

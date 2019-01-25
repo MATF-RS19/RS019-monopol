@@ -3,6 +3,8 @@
 #include "Space.hpp"
 #include "Player.hpp"
 #include <QString>
+#include <algorithm>
+#include <iterator>
 
 class Player;
 
@@ -68,16 +70,17 @@ public:
         return id_owner;
     }
 
-	int player() const override {
+	std::vector<int> player() const override {
 		return m_player; 
 	}
 
-	void setPlayer(int p) override {
-		m_player = p;
+	void addPlayer(int p) override {
+		m_player.push_back(p);
 	}
 
-	void removePlayer() override {
-		m_player = -1;
+	void removePlayer(int p) override {
+		m_player.erase(std::remove(m_player.begin(), m_player.end(), p), 
+					   m_player.end()); 
 	}
     
     std::string getType() const override{
@@ -129,5 +132,5 @@ private:
 	bool _is_on_mortgage = false;
     //FIXME: should be something like ref to Player object
     int id_owner = -1;
-	int m_player = -1;
+	std::vector<int> m_player = {};
 };

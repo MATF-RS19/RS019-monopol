@@ -1,4 +1,5 @@
 #include "ActionSpace.hpp" 
+#include <algorithm>
 
 std::string ActionSpace::getInfo() const {
 	std::ostringstream info;
@@ -57,16 +58,17 @@ bool ActionSpace::isOwned() const {
     return false;    
 }
 
-int ActionSpace::player() const {
+std::vector<int> ActionSpace::player() const {
 	return m_player;
 }
 
-void ActionSpace::setPlayer(int p) {
-	m_player = p;
+void ActionSpace::addPlayer(int p) {
+	m_player.push_back(p);
 }
 
-void ActionSpace::removePlayer() {
-	m_player = -1;
+void ActionSpace::removePlayer(int p) {
+	m_player.erase(std::remove(m_player.begin(), m_player.end(), p),
+				   m_player.end());
 }
 
 double ActionSpace::getBuyPrice() const {
