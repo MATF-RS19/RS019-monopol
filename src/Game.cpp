@@ -8,16 +8,28 @@ void Game::printPlayers() const {
 }
 
 void Game::movePlayer(Player *player, int steps) {
-    player->set_pos((player->get_pos() + steps) % 40);
+	m_board->getSpaces().at(player->get_pos())->removePlayer();
+	
+	player->set_pos((player->get_pos() + steps) % 40);
+
+	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
 }
 
 void Game::moveToPos(Player *player, int pos) {
+	m_board->getSpaces().at(player->get_pos())->removePlayer();
+
 	player->set_pos(pos);
+
+	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
 }
 
 void Game::send_to_jail(Player *player) {
+	m_board->getSpaces().at(player->get_pos())->removePlayer();
+
 	player->send_to_jail();
 	player->set_num_turns(1);
+
+	m_board->getSpaces().at(player->get_pos())->setPlayer(player->getId());
 }
 
 void Game::release_from_jail(Player *player) {

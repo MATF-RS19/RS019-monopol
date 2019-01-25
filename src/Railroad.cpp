@@ -91,6 +91,18 @@ bool Railroad::isOwned() const{
     return _owned;
 }
 
+int Railroad::player() const {
+	return m_player;
+}
+
+void Railroad::setPlayer(int p) {
+	m_player = p;
+}
+
+void Railroad::removePlayer() {
+	m_player = -1;
+}
+
 void Railroad::setIsOnMortgage(){
     _is_on_mortgage = true;
 }

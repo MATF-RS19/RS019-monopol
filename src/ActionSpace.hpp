@@ -28,7 +28,13 @@ class ActionSpace : public Space {
         void setOwner(int id) override;
         
         int getOwner() const override;
-        
+
+		int player() const override;
+
+		void setPlayer(int p) override;
+
+		void removePlayer() override;
+
         int getNumBuildings() const override;
 
 		void setNumBuildings(int num) override;
@@ -91,4 +97,5 @@ class ActionSpace : public Space {
 		};
 private:
 	int m_action;
+   	int m_player = -1;
 };

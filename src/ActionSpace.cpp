@@ -57,6 +57,18 @@ bool ActionSpace::isOwned() const {
     return false;    
 }
 
+int ActionSpace::player() const {
+	return m_player;
+}
+
+void ActionSpace::setPlayer(int p) {
+	m_player = p;
+}
+
+void ActionSpace::removePlayer() {
+	m_player = -1;
+}
+
 double ActionSpace::getBuyPrice() const {
     return -1;
 }

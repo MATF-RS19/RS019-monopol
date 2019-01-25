@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "mainwindow.h"
+#include "SpaceDelegate.hpp"
 #include "Game.hpp"
 #include "LoadXML.h"
 
@@ -36,11 +37,17 @@ MainWindow::MainWindow()
     //Populate model for players
     playersTest = game->getPlayers();
 
-    setModel();
-
 	// setting view
     view = new QTableView();
+
+	view->setItemDelegate(new SpaceDelegate); // NOVO
+	view->setEditTriggers(QAbstractItemView::SelectedClicked); // NOVO
+	view->setSelectionBehavior(QAbstractItemView::SelectItems); // NOVO
+	
+    setModel();
+	
     view->setModel(model);
+
     view->resize(500, 500);
     view->setStyleSheet("selection-background-color : red; border-style: none;");
     view->setSortingEnabled(false);
@@ -98,7 +105,8 @@ void MainWindow::setModel(){
 
         // initializing item for the model
         QStandardItem *spaceItem = new QStandardItem();
-        QVariant v_data;
+       
+	   	QVariant v_data;
         v_data.setValue(s);
         spaceItem->setData(v_data);
 
@@ -143,6 +151,7 @@ void MainWindow::setModel(){
             model->setItem(i,j,item);
         }
     }
+
 }
 
 void MainWindow::createActions(){

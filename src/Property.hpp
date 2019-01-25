@@ -67,6 +67,18 @@ public:
     int getOwner() const override{
         return id_owner;
     }
+
+	int player() const override {
+		return m_player; 
+	}
+
+	void setPlayer(int p) override {
+		m_player = p;
+	}
+
+	void removePlayer() override {
+		m_player = -1;
+	}
     
     std::string getType() const override{
 		return "PROPERTY";
@@ -117,5 +129,5 @@ private:
 	bool _is_on_mortgage = false;
     //FIXME: should be something like ref to Player object
     int id_owner = -1;
-    
+	int m_player = -1;
 };

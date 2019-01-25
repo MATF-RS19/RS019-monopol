@@ -29,6 +29,18 @@ void Utility::setNumBuildings(int num) {
 	return;
 }
 
+int Utility::player() const {
+	return m_player;
+}
+
+void Utility::setPlayer(int p) {
+	m_player = p;
+}
+
+void Utility::removePlayer() {
+	m_player = -1;
+}
+
 std::vector<Utility*> Utility::initialize_utilities()
 {
 	Utility* water_works = new Utility(150, 75, "WATER_WORKS");

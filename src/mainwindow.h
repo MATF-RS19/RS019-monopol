@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDomDocument>
 #include "Game.hpp"
+#include "SpaceDelegate.hpp"
 
 class QListWidget;
 class QPushButton;
@@ -48,6 +49,7 @@ private:
     void createMenus();
     void load(const QString& fileName);
     void save();
+	void populateTableView(QTableView *view);
 	
     // menus
     QMenu* loadSaveMenu;
@@ -85,6 +87,8 @@ private:
 
     //HACK: global variable used to store currently selected field
     QVariant currentSelection;
+
+	SpaceDelegate *spaceDelegate;
 
 Q_SIGNALS:
     void dataChanged();

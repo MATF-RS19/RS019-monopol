@@ -32,7 +32,13 @@ class Space{
         virtual void setOwner(int id) = 0;
         
         virtual int getOwner() const = 0;
-        
+
+		virtual int player() const = 0;
+
+		virtual void setPlayer(int p) = 0;
+		
+		virtual void removePlayer() = 0;
+
         virtual std::string getGroup() const = 0;
         
         virtual int getNumBuildings() const = 0;

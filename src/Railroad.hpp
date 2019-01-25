@@ -34,6 +34,12 @@ public:
 	
     void setOwned() override;
 
+	int player() const override;
+	
+	void setPlayer(int p) override; 
+
+	void removePlayer() override;
+
     int getNumBuildings() const override;
 
 	void setNumBuildings(int num) override;
@@ -84,4 +90,5 @@ private:
     bool _owned = false;
 	bool _is_on_mortgage = false;
     int id_owner = -1;
+	int m_player = -1;
 };

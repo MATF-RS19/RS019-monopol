@@ -73,6 +73,14 @@ public:
     std::pair<int,int> getMatrixAtPos(int pos){
         return posToMatrixMap.at(pos);
 	} 
+
+	int posFromMatrix(const std::pair<int, int> &coord)
+	{
+		auto result = std::find_if(posToMatrixMap.cbegin(), posToMatrixMap.cend(), 
+									[coord] (const std::pair<int, std::pair<int, int>> &item) { return item.second == coord; });
+
+		return result->first;
+	}
 private:
     //tabla, igraci, banka, aukcijska kuca, trenutno na potezu igrac
     Board* m_board;
