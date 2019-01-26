@@ -258,8 +258,9 @@ bool HandleXML::processProperties(QDomElement &properties, Player* p){
         // NOTE: couldn't get it to work with std::find_if + std::distance, don't know why ...
         // Find and set space in board
         int index;
-        for(int i = 0; i < m_board->getSpaces().size(); i++){
-            if(m_board->getSpaces().at(i)->getName() == prop->getName()){
+        std::vector<Space*> spaces = m_board->getSpaces();
+        for(int i = 0; i < spaces.size(); i++){
+            if(spaces.at(i)->getName() == prop->getName()){
                 index = i;
                 break;
             }
@@ -329,8 +330,9 @@ bool HandleXML::processUtilities(QDomElement &utilities, Player* p){
 
         // Find and set place on board
         int index;
-        for(int i = 0; i < m_board->getSpaces().size(); i++){
-            if(m_board->getSpaces().at(i)->getName() == util->getName()){
+        std::vector<Space*> spaces = m_board->getSpaces();
+        for(int i = 0; i < spaces.size(); i++){
+            if(spaces.at(i)->getName() == util->getName()){
                 index = i;
                 break;
             }
@@ -384,8 +386,9 @@ bool HandleXML::processRailroads(QDomElement &railroads, Player* p){
 
         // Find and set place in board
         int index;
-        for(int i = 0; i < m_board->getSpaces().size(); i++){
-            if(m_board->getSpaces().at(i)->getName() == rail->getName()){
+        std::vector<Space*> spaces = m_board->getSpaces();
+        for(int i = 0; i < spaces.size(); i++){
+            if(spaces.at(i)->getName() == rail->getName()){
                 index = i;
                 break;
             }

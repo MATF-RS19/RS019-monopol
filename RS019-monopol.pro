@@ -10,7 +10,6 @@ QT += widgets \
 
 # Input
 HEADERS += src/ActionSpace.hpp \
-           src/AuctionHouse.hpp \
            src/Bank.hpp \
            src/Board.hpp \
            src/Card.hpp \
@@ -24,7 +23,6 @@ HEADERS += src/ActionSpace.hpp \
            src/SpaceDelegate.hpp \
            src/Utility.hpp
 SOURCES += src/ActionSpace.cpp \
-           src/AuctionHouse.cpp \
            src/Bank.cpp \
            src/Board.cpp \
            src/Card.cpp \

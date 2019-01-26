@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AuctionHouse.hpp"
 #include "Player.hpp"
 #include "Property.hpp"
 #include "Utility.hpp"
@@ -29,6 +28,5 @@ public:
     void setHotels(int num);
 
 private:
-    AuctionHouse* m_auction_house;
     int m_houses = num_of_houses, m_hotels = num_of_hotels;
 };
