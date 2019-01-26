@@ -61,22 +61,24 @@ void SpaceDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 		for (int p : space->player()) {
 			painter->setPen(Qt::black);
 			
-			int x, y;
+			int x=0, y=0;
 			if (p == 1) {
-				painter->setBrush(Qt::red);
-				x = 10; y = 30;
+				x = -1; y = -1;
 			} else if (p == 2) {
-				painter->setBrush(Qt::blue);
-				x = 30; y = 30;
+				x = 1; y = -1;
 			} else if (p == 3) {
-				painter->setBrush(Qt::green);
-				x = 10; y = 30;
+				x = -1; y = 1;
 			} else if (p == 4) {
-				painter->setBrush(Qt::yellow);
-				x = 30; y = 30;
+				x = 1; y = 1;
 			}
 
-			painter->drawEllipse(option.rect.x() + x, option.rect.y() + y, 20, 20);
+			int diametar = 20;
+			QRectF rect(option.rect.x() + option.rect.width()/2.0 + x*diametar/2, 
+						option.rect.y() + option.rect.height()/2.0 + y*diametar/2, 
+						diametar, diametar);
+			painter->drawEllipse(rect);
+			painter->setPen(Qt::white);
+			painter->drawText(rect, Qt::AlignCenter, QString::number(p));
 		}
 	}
 

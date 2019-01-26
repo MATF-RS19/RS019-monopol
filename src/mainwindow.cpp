@@ -421,18 +421,8 @@ void MainWindow::createDockWindows()
 
 	// initialize tab for every player
 	for (int i = 0; i < numOfPlayers; i++) {
-		players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->getName()));
-		QPixmap pix(10, 10);
-		if (i == 0) { 
-			pix.fill(Qt::red);
-		} else if (i == 1) {
-			pix.fill(Qt::blue);
-		} else if (i == 2) {
-			pix.fill(Qt::green);
-		} else if (i == 3) {
-			pix.fill(Qt::yellow);
-		}
-		players_widget->setTabIcon(i, QIcon(pix)); 
+		QString tab_text("[" + QString::number(players[i]->getId()) + "] " + QString::fromStdString(players[i]->getName()));
+		players_widget->addTab(player_tabs[i], tab_text);
 	}
 
     // set layout
@@ -471,6 +461,7 @@ void MainWindow::roll_dice()
     Player* curr_player = game->getCurrentPlayer();
 
     game->movePlayer(curr_player, dice.first+dice.second);
+	view->update();
 	reactToField();
 	display_tabs(); // update tabs for every player
 
