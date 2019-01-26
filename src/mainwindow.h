@@ -50,6 +50,7 @@ private:
 	void display_tabs();
     void createActions();
     void createMenus();
+	void handle_proceed(bool bot);
     inline void load(const QString& fileName);
     inline void save(const QString& fileName);
 	

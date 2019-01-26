@@ -262,39 +262,84 @@ void MainWindow::saveGame(){
 
 void MainWindow::mainMenu(std::vector<std::string>& names) 
 {
-	// ask for number of players
-	QMessageBox msgBox;
-	msgBox.setText(tr("Hello! Select number of players!"));
-	QPushButton* btn1 = msgBox.addButton(QString("One"), QMessageBox::ActionRole);
-	QPushButton* btn2 = msgBox.addButton(QString("Two"), QMessageBox::ActionRole);
-	QPushButton* btn3 = msgBox.addButton(QString("Three"), QMessageBox::ActionRole);
-	QPushButton* btn4 = msgBox.addButton(QString("Four"), QMessageBox::ActionRole);
-
-	msgBox.exec();
-
-	// set number of players depending on the answer
-	if (msgBox.clickedButton() == btn1) {
-	   	numOfPlayers = 1;
-	} else if (msgBox.clickedButton() == btn2) {
-		numOfPlayers = 2;
-	} else if (msgBox.clickedButton() == btn3) {
-		numOfPlayers = 3;
-	} else if (msgBox.clickedButton() == btn4) {
-		numOfPlayers = 4;
-	}
+	// ask if computer should be included
+	QMessageBox msgBoxComp;
+	msgBoxComp.setText(tr("Play against the computer?"));
+	QPushButton* yes = msgBoxComp.addButton(QString("Yes"), QMessageBox::ActionRole);
+	QPushButton* no = msgBoxComp.addButton(QString("No"), QMessageBox::ActionRole);
 	
-	//Ask players to input their names
-    bool ok;
-    for(int i = 0; i < numOfPlayers; i++){
-        QString name = QInputDialog::getText(
-                    this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
-                    QString::null, &ok
-                    );
-        if(ok && !name.isEmpty())
-            names.push_back(name.toStdString());
-        else
-            i--;
-    }
+	msgBoxComp.exec();
+	if (msgBoxComp.clickedButton() == yes)
+	{
+		QMessageBox msgBoxOpp;
+		msgBoxOpp.setText(tr("Select a number of opponents!"));
+		QPushButton* op1 = msgBoxOpp.addButton(QString("One"), QMessageBox::ActionRole);
+		QPushButton* op2 = msgBoxOpp.addButton(QString("Two"), QMessageBox::ActionRole);
+		QPushButton* op3 = msgBoxOpp.addButton(QString("Three"), QMessageBox::ActionRole);
+		
+		msgBoxOpp.exec();
+		
+		// set number of players depending on the answer
+		if (msgBoxOpp.clickedButton() == op1) {
+			numOfPlayers = 2;
+		} else if (msgBoxOpp.clickedButton() == op2) {
+			numOfPlayers = 3;
+		} else if (msgBoxOpp.clickedButton() == op3) {
+			numOfPlayers = 4;
+		}
+
+		//Ask player to input their name
+		bool ok;
+		QString name = QInputDialog::getText(
+			this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
+			QString::null, &ok
+			);
+		if(ok && !name.isEmpty())
+			names.push_back(name.toStdString());
+		
+		// There are three different bots with different "personalities". MonoBot1 is the smart, MonoBot2 is unpredictable, and MonoBot3 is greedy.
+		for(int i = 1; i < numOfPlayers; i++)
+		{
+			std::string name = "MonoBot" + std::to_string(i);
+			names.push_back(name);
+		}
+	}
+	else
+	{
+		// ask for number of players
+		QMessageBox msgBox;
+		msgBox.setText(tr("Select a number of players!"));
+		QPushButton* btn1 = msgBox.addButton(QString("One"), QMessageBox::ActionRole);
+		QPushButton* btn2 = msgBox.addButton(QString("Two"), QMessageBox::ActionRole);
+		QPushButton* btn3 = msgBox.addButton(QString("Three"), QMessageBox::ActionRole);
+		QPushButton* btn4 = msgBox.addButton(QString("Four"), QMessageBox::ActionRole);
+
+		msgBox.exec();
+
+		// set number of players depending on the answer
+		if (msgBox.clickedButton() == btn1) {
+			numOfPlayers = 1;
+		} else if (msgBox.clickedButton() == btn2) {
+			numOfPlayers = 2;
+		} else if (msgBox.clickedButton() == btn3) {
+			numOfPlayers = 3;
+		} else if (msgBox.clickedButton() == btn4) {
+			numOfPlayers = 4;
+		}
+
+		//Ask players to input their names
+		bool ok;
+		for(int i = 0; i < numOfPlayers; i++){
+			QString name = QInputDialog::getText(
+						this, QString("Name input"), QString("Enter your name:"), QLineEdit::Normal,
+						QString::null, &ok
+						);
+			if(ok && !name.isEmpty())
+				names.push_back(name.toStdString());
+			else
+				i--;
+		}
+	}
 }
 
 void MainWindow::updateTabs(std::vector<Player*> players){
@@ -458,7 +503,8 @@ void MainWindow::roll_dice()
 	std::pair<int, int> dice = game->getDice();
 	die_1->setPixmap(*(die_sides[dice.first]));
 	die_2->setPixmap(*(die_sides[dice.second]));
-	game_info->append("- " + QString::fromStdString(game->getCurrentPlayer()->getName()) + " rolled a " 
+	std::string name = game->getCurrentPlayer()->getName();
+	game_info->append("- " + QString::fromStdString(name) + " rolled a " 
 						+ QString::number(dice.first) + " and a " + QString::number(dice.second) + ".");
 
     Player* curr_player = game->getCurrentPlayer();
@@ -466,10 +512,13 @@ void MainWindow::roll_dice()
     if(curr_player->get_pos() + dice.first + dice.second > 39){
         game->getBank()->giveMoney(curr_player, 200);
 
-        QMessageBox payment;
-        payment.setWindowTitle("Salary");
-        payment.setText("You have recieved 200$ from the bank.");
-        payment.exec();
+		if(name != "MonoBot1" && name != "MonoBot2" && name != "MonoBot3")
+		{
+			QMessageBox payment;
+			payment.setWindowTitle("Salary");
+			payment.setText("You have recieved 200$ from the bank.");
+			payment.exec();
+		}
     }
 
     game->movePlayer(curr_player, dice.first+dice.second);
@@ -486,7 +535,11 @@ void MainWindow::roll_dice()
 	// if player got dice with different sides, switch to next player
 	if (dice.first != dice.second) {
 		game->nextPlayer();
-		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->getName() + "'s turn."));
+		std::string plname = game->getCurrentPlayer()->getName();
+		QString name = QString::fromStdString(plname);
+		game_info->append("- It's " + name + "'s turn.");
+		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
+			roll_dice();
 	}
 }
 
@@ -519,7 +572,11 @@ void MainWindow::proceed_action()
 	// if player got dice with different sides, switch to next player
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
-		game_info->append("- It's " + QString::fromStdString(game->getCurrentPlayer()->getName() + "'s turn."));
+		std::string plname = p->getName();
+		QString name = QString::fromStdString(plname);
+		game_info->append("- It's " + name + "'s turn.");
+		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
+			roll_dice();
 	}
 
 	// "Roll" button is visible again
@@ -539,7 +596,7 @@ void MainWindow::display_tabs()
         owned_spaces += "    ->" + i->getName() + "\n";
     }
 
-    std::string player_tab_info = "Current balance" + std::to_string(curr_player->get_wallet()) + "\nOwned spaces: \n" + owned_spaces;
+    std::string player_tab_info = "Current balance: " + std::to_string(curr_player->get_wallet()) + "\nOwned spaces: \n" + owned_spaces;
     player_tabs.at(index)->setText(QString::fromStdString(player_tab_info));
 }
 
@@ -547,7 +604,11 @@ void MainWindow::reactToField()
 {
 	Player* curr_player = game->getCurrentPlayer();
 	Space* curr_space = game->getCurrentPlayerSpace();
-	QString playerName = QString::fromStdString(curr_player->getName());
+	std::string name = curr_player->getName();
+	QString playerName = QString::fromStdString(name);
+	bool bot = false;
+	if(name == "MonoBot1" || name == "MonoBot2" || name == "MonoBot3")
+		bot = true;
 	QString spaceName = QString::fromStdString(curr_space->getName());
 
 	// get table coordinates
@@ -559,18 +620,99 @@ void MainWindow::reactToField()
 
 	// You can buy space that's not owned
 	if (curr_space->getType() != "ACTION SPACE" && !curr_space->isOwned()) {
-		infoText->setText(QString::fromStdString(curr_space->getInfo()));
+			infoText->setText(QString::fromStdString(curr_space->getInfo()));
+		
+		bool will_buy = false;
+		// MonoBot1 is the "smart" one -- they check if the property/utility/railroad he stepped on is owned by anyone (including themself). If it is, they buy it (if affordable), in order to collect all properties of the same colour/all railroads/all utilites or stop another player from doing so. If none of the spaces from the same group as the current are own, they decide randomly if they should buy it or not.
+		if(name == "MonoBot1")
+		{
+			std::string type = curr_space->getType();
+			if(type == "PROPERTY")
+			{
+				std::vector<Player*> players = game->getPlayers();
+				std::string colour = curr_space->getColour();
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					// get everyone's properties
+					std::vector<Property*> props = players[i]->get_properties();
+					int size = props.size();
+					for(int j=0; j<size; j++)
+					{
+						// as soon we know someone has one field of the same colour, MonoBot1 decides to buy it
+						if(props[j]->getColour() == colour)
+						{
+							will_buy = true;
+							break;
+						}
+					}
+				}
+			}
+			else if(type == "RAILROAD")
+			{
+				std::vector<Player*> players = game->getPlayers();
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					std::vector<Railroad*> rails = players[i]->get_railroads();
+					// as soon as anyone has at least one raiload, MonoBot1 decides to buy it
+					if(!rails.empty())
+					{
+						will_buy = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				std::vector<Player*> players = game->getPlayers();
+				for(int i=0; i<numOfPlayers; i++)
+				{
+					std::vector<Utility*> utils = players[i]->get_utilities();
+					// if anyone owns the other utility
+					if(!utils.empty())
+					{
+						will_buy = true;
+						break;
+					}
+				}
+			}
+			
+			// if no one owns anything relevant to this space, decide randomly
+			if(!will_buy)
+			{
+				int decision = rand()%2;
+				if(decision)
+					will_buy = true;
+			}
+		}
+		// MonoBot2 decides if the should buy the space randomly.
+		else if(name == "MonoBot2")
+		{
+			int decision = rand()%2;
+			if(decision)
+				will_buy = true;
+		}
+		// MonoBot3 is very greedy, and will buy anything affordable.
+		else if(name == "MonoBot3")
+		{
+			will_buy = true;
+		}
 
 		QMessageBox buy_msg;
+	
+		if(!bot)
+		{
+			buy_msg.setWindowTitle(spaceName);
 		
-		buy_msg.setWindowTitle(spaceName);
-		buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
-		QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
-        QPushButton *noButton = buy_msg.addButton(QMessageBox::No); //TODO: start auction
-		buy_msg.exec();
+			buy_msg.setText("Do you want to buy this " + QString::fromStdString(curr_space->getType()) + "?");
+			QPushButton *yesButton = buy_msg.addButton(QMessageBox::Yes);
+			QPushButton *noButton = buy_msg.addButton(QMessageBox::No); 
+			buy_msg.exec();
+			if(buy_msg.clickedButton() == yesButton)
+				will_buy = true;
+		}
 
 		// Player buys space
-		if (buy_msg.clickedButton() == yesButton) {
+		if (will_buy == true) {
 			if (game->isAffordable(curr_player, curr_space)) {
 				game->getBank()->sellSpace(curr_player, curr_space);
 				game_info->append("~ " + playerName + " bought " + spaceName);
@@ -578,8 +720,9 @@ void MainWindow::reactToField()
 				game_info->append(playerName + " can't afford this. :(");
 			}
 		}
+	}
 	// If player stepped on an owned field
-    } else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
+     else if (curr_space->getType() != "ACTION SPACE" && curr_space->isOwned()) {
 		infoText->setText(QString::fromStdString(curr_space->getInfo()));
 
         // You can upgrade your property when you step on it
@@ -622,7 +765,8 @@ void MainWindow::reactToField()
                 }
 
 
-                rent_msg.exec();
+                if(!bot)
+					rent_msg.exec();
 
 
             }else{
@@ -689,8 +833,7 @@ void MainWindow::reactToField()
 			{
 				game_info->append("* Chance: " + chanceMsg);
 				game->moveToPos(curr_player, 0);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 1)
 			{
@@ -700,8 +843,7 @@ void MainWindow::reactToField()
 					game->getBank()->giveMoney(curr_player, 200);
 				// Illinos Avenue
 				game->moveToPos(curr_player, 24);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 2)
 			{
@@ -711,8 +853,7 @@ void MainWindow::reactToField()
 					game->getBank()->giveMoney(curr_player, 200);
 				// St. Charles Place
 				game->moveToPos(curr_player, 11);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 3)
 			{
@@ -726,8 +867,7 @@ void MainWindow::reactToField()
 					nearest = 28;
 				// nearest utility
 				game->moveToPos(curr_player, nearest);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 4)
 			{
@@ -736,8 +876,7 @@ void MainWindow::reactToField()
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
 				game->moveToPos(curr_player, move_to);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 5)
 			{
@@ -746,8 +885,7 @@ void MainWindow::reactToField()
 				int move_to = quotient * 10 + 5;
 				// nearest railroad
 				game->moveToPos(curr_player, move_to);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 6)
 			{
@@ -774,8 +912,7 @@ void MainWindow::reactToField()
 					game->moveToPos(curr_player, 39);
 				else 
 					game->moveToPos(curr_player, current-3);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 9)
 			{
@@ -808,8 +945,7 @@ void MainWindow::reactToField()
 					game->getBank()->giveMoney(curr_player, 200);
 				// Reading Railroad
 				game->moveToPos(curr_player, 5);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 13)
 			{
@@ -849,8 +985,7 @@ void MainWindow::reactToField()
 			{
 				game_info->append("* Community chest:" + QString::fromStdString(chest.getMsg()));
 				game->moveToPos(curr_player, 0);
-				proceed_button->setVisible(true);
-				roll_button->setVisible(false);
+				handle_proceed(bot);
 			}
 			else if(num_card == 18)
 			{
@@ -1071,4 +1206,12 @@ void MainWindow::upgrade_property()
     sell_house_button->setVisible(true);
 
 	view->update();
+}
+
+void MainWindow::handle_proceed(bool bot)
+{
+		proceed_button->setVisible(true);
+		roll_button->setVisible(false);
+		if(bot)
+			proceed_action();
 }
