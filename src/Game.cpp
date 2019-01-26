@@ -197,9 +197,9 @@ double Game::pay_rent(Space* s)
 		
 		curr_player->set_bankrupt();
 		
-		Player* pTemp = curr_player;
-		curr_player = m_players.at(curr_player->getId());
-		delete pTemp;
+        nextPlayer();
+        m_players.erase(std::find_if(m_players.cbegin(), m_players.cend(), [&] (Player *p) { return curr_player->getId() == p->getId(); }));
+
 		return amount;
     }
 

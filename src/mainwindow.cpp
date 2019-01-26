@@ -304,9 +304,10 @@ void MainWindow::updateTabs(std::vector<Player*> players){
     players_widget->clear();
 
     std::string owned_spaces;
+    auto numPlayers = game->getPlayers().size();
 
-    int i = 0;
-    while(i < numOfPlayers) {
+    std::vector<Player*>::size_type i = 0;
+    while(i < numPlayers) {
         tab = new QTextEdit(left_dock);
         tab->setReadOnly(true);
 
@@ -321,10 +322,12 @@ void MainWindow::updateTabs(std::vector<Player*> players){
         owned_spaces.clear();
     }
 
-    for (int i = 0; i < numOfPlayers; i++) {
-        players_widget->addTab(player_tabs[i], QString::fromStdString(players[i]->getName()));
+    for (i = 0; i < numPlayers; i++) {
+        QString tab_text("[" + QString::number(players[i]->getId()) + "] " + QString::fromStdString(players[i]->getName()));
+        players_widget->addTab(player_tabs[i], tab_text);
     }
 
+    select_tab();
 }
 
 void MainWindow::createDockWindows()
@@ -410,8 +413,8 @@ void MainWindow::createDockWindows()
 	QTextEdit *tab;
 
 	// setting widget for every player
-	int i = 0;
-	while(i < numOfPlayers) {
+    std::vector<Player*>::size_type i = 0;
+    while(i < players.size()) {
         tab = new QTextEdit(left_dock);
         tab->setReadOnly(true);
         tab->setText(QString("Current balance: " + QString::number(players[i]->get_wallet())));
@@ -420,7 +423,7 @@ void MainWindow::createDockWindows()
 	}
 
 	// initialize tab for every player
-	for (int i = 0; i < numOfPlayers; i++) {
+    for (i = 0; i < players.size(); i++) {
 		QString tab_text("[" + QString::number(players[i]->getId()) + "] " + QString::fromStdString(players[i]->getName()));
 		players_widget->addTab(player_tabs[i], tab_text);
 	}
@@ -472,7 +475,7 @@ void MainWindow::roll_dice()
     game->movePlayer(curr_player, dice.first+dice.second);
 	view->update();
 	reactToField();
-	display_tabs(); // update tabs for every player
+    display_tabs(); // update tabs for every player
 
 	// SLOT method proceed_action will do the rest
 	if (proceed_button->isVisible()) {
@@ -596,17 +599,38 @@ void MainWindow::reactToField()
             //Dangerous, could not work
             if(amt != -1.0){
                 QString owner;
-                owner = QString::fromStdString(playersTest.at(curr_space->getOwner()-1)->getName());
-                rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
-                                 + owner);
+                auto iter = std::find_if(playersTest.cbegin(), playersTest.cend(),
+                             [&] (Player *p) { return p->getId() == curr_space->getOwner(); } );
+                auto idx = std::distance(playersTest.cbegin(), iter);
+                owner = QString::fromStdString(playersTest.at(idx)->getName());
+                if(amt > curr_player->balance().first + curr_player->balance().second){
+                    rent_msg.setText("You are bankrupt!\n" + owner + " gets all of your possessions.");
+                    game_info->append(QString::fromStdString(curr_player->getName()) + " is bankrupt!");
+                    view->update();
+                    if(game->getPlayers().size() == 1){
+                        QMessageBox game_over;
+                        game_over.setText(owner + " won!");
+                        game_over.setWindowTitle("GAME OVER!");
+
+                        game_over.exec();
+                        exit(0);
+                    }
+                }else{
+                    rent_msg.setText("You have to pay $" + QString::number(amt) + " to "
+                                     + owner);
+                    game_info->append(owner + " received rent from " + playerName + ".");
+                }
+
+
                 rent_msg.exec();
-                game_info->append(owner + " received rent from " + playerName + ".");
+
+
             }else{
                 rent_msg.setText("Space is under mortgage, you don't have to pay");
                 rent_msg.exec();
             }
 
-
+            updateTabs(game->getPlayers());
         }
 	} else if (curr_space->getType() == "ACTION SPACE") {
 		// action space is not upgradable
