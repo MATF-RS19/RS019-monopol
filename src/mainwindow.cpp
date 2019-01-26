@@ -470,6 +470,15 @@ void MainWindow::roll_dice()
 
     Player* curr_player = game->getCurrentPlayer();
 
+    if(curr_player->get_pos() + dice.first + dice.second > 39){
+        game->getBank()->giveMoney(curr_player, 200);
+
+        QMessageBox payment;
+        payment.setWindowTitle("Salary");
+        payment.setText("You have recieved 200$ from the bank.");
+        payment.exec();
+    }
+
     game->movePlayer(curr_player, dice.first+dice.second);
 	reactToField();
 	display_tabs(); // update tabs for every player
@@ -616,8 +625,6 @@ void MainWindow::reactToField()
 
 		ActionSpace* curr_act_space = (ActionSpace*)curr_space;
         std::string action = curr_act_space->getSpaceAction();
-
-//		game_info->append(QString::fromStdString(curr_act_space->))
 
 		if(action == "GO")
 		{
