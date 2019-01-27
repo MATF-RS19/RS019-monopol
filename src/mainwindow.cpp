@@ -1204,7 +1204,9 @@ void MainWindow::putUnderMortgage()
     	}
     }
 	
-    mortgageMsg->exec();
+	std::string name = game->getCurrentPlayer()->getName();
+	if(name != "MonoBot1" && name != "MonoBot2" && name != "MonoBot3")
+		mortgageMsg->exec();
 	// update tabs for every player
     display_tabs();
 }
