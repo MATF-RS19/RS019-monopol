@@ -541,6 +541,13 @@ void MainWindow::roll_dice()
 		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
 			roll_dice();
 	}
+	else
+	{
+		if(name == "MonoBot1" || name == "MonoBot2" || name == "MonoBot3")
+		{
+			roll_dice();
+		}
+	}
 }
 
 // called when the text in game_info is changed
@@ -572,7 +579,7 @@ void MainWindow::proceed_action()
 	// if player got dice with different sides, switch to next player
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
-		std::string plname = p->getName();
+		std::string plname = game->getCurrentPlayer->getName();
 		QString name = QString::fromStdString(plname);
 		game_info->append("- It's " + name + "'s turn.");
 		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
