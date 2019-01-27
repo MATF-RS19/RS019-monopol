@@ -579,9 +579,15 @@ void MainWindow::proceed_action()
 	// if player got dice with different sides, switch to next player
 	if (game->getDice().first != game->getDice().second) {
 		game->nextPlayer();
-		std::string plname = game->getCurrentPlayer->getName();
+		std::string plname = game->getCurrentPlayer()->getName();
 		QString name = QString::fromStdString(plname);
 		game_info->append("- It's " + name + "'s turn.");
+		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
+			roll_dice();
+	}
+	else
+	{
+		std::string plname = game->getCurrentPlayer()->getName();
 		if(plname == "MonoBot1" || plname == "MonoBot2" || plname == "MonoBot3")
 			roll_dice();
 	}
@@ -735,9 +741,31 @@ void MainWindow::reactToField()
         // You can upgrade your property when you step on it
 		if(curr_space->getOwner() == curr_player->getId()) 
 		{
+			std::string name = game->getCurrentPlayer()->getName();
+			bot = name == "MonoBot1" || name == "MonoBot2" || name == "MonoBot3";
+			// bots put owned spaces under mortgage randomly, not very often
+			if(bot)
+			{
+				std::vector<int> decision = std::vector<int>(25, 0);
+				int i = rand() % 25;
+				decision[i] = 1;
+				int choice = rand() % 25;
+				if(decision[choice])
+					mortgage_button->click();
+			}
 			if (curr_space->getType() == "PROPERTY" 
-		   		&& game->getCurrentPlayer()->check_properties(curr_space)) {
-				upgrade_button->setVisible(true);
+		   		&& game->getCurrentPlayer()->check_properties(curr_space))
+			{
+				if(name == "MonoBot1" or name == "MonoBot2")
+				{
+					int decision = rand()%2;
+					if(decision)
+						sell_house();
+				}
+				else if(name == "MonoBot3")
+					sell_house();
+				else
+					upgrade_button->setVisible(true);
             } if(curr_space->getNumBuildings() > 0){
                 sell_house_button->setVisible(true);
             }
