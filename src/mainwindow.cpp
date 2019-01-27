@@ -760,10 +760,10 @@ void MainWindow::reactToField()
 				{
 					int decision = rand()%2;
 					if(decision)
-						sell_house();
+						upgrade_property();
 				}
 				else if(name == "MonoBot3")
-					sell_house();
+					upgrade_property();
 				else
 					upgrade_button->setVisible(true);
             } if(curr_space->getNumBuildings() > 0){
